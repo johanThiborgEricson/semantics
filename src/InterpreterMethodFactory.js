@@ -162,3 +162,17 @@ InterpreterMethodFactory.prototype
   
   return this.makeMethod(instructionMaker);
 };
+
+InterpreterMethodFactory.prototype
+.deferredExecution = function(name) {
+  var instructionMaker = function(codePointer, interpreter) {
+    var instructionToDeferre = interpreter[name](codePointer);
+    var instruction = function(interpreter) {
+      return instructionToDeferre;
+    };
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
