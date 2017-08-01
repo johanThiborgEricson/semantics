@@ -73,6 +73,7 @@ InterpreterMethodFactory.prototype
   "use strict";
   var names;
   var interpretation;
+  var interpreterMethodFactory = this;
   
   if(typeof arguments[arguments.length - 1] === "string") {
     names = Array.prototype.slice.call(arguments);
@@ -83,20 +84,27 @@ InterpreterMethodFactory.prototype
   
   var instructionMaker = function(codePointer, interpreter) {
     var instructions = {};
+    var stringNames = [];
     for(var i = 0; i < names.length; i++) {
       var name = names[i];
-      var maybeInstruction = interpreter[name](codePointer);
-      if(!maybeInstruction) {
-        return null;
+      if(name instanceof RegExp) {
+        codePointer.parse(name);
+      } else { // name instanceof String
+        stringNames.push(name);
+        var maybeInstruction = interpreter[name](codePointer);
+        if(!maybeInstruction) {
+          return null;
+        }
+        
+        instructions[name] = maybeInstruction;
       }
       
-      instructions[name] = maybeInstruction;
     }
 
     var instruction = function(interpreter) {
       var resultsArray = [];
       var resultsObject = {};
-      names.map(function(name) {
+      stringNames.map(function(name) {
         var result = instructions[name](interpreter);
         resultsArray.push(result);
         resultsObject[name] = result;

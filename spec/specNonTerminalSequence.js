@@ -157,5 +157,19 @@ function() {
     });
     
   });
+  
+  it("can skip a regular expression", 
+  function() {
+    interpreter.code = methodFactory.terminal(/code/, function() {});
+    
+    interpreter.sequence = methodFactory
+    .nonTerminalSequence(/regular expression/, "code");
+    
+    expect(function() {
+      interpreter.sequence("regular expressioncode");
+    }).not.toThrow();
+  });
+  
+  
 
 });
