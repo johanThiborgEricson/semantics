@@ -170,6 +170,17 @@ function() {
     }).not.toThrow();
   });
   
-  
+  it("can handle many occurrences of the same name", function() {
+    interpreter.digit = methodFactory.terminal(/(\d)/, function(digit) {
+      return Number(digit);
+    });
+    
+    interpreter.plus = methodFactory.nonTerminalSequence(
+      "digit", /\+/, "digit", function(digit1, digit2) {
+        return digit1 + digit2;
+      });
+    
+    expect(interpreter.plus("1+2")).toBe(3);
+  });
 
 });

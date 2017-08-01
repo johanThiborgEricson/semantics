@@ -73,8 +73,7 @@ InterpreterMethodFactory.prototype
   "use strict";
   var names;
   var interpretation;
-  var interpreterMethodFactory = this;
-  
+
   if(typeof arguments[arguments.length - 1] === "string") {
     names = Array.prototype.slice.call(arguments);
   } else {
@@ -83,7 +82,7 @@ InterpreterMethodFactory.prototype
   }
   
   var instructionMaker = function(codePointer, interpreter) {
-    var instructions = {};
+    var instructions = [];
     var stringNames = [];
     for(var i = 0; i < names.length; i++) {
       var name = names[i];
@@ -96,7 +95,7 @@ InterpreterMethodFactory.prototype
           return null;
         }
         
-        instructions[name] = maybeInstruction;
+        instructions.push(maybeInstruction);
       }
       
     }
@@ -104,11 +103,12 @@ InterpreterMethodFactory.prototype
     var instruction = function(interpreter) {
       var resultsArray = [];
       var resultsObject = {};
-      stringNames.map(function(name) {
-        var result = instructions[name](interpreter);
+      for(var i = 0; i < stringNames.length; i++) {
+        var name = stringNames[i];
+        var result = instructions[i](interpreter);
         resultsArray.push(result);
         resultsObject[name] = result;
-      });
+      }
       
       if(interpretation) {
         return interpretation.apply(interpreter, resultsArray);
