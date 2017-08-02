@@ -10,3 +10,5 @@ Terminal called without an interpretation should just return the matched...
 Error messages for bad arguments.
 In sequence, add name as a property on each instruction.
 Implement separated lists.
+Sequence should check if the last argument is a function, not if it not is a 
+  string. It might be a regular expression.

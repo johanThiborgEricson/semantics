@@ -87,7 +87,10 @@ InterpreterMethodFactory.prototype
     for(var i = 0; i < names.length; i++) {
       var name = names[i];
       if(name instanceof RegExp) {
-        codePointer.parse(name);
+        var parsingIsSuccessful = codePointer.parse(name);
+        if(!parsingIsSuccessful) {
+          return null;
+        }
       } else { // name instanceof String
         stringNames.push(name);
         var maybeInstruction = interpreter[name](codePointer);

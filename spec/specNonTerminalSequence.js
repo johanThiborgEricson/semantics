@@ -182,5 +182,13 @@ function() {
     
     expect(interpreter.plus("1+2")).toBe(3);
   });
+  
+  it("throws an error if the regular expression doesn't match", function() {
+    interpreter.a = methodFactory.nonTerminalSequence(/a/, function() {});
+    
+    expect(function() {
+      interpreter.a("b");
+    }).toThrowError("Expected /^a/ to match 'b'.");
+  });
 
 });
