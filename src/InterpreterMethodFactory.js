@@ -175,6 +175,27 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.nonTerminalQuestionMark = function(name, defaultReturnValue) {
+  var instructionMaker = function(codePointer, interpreter) {
+    var maybeInstruction = interpreter[name](codePointer);
+    var instruction = function(interpreter) {
+      var result;
+      if(maybeInstruction) {
+        result = maybeInstruction(interpreter);
+      } else {
+        result = defaultReturnValue;
+      }
+      
+      return result;
+    };
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
 .deferredExecution = function(name) {
   var instructionMaker = function(codePointer, interpreter) {
     var instructionToDeferre = interpreter[name](codePointer);
