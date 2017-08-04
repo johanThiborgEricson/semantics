@@ -14,3 +14,4 @@ Sequence should check if the last argument is a function, not if it not is a
   string. It might be a regular expression.
 The quantifiers should be called quantifiers, not non terminals
 Nonterminal is one word, not two.
+Refactor debugging out to method on factory.

@@ -12,6 +12,9 @@ InterpreterMethodFactory.prototype
   "use strict";
   var methodFactory = this;
   var method = function(code) {
+    if(methodFactory.debugging) {
+      console.log(methodFactory.nameOf(this, method));
+    }
     if(code instanceof CodePointer) {
       var backup = code.backup();
       var maybeInstruction = instructionMaker(code, this);
