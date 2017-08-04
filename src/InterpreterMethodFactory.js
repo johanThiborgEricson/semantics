@@ -39,6 +39,15 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.nameOf = function(o, propertyValue) {
+  for(var propertyName in o) {
+    if(o[propertyName] === propertyValue) {
+      return propertyName;
+    }
+  }
+};
+
+InterpreterMethodFactory.prototype
 .terminal = function(token, interpretation){
   "use strict";
   var instructionMaker = function(codePointer, interpreter) {
