@@ -14,3 +14,4 @@ Refactor debugging out to method on factory or CodePointer.
 Move debugging setting to parameter.
 Trailing code should be printed as a parse fail.
 Print CodePointer parsing result if debugging is turned on.
+How does deffered executions get their this value?

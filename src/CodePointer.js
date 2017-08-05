@@ -16,9 +16,19 @@ CodePointer.prototype
 .parse = function(token) {
   var unparsedCode = this._code.slice(this._pointer);
   var match = token.exec(unparsedCode);
+  if(this._debugging) {
+    var remainingLine = /[^\n]*/.exec(unparsedCode)[0];
+    console.log("%s.exec(\"%s\")", token.toString(), remainingLine);
+  }
+  
   if(!match || match.index !== 0) {
+    if(this._debugging) {
+      console.log("Match failed");
+    }
     this.reportParseError(token);
     return null;
+  } else if(this._debugging) {
+    console.log("Match succeeded");
   }
   
   this._pointer += match[0].length;
@@ -91,5 +101,3 @@ CodePointer.prototype
   return "Expected /^" + this.parseErrorDescription.expectedAlternatives + 
   "/ to match '" + this.parseErrorDescription.actuallCode + "'.";
 };
-  
-

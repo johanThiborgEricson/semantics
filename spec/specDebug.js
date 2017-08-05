@@ -124,7 +124,8 @@ describe("Debugging messages", function() {
     expect(console.log).not.toHaveBeenCalled();
   });
   
-  they("look like xml when called internaly and externaly successfully", function() {
+  they("look like xml when called internaly and externaly successfully", 
+  function() {
     var interpreter = {};
     var factory = new InterpreterMethodFactory();
     spyOn(console, "log");
@@ -149,7 +150,7 @@ describe("Debugging messages", function() {
     interpreter.text = factory.terminal(/text/, function() {});
     interpreter.lineBreak = factory.terminal(/\n/, function() {});
     interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-
+    
     try {
       interpreter.paragraph("Something else\n", true);
     } catch(e) {}
@@ -158,6 +159,73 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("</%s>", "text");
     expect(console.log).toHaveBeenCalledWith("<%s>", "paragraph");
     expect(console.log).toHaveBeenCalledWith("</%s>", "paragraph");
+  });
+  
+  they("report matches", function() {
+    var interpreter = {};
+    var factory = new InterpreterMethodFactory();
+    spyOn(console, "log");
+    
+    interpreter.text = factory.terminal(/text/, function() {});
+
+    interpreter.text("text", true);
+    
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", "text");
+  });
+  
+  they("report the remaining code", function() {
+    var interpreter = {};
+    var factory = new InterpreterMethodFactory();
+    spyOn(console, "log");
+    
+    interpreter.foo = factory.terminal(/foo/, function() {});
+    interpreter.bar = factory.terminal(/bar/, function() {});
+    interpreter.fooBar = factory.nonTerminalSequence("foo", "bar", function(){});
+
+    interpreter.fooBar("foobar", true);
+    
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/bar/", "bar");
+  });
+  
+  they("restrict the report to the end of the line", function() {
+    var interpreter = {};
+    var factory = new InterpreterMethodFactory();
+    spyOn(console, "log");
+    
+    interpreter.foo = factory.terminal(/foo/, function() {});
+    interpreter.bar = factory.terminal(/bar/, function() {});
+    interpreter.fooBar = factory.nonTerminalSequence("foo", /\n/, "bar", 
+    function(){});
+
+    interpreter.fooBar("foo\nbar", true);
+    
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/foo/", "foo");
+  });
+  
+  they("report match success", function() {
+    var interpreter = {};
+    var factory = new InterpreterMethodFactory();
+    spyOn(console, "log");
+    
+    interpreter.text = factory.terminal(/text/, function() {});
+
+    interpreter.text("text", true);
+    
+    expect(console.log).toHaveBeenCalledWith("Match succeeded");
+  });
+  
+  they("report match failures", function() {
+    var interpreter = {};
+    var factory = new InterpreterMethodFactory();
+    spyOn(console, "log");
+    
+    interpreter.text = factory.terminal(/text/, function() {});
+    
+    try {
+      interpreter.text("Something else", true);
+    } catch(e) {}
+    
+    expect(console.log).toHaveBeenCalledWith("Match failed");
   });
   
 });
