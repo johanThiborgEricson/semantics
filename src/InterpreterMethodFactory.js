@@ -12,39 +12,31 @@ InterpreterMethodFactory.prototype
   "use strict";
   var methodFactory = this;
   var method = function(code) {
-    if(methodFactory.debugging) {
-      console.log("<%s>", methodFactory.nameOf(this, method));
-    }
+    var name = methodFactory.nameOf(this, method);
     
     if(code instanceof CodePointer) {
+      code.logParseStart(name, methodFactory.debugging);
       var backup = code.backup();
       var maybeInstruction = instructionMaker(code, this);
       if(!maybeInstruction){
-        if(methodFactory.debugging) {
-          console.log("Failed to parse %s.", methodFactory.nameOf(this, method));
-          console.log("</%s>", methodFactory.nameOf(this, method));
-        }
+        code.logParseFail(name, methodFactory.debugging);
         code.restore(backup);
-      } else if(methodFactory.debugging) {
-        console.log("Successfully parsed %s.", methodFactory.nameOf(this, method));
-        console.log("</%s>", methodFactory.nameOf(this, method));
+      } else {
+        code.logParseSuccess(name, methodFactory.debugging);
       }
       
       return maybeInstruction;
     }
     
     var codePointer = methodFactory.CodePointer(code);
+    codePointer.logParseStart(name, methodFactory.debugging);
     var instruction = instructionMaker(codePointer, this);
     if(!instruction) {
-      if(methodFactory.debugging) {
-        console.log("Failed to parse %s.", methodFactory.nameOf(this, method));
-        console.log("</%s>", methodFactory.nameOf(this, method));
-      }
+      codePointer.logParseFail(name, methodFactory.debugging);
       throw new Error(codePointer.getParseErrorDescription());
-    } else if(methodFactory.debugging) {
-      console.log("Successfully parsed %s.", methodFactory.nameOf(this, method));
-      console.log("</%s>", methodFactory.nameOf(this, method));
-    }
+    } else {
+        codePointer.logParseSuccess(name, methodFactory.debugging);
+      }
     
     if(codePointer.getUnparsed() !== "") {
       throw new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");

@@ -1,17 +1,16 @@
-Write test for number plusSign number 1+2 sequence. Merge code from
-  semantics-demo
-A sequence should fail to compile if the regexp isn't matched.
 A terminal should call it's interpretation with the full match as its last 
   argument.
 Shorten the names of the methods of the InterpreterMethodFactory.
-Remove the CodePointer attribute.
+Remove the CodePointer attribute. Or move CodePointer to the same file.
 Terminal called without an interpretation should just return the matched...
   full match? first captured group? array? array iff many? Hm...
 Error messages for bad arguments.
-In sequence, add name as a property on each instruction.
 Implement separated lists.
 Sequence should check if the last argument is a function, not if it not is a 
   string. It might be a regular expression.
 The quantifiers should be called quantifiers, not non terminals
 Nonterminal is one word, not two.
-Refactor debugging out to method on factory.
+Refactor debugging out to method on factory or CodePointer.
+Move debugging setting to parameter.
+Trailing code should be printed as a parse fail.
+Print CodePointer parsing result if debugging is turned on.

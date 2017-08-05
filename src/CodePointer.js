@@ -25,6 +25,29 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
+.logParseStart = function(name, isDebugging) {
+  if(isDebugging) {
+    console.log("<%s>", name);
+  }
+};
+
+CodePointer.prototype
+.logParseFail = function(name, isDebugging) {
+  if(isDebugging) {
+    console.log("Failed to parse %s.", name);
+    console.log("</%s>", name);
+  }
+};
+
+CodePointer.prototype
+.logParseSuccess = function(name, isDebugging) {
+  if(isDebugging) {
+    console.log("Successfully parsed %s.", name);
+    console.log("</%s>", name);
+  }
+};
+
+CodePointer.prototype
 .backup = function() {
   return this._pointer;
 };

@@ -39,7 +39,8 @@ describe("InterpreterMethodFactory().makeMethod(instructionMaker)" +
   
   it("calls instructionMaker with the result of " + 
   "CodePointer(code) and the interpreter that the method was on", function() {
-    var codePointer = {getUnparsed() {return "";}};
+    var codePointer = CodePointer("");
+    spyOn(codePointer, "getUnparsed").and.returnValue("");
     methodFactory.CodePointer = function() {
       return codePointer;
     };
