@@ -211,7 +211,7 @@ describe("Debugging messages", function() {
 
     interpreter.text("text", true);
     
-    expect(console.log).toHaveBeenCalledWith("Match succeeded");
+    expect(console.log).toHaveBeenCalledWith("Matched \"%s\"", "text");
   });
   
   they("report match failures", function() {

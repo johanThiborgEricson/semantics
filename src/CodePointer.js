@@ -28,7 +28,7 @@ CodePointer.prototype
     this.reportParseError(token);
     return null;
   } else if(this._debugging) {
-    console.log("Match succeeded");
+    console.log("Matched \"%s\"", match[0]);
   }
   
   this._pointer += match[0].length;
