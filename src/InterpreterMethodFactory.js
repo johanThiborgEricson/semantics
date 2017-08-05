@@ -13,13 +13,21 @@ InterpreterMethodFactory.prototype
   var methodFactory = this;
   var method = function(code) {
     if(methodFactory.debugging) {
-      console.log(methodFactory.nameOf(this, method));
+      console.log("<%s>", methodFactory.nameOf(this, method));
     }
+    
     if(code instanceof CodePointer) {
       var backup = code.backup();
       var maybeInstruction = instructionMaker(code, this);
       if(!maybeInstruction){
+        if(methodFactory.debugging) {
+          console.log("Failed to parse %s.", methodFactory.nameOf(this, method));
+          console.log("</%s>", methodFactory.nameOf(this, method));
+        }
         code.restore(backup);
+      } else if(methodFactory.debugging) {
+        console.log("Successfully parsed %s.", methodFactory.nameOf(this, method));
+        console.log("</%s>", methodFactory.nameOf(this, method));
       }
       
       return maybeInstruction;
@@ -28,7 +36,14 @@ InterpreterMethodFactory.prototype
     var codePointer = methodFactory.CodePointer(code);
     var instruction = instructionMaker(codePointer, this);
     if(!instruction) {
+      if(methodFactory.debugging) {
+        console.log("Failed to parse %s.", methodFactory.nameOf(this, method));
+        console.log("</%s>", methodFactory.nameOf(this, method));
+      }
       throw new Error(codePointer.getParseErrorDescription());
+    } else if(methodFactory.debugging) {
+      console.log("Successfully parsed %s.", methodFactory.nameOf(this, method));
+      console.log("</%s>", methodFactory.nameOf(this, method));
     }
     
     if(codePointer.getUnparsed() !== "") {
