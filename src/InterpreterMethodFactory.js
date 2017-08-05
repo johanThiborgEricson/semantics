@@ -12,38 +12,43 @@ InterpreterMethodFactory.prototype
   "use strict";
   var methodFactory = this;
   var method = function(code, debugging) {
+    var codePointer;
+    var isInternalCall = false;
     var name = methodFactory.nameOf(this, method);
+    var backup;
+    var maybeInstruction;
+    var result;
     
     if(code instanceof CodePointer) {
-      code.logParseStart(name);
-      var backup = code.backup();
-      var maybeInstruction = instructionMaker(code, this);
-      if(!maybeInstruction){
-        code.restore(backup);
+      codePointer = code;
+      isInternalCall = true;
+    } else {
+      codePointer = methodFactory.CodePointer(code, debugging);
+    }
+    
+    codePointer.logParseStart(name);
+    backup = codePointer.backup();
+    maybeInstruction = instructionMaker(codePointer, this);
+    if(!maybeInstruction){
+      codePointer.restore(backup);
+    }
+    codePointer.logParseEnd(name, !!maybeInstruction);
+    
+    if(isInternalCall) {
+      result = maybeInstruction;
+    } else { // isExternalCall
+      if(!maybeInstruction) {
+        throw new Error(codePointer.getParseErrorDescription());
+      } else if(codePointer.getUnparsed() !== "") {
+        throw new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");
+      } else {
+        result = maybeInstruction(this);
       }
       
-      code.logParseEnd(name, !!maybeInstruction);
-      return maybeInstruction;
     }
     
-    var codePointer = methodFactory.CodePointer(code, debugging);
-    codePointer.logParseStart(name);
-    var instruction = instructionMaker(codePointer, this);
-    var error;
+    return result;
     
-    
-    
-    if(!instruction) {
-      error = new Error(codePointer.getParseErrorDescription());
-    } else if(codePointer.getUnparsed() !== "") {
-      error = new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");
-    }
-    
-    codePointer.logParseEnd(name, !!instruction);
-    
-    if(error) throw error;
-    
-    return instruction(this);
   };
   
   return method;
