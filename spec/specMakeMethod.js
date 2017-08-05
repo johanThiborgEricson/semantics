@@ -1,5 +1,5 @@
 describe("InterpreterMethodFactory().makeMethod(instructionMaker)" + 
-".call(interpreter, code)", function() {
+".call(interpreter, code, debugging)", function() {
   var CodePointer;
   var interpreter;
   var methodFactory;
@@ -28,13 +28,13 @@ describe("InterpreterMethodFactory().makeMethod(instructionMaker)" +
     
   });
   
-  it("calls CodePointer with code", function() {
+  it("calls CodePointer with code and debugging", function() {
     interpreter.method = methodFactory.makeMethod(function() {
       return function() {};
     });
     
-    interpreter.method("code");
-    expect(methodFactory.CodePointer).toHaveBeenCalledWith("code");
+    interpreter.method("code", "debugging");
+    expect(methodFactory.CodePointer).toHaveBeenCalledWith("code", "debugging");
   });
   
   it("calls instructionMaker with the result of " + 

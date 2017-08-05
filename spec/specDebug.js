@@ -8,8 +8,8 @@ describe("Debugging messages", function() {
     spyOn(console, "log");
     
     interpreter.text = factory.terminal(/text/, function() {});
-    factory.debugging = true;
-    interpreter.text("text");
+
+    interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalled();
   });
@@ -31,8 +31,8 @@ describe("Debugging messages", function() {
     spyOn(console, "log");
     
     interpreter.text = factory.terminal(/text/, function() {});
-    factory.debugging = true;
-    interpreter.text("text");
+
+    interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalledWith("<%s>", "text");
     expect(console.log).toHaveBeenCalledWith("</%s>", "text");
@@ -44,8 +44,8 @@ describe("Debugging messages", function() {
     spyOn(console, "log");
     
     interpreter.text = factory.terminal(/text/, function() {});
-    factory.debugging = true;
-    interpreter.text("text");
+
+    interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
   });
@@ -58,8 +58,7 @@ describe("Debugging messages", function() {
     interpreter.text = factory.terminal(/text/, function() {});
     interpreter.lineBreak = factory.terminal(/\n/, function() {});
     interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-    factory.debugging = true;
-    interpreter.paragraph("text\n");
+    interpreter.paragraph("text\n", true);
     
     expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
   });
@@ -70,9 +69,9 @@ describe("Debugging messages", function() {
     spyOn(console, "log");
     
     interpreter.text = factory.terminal(/text/, function() {});
-    factory.debugging = true;
+
     try {
-      interpreter.text("Something else");
+      interpreter.text("Something else", true);
     } catch(e) {}
     
     expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "text");
@@ -84,9 +83,9 @@ describe("Debugging messages", function() {
     spyOn(console, "log");
     
     interpreter.text = factory.terminal(/text/, function() {});
-    factory.debugging = true;
+
     try {
-      interpreter.text("Something else");
+      interpreter.text("Something else", true);
     } catch(e) {}
     
     expect(console.log).toHaveBeenCalledWith("</%s>", "text");
@@ -100,9 +99,9 @@ describe("Debugging messages", function() {
     interpreter.text = factory.terminal(/text/, function() {});
     interpreter.lineBreak = factory.terminal(/\n/, function() {});
     interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-    factory.debugging = true;
+
     try {
-      interpreter.paragraph("Something else\n");
+      interpreter.paragraph("Something else\n", true);
     } catch(e) {}
     
     
@@ -133,8 +132,8 @@ describe("Debugging messages", function() {
     interpreter.text = factory.terminal(/text/, function() {});
     interpreter.lineBreak = factory.terminal(/\n/, function() {});
     interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-    factory.debugging = true;
-    interpreter.paragraph("text\n");
+
+    interpreter.paragraph("text\n", true);
     
     expect(console.log).toHaveBeenCalledWith("<%s>", "text");
     expect(console.log).toHaveBeenCalledWith("</%s>", "text");
@@ -150,9 +149,9 @@ describe("Debugging messages", function() {
     interpreter.text = factory.terminal(/text/, function() {});
     interpreter.lineBreak = factory.terminal(/\n/, function() {});
     interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-    factory.debugging = true;
+
     try {
-      interpreter.paragraph("Something else\n");
+      interpreter.paragraph("Something else\n", true);
     } catch(e) {}
     
     expect(console.log).toHaveBeenCalledWith("<%s>", "text");

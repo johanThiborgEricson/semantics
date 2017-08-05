@@ -1,6 +1,7 @@
-function CodePointer(code) {
+function CodePointer(code, debugging) {
   var that = Object.create(CodePointer.prototype);
   that._code = code;
+  that._debugging = debugging;
   that._pointer = 0;
   that.parseErrorDescription = {
     actuallCode: {
@@ -25,17 +26,17 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
-.logParseStart = function(name, isDebugging) {
-  if(isDebugging) {
+.logParseStart = function(name) {
+  if(this._debugging) {
     console.log("<%s>", name);
   }
 };
 
 CodePointer.prototype
-.logParseEnd = function(name, parseSuccess, isDebugging) {
+.logParseEnd = function(name, parseSuccess) {
   var message 
   = parseSuccess ? "Successfully parsed %s." : "Failed to parse %s.";
-  if(isDebugging) {
+  if(this._debugging) {
     console.log(message, name);
     console.log("</%s>", name);
   }

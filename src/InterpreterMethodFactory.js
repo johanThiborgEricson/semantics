@@ -11,23 +11,23 @@ InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
   var methodFactory = this;
-  var method = function(code) {
+  var method = function(code, debugging) {
     var name = methodFactory.nameOf(this, method);
     
     if(code instanceof CodePointer) {
-      code.logParseStart(name, methodFactory.debugging);
+      code.logParseStart(name);
       var backup = code.backup();
       var maybeInstruction = instructionMaker(code, this);
       if(!maybeInstruction){
         code.restore(backup);
       }
       
-      code.logParseEnd(name, !!maybeInstruction, methodFactory.debugging);
+      code.logParseEnd(name, !!maybeInstruction);
       return maybeInstruction;
     }
     
-    var codePointer = methodFactory.CodePointer(code);
-    codePointer.logParseStart(name, methodFactory.debugging);
+    var codePointer = methodFactory.CodePointer(code, debugging);
+    codePointer.logParseStart(name);
     var instruction = instructionMaker(codePointer, this);
     var error;
     
@@ -39,7 +39,7 @@ InterpreterMethodFactory.prototype
       error = new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");
     }
     
-    codePointer.logParseEnd(name, !!instruction, methodFactory.debugging);
+    codePointer.logParseEnd(name, !!instruction);
     
     if(error) throw error;
     
