@@ -19,28 +19,29 @@ InterpreterMethodFactory.prototype
       var backup = code.backup();
       var maybeInstruction = instructionMaker(code, this);
       if(!maybeInstruction){
-        code.logParseFail(name, methodFactory.debugging);
         code.restore(backup);
-      } else {
-        code.logParseSuccess(name, methodFactory.debugging);
       }
       
+      code.logParseEnd(name, !!maybeInstruction, methodFactory.debugging);
       return maybeInstruction;
     }
     
     var codePointer = methodFactory.CodePointer(code);
     codePointer.logParseStart(name, methodFactory.debugging);
     var instruction = instructionMaker(codePointer, this);
-    if(!instruction) {
-      codePointer.logParseFail(name, methodFactory.debugging);
-      throw new Error(codePointer.getParseErrorDescription());
-    } else {
-        codePointer.logParseSuccess(name, methodFactory.debugging);
-      }
+    var error;
     
-    if(codePointer.getUnparsed() !== "") {
-      throw new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");
+    
+    
+    if(!instruction) {
+      error = new Error(codePointer.getParseErrorDescription());
+    } else if(codePointer.getUnparsed() !== "") {
+      error = new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");
     }
+    
+    codePointer.logParseEnd(name, !!instruction, methodFactory.debugging);
+    
+    if(error) throw error;
     
     return instruction(this);
   };

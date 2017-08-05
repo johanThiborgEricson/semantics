@@ -32,19 +32,14 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
-.logParseFail = function(name, isDebugging) {
+.logParseEnd = function(name, parseSuccess, isDebugging) {
+  var message 
+  = parseSuccess ? "Successfully parsed %s." : "Failed to parse %s.";
   if(isDebugging) {
-    console.log("Failed to parse %s.", name);
+    console.log(message, name);
     console.log("</%s>", name);
   }
-};
-
-CodePointer.prototype
-.logParseSuccess = function(name, isDebugging) {
-  if(isDebugging) {
-    console.log("Successfully parsed %s.", name);
-    console.log("</%s>", name);
-  }
+  
 };
 
 CodePointer.prototype
