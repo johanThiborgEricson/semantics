@@ -23,7 +23,7 @@ describe("InterpreterMethodFactory().makeMethod(instructionMaker)" +
       var codePointer = CodePointer();
       expect(interpreter.method(codePointer))
       .toEqual("instruction maker result");
-      expect(instructionMaker).toHaveBeenCalledWith(codePointer, interpreter);
+      expect(instructionMaker).toHaveBeenCalledWith(codePointer, interpreter, undefined);
     });
     
   });
@@ -50,7 +50,7 @@ describe("InterpreterMethodFactory().makeMethod(instructionMaker)" +
     interpreter.method = methodFactory.makeMethod(instructionMaker);
     interpreter.method();
     expect(instructionMaker)
-    .toHaveBeenCalledWith(codePointer, interpreter);
+    .toHaveBeenCalledWith(codePointer, interpreter, "method");
   });
   
   it("throws an error if !instructionMaker(codePointer)", function() {

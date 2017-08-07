@@ -19,7 +19,7 @@ InterpreterMethodFactory.prototype
   var method = function(code, debuggingOrMethodName) {
     var codePointer;
     var isInternalCall = false;
-    var name = methodFactory.nameOf(this, method);
+    var name;
     var backup;
     var maybeInstruction;
     var result;
@@ -35,7 +35,7 @@ InterpreterMethodFactory.prototype
     
     codePointer.logParseStart(name);
     backup = codePointer.backup();
-    maybeInstruction = instructionMaker(codePointer, this);
+    maybeInstruction = instructionMaker(codePointer, this, name);
     if(!maybeInstruction){
       codePointer.restore(backup);
     }
