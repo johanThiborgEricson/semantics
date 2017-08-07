@@ -15,3 +15,18 @@ Move debugging setting to parameter.
 Trailing code should be printed as a parse fail.
 Print CodePointer parsing result if debugging is turned on.
 How does deffered executions get their this value?
+If a recursive call has itself as its first nonTerminal, will it lead to an 
+  infinit loop? Is this detectable? Maintain a list of successfully parsed 
+  subinstructions. Check if it current parse method name is in it. Discard on
+  parse failure. What happens if many methods are the same function?
+  var maybeInstruction = interpreter[name](cp) -> 
+  var e = new TypeError("TypeError: "+name+" is not an interpreter method");
+  if(!(interpreter[methodName] instanceof Function)) {
+    throw e;
+  }
+  var mi = interpreter[name](cp);
+  if(!(mi instanceof Function || !mi)) {
+    throw e;
+  }
+  return mi;
+Move CodePointer method tests to specInterpreterCodePointer.js, except parse

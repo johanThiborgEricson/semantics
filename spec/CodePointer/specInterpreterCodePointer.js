@@ -4,5 +4,4 @@ describe("InterpreterMethodFactory().CodePointer()", function() {
     expect(mf.CodePointer).toBeDefined();
   });
   
-  // TODO: move CodePointer method tests here, except parse
 });
