@@ -7,6 +7,11 @@ InterpreterMethodFactory = function() {
   return that;
 };
 
+InterpreterMethodFactory
+.callInterpreterMethod = function(interpreter, methodName, codePointer) {
+  return interpreter[methodName](codePointer);
+};
+
 InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
@@ -118,7 +123,8 @@ InterpreterMethodFactory.prototype
         }
       } else { // name instanceof String
         stringNames.push(name);
-        var maybeInstruction = interpreter[name](codePointer);
+        var maybeInstruction = InterpreterMethodFactory
+            .callInterpreterMethod(interpreter, name, codePointer);
         if(!maybeInstruction) {
           return null;
         }
@@ -159,7 +165,8 @@ InterpreterMethodFactory.prototype
     var parseSuccess = false;
     var i = 0;
     while(!parseSuccess && i < alternatives.length) {
-      parseSuccess = interpreter[alternatives[i++]](codePointer);
+      parseSuccess = InterpreterMethodFactory
+          .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
     }
     
     return parseSuccess;
@@ -175,7 +182,8 @@ InterpreterMethodFactory.prototype
     var maybeInstruction = true;
     var instructions = [];
     while(maybeInstruction) {
-      maybeInstruction = interpreter[name](codePointer);
+      maybeInstruction = InterpreterMethodFactory
+          .callInterpreterMethod(interpreter, name, codePointer);
       instructions.push(maybeInstruction);
     }
     
@@ -202,7 +210,8 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .nonTerminalQuestionMark = function(name, defaultReturnValue) {
   var instructionMaker = function(codePointer, interpreter) {
-    var maybeInstruction = interpreter[name](codePointer);
+    var maybeInstruction = InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, name, codePointer);
     var instruction = function(interpreter) {
       var result;
       if(maybeInstruction) {
@@ -223,7 +232,8 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .deferredExecution = function(name) {
   var instructionMaker = function(codePointer, interpreter) {
-    var instructionToDeferre = interpreter[name](codePointer);
+    var instructionToDeferre = InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, name, codePointer);
     var instruction = function(interpreter) {
       return instructionToDeferre;
     };
