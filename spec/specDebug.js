@@ -228,4 +228,20 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("Match failed");
   });
   
+  they("can tell the name of the called method, even if there are other " + 
+  "methods with the same function", function() {
+    var interpreter = {};
+    var factory = new InterpreterMethodFactory();
+    spyOn(console, "log");
+    
+    interpreter.a1 = factory.terminal(/a/, function() {});
+    interpreter.a2 = interpreter.a1;
+    interpreter.aa = factory.nonTerminalSequence("a1", "a2", function() {});
+
+    interpreter.aa("aa", true);
+    
+    expect(console.log).toHaveBeenCalledWith("<%s>", "a1");
+    expect(console.log).toHaveBeenCalledWith("<%s>", "a2");
+  });
+  
 });

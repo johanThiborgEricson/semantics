@@ -9,14 +9,14 @@ InterpreterMethodFactory = function() {
 
 InterpreterMethodFactory
 .callInterpreterMethod = function(interpreter, methodName, codePointer) {
-  return interpreter[methodName](codePointer);
+  return interpreter[methodName](codePointer, methodName);
 };
 
 InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
   var methodFactory = this;
-  var method = function(code, debugging) {
+  var method = function(code, debuggingOrMethodName) {
     var codePointer;
     var isInternalCall = false;
     var name = methodFactory.nameOf(this, method);
@@ -27,8 +27,10 @@ InterpreterMethodFactory.prototype
     if(code instanceof CodePointer) {
       codePointer = code;
       isInternalCall = true;
+      name = debuggingOrMethodName;
     } else {
-      codePointer = methodFactory.CodePointer(code, debugging);
+      codePointer = methodFactory.CodePointer(code, debuggingOrMethodName);
+      name = methodFactory.nameOf(this, method);
     }
     
     codePointer.logParseStart(name);

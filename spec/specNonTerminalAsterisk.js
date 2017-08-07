@@ -21,7 +21,7 @@ function() {
     interpreter.asterisk = methodFactory.nonTerminalAsterisk("name");
     var codePointer = CodePointer("");
     interpreter.asterisk(codePointer);
-    expect(interpreter.name).toHaveBeenCalledWith(codePointer);
+    expect(interpreter.name).toHaveBeenCalledWith(codePointer, "name");
     expect(interpreter.name.calls.count()).toBe(1);
   });
   

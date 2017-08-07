@@ -35,7 +35,7 @@ function() {
     .nonTerminalSequence("name1");
     var codePointer = CodePointer();
     interpreter.sequence(codePointer);
-    expect(interpreter.name1).toHaveBeenCalledWith(codePointer);
+    expect(interpreter.name1).toHaveBeenCalledWith(codePointer, "name1");
   });
   
   it("with n = 2, calls the methods name1 and name2", function() {

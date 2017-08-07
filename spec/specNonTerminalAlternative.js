@@ -22,7 +22,7 @@ describe("InterpreterMethodFactory()" +
     interpreter.alternative = methodFactory.nonTerminalAlternative("name1");
     var codePointer = CodePointer();
     expect(interpreter.alternative(codePointer)).toEqual("instruction 1");
-    expect(interpreter.name1).toHaveBeenCalledWith(codePointer);
+    expect(interpreter.name1).toHaveBeenCalledWith(codePointer, "name1");
   });
   
   it("if k = m = 2, returns the reslut of calling name2", function() {
