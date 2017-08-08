@@ -3,6 +3,7 @@ function CodePointer(code, debugging) {
   that._code = code;
   that._debugging = debugging;
   that._pointer = 0;
+  that.stack = {};
   that.parseErrorDescription = {
     actuallCode: {
       length: Infinity,
@@ -33,6 +34,16 @@ CodePointer.prototype
   
   this._pointer += match[0].length;
   return match.slice(1);
+};
+
+CodePointer.prototype
+.reportCall = function(methodName) {
+  if(this.stack[methodName]) {
+    this.recursionDetected = true;
+  } else {
+    this.recursionDetected = false;
+    this.stack[methodName] = methodName;
+  }
 };
 
 CodePointer.prototype

@@ -164,11 +164,34 @@ InterpreterMethodFactory.prototype
   "use strict";
   var alternatives = Array.prototype.slice.call(arguments);
   var instructionMaker = function(codePointer, interpreter, methodName) {
+    codePointer.reportCall(methodName);
+    if(codePointer.recursionDetected) {
+      return codePointer.parsedHead;
+    }
+    
     var parseSuccess = false;
     var i = 0;
     while(!parseSuccess && i < alternatives.length) {
       parseSuccess = InterpreterMethodFactory
           .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
+    }
+    
+    if(codePointer.recursionDetected) {
+      codePointer.parsedHead = parseSuccess;
+      while(parseSuccess) {
+        parseSuccess = false;
+        i = 0;
+        while(!parseSuccess && i < alternatives.length-1) {
+          parseSuccess = InterpreterMethodFactory
+              .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
+          if(parseSuccess) {
+            codePointer.parsedHead = parseSuccess;
+          }
+        }
+      }
+      
+      return codePointer.parsedHead;
+      
     }
     
     return parseSuccess;
