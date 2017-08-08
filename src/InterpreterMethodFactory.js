@@ -163,7 +163,7 @@ InterpreterMethodFactory.prototype
 .nonTerminalAlternative = function() {
   "use strict";
   var alternatives = Array.prototype.slice.call(arguments);
-  var instructionMaker = function(codePointer, interpreter) {
+  var instructionMaker = function(codePointer, interpreter, methodName) {
     var parseSuccess = false;
     var i = 0;
     while(!parseSuccess && i < alternatives.length) {
