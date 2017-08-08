@@ -190,8 +190,8 @@ InterpreterMethodFactory.prototype
         }
       }
       
+      codePointer.recursionDone(methodName);
       return codePointer.parsedHead;
-      
     }
     
     return parseSuccess;

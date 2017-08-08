@@ -6,15 +6,16 @@ describe("Head recursion", function() {
     return x;
   };
   
+  var noop = function() {};
+  
   beforeEach(function() {
     i = {};
-  });
-  
-  it("doesn't cause an infinite loop", function() {
     i.a = f.terminal(/a/, function() {});
     i.aa = f.nonTerminalAlternative("aa0", "a");
     i.aa0 = f.nonTerminalSequence("aa", "a", function() {});
-    
+  });
+  
+  it("doesn't cause an infinite loop", function() {
     expect(function() {
       i.aa("a");
     }).not.toThrow();
@@ -22,10 +23,6 @@ describe("Head recursion", function() {
   });
   
   it("can make one recursive call", function() {
-    i.a = f.terminal(/a/, function() {});
-    i.aa = f.nonTerminalAlternative("aa0", "a");
-    i.aa0 = f.nonTerminalSequence("aa", "a", function() {});
-    
     expect(function() {
       i.aa("aa");
     }).not.toThrow();
@@ -33,10 +30,6 @@ describe("Head recursion", function() {
   });
   
   it("can make two recursive calls", function() {
-    i.a = f.terminal(/a/, function() {});
-    i.aa = f.nonTerminalAlternative("aa0", "a");
-    i.aa0 = f.nonTerminalSequence("aa", "a", function() {});
-    
     expect(function() {
       i.aa("aaa");
     }).not.toThrow();
@@ -51,6 +44,14 @@ describe("Head recursion", function() {
     });
     
     expect(i.ads("abcd")).toBe("abcd");
+  });
+  
+  it("can occure at many places in a text", function() {
+    i.aaxaa = f.nonTerminalSequence("aa", /x/, "aa", noop);
+    
+    expect(function() {
+      i.aaxaa("axa");
+    }).not.toThrow();
   });
   
 });

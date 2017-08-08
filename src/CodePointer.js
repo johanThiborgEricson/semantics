@@ -47,6 +47,11 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
+.recursionDone = function(methodName) {
+  delete this.stack[methodName];
+};
+
+CodePointer.prototype
 .logParseStart = function(name) {
   if(this._debugging) {
     console.log("<%s>", name);
