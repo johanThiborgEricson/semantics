@@ -190,5 +190,13 @@ function() {
       interpreter.a("b");
     }).toThrowError("Expected /^a/ to match 'b'.");
   });
+  
+  it("reads the last regexp", function() {
+    interpreter.a = methodFactory.nonTerminalSequence(/a/);
+    
+    expect(function() {
+      interpreter.a("a");
+    }).not.toThrow();
+  });
 
 });

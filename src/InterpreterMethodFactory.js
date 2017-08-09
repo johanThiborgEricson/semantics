@@ -18,17 +18,18 @@ InterpreterMethodFactory.prototype
   var methodFactory = this;
   var method = function(code, debuggingOrMethodName) {
     var codePointer;
-    var isInternalCall = false;
+    var isInternalCall;
     var name;
     var backup;
     var maybeInstruction;
     var result;
     
     if(code instanceof CodePointer) {
-      codePointer = code;
       isInternalCall = true;
+      codePointer = code;
       name = debuggingOrMethodName;
     } else {
+      isInternalCall = false;
       codePointer = methodFactory.CodePointer(code, debuggingOrMethodName);
       name = methodFactory.nameOf(this, method);
     }
@@ -106,11 +107,11 @@ InterpreterMethodFactory.prototype
   var names;
   var interpretation;
 
-  if(typeof arguments[arguments.length - 1] === "string") {
-    names = Array.prototype.slice.call(arguments);
-  } else {
+  if(arguments[arguments.length - 1] instanceof Function) {
     interpretation = arguments[arguments.length - 1];
     names = Array.prototype.slice.call(arguments, 0, -1);
+  } else {
+    names = Array.prototype.slice.call(arguments);
   }
   
   var instructionMaker = function(codePointer, interpreter) {
