@@ -171,9 +171,11 @@ InterpreterMethodFactory.prototype
     
     var parseSuccess = false;
     var i = 0;
+    var baseCase;
     while(!parseSuccess && i < alternatives.length) {
       parseSuccess = InterpreterMethodFactory
           .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
+      baseCase = parseSuccess?i-1:i;
     }
     
     if(codePointer.recursionDetected) {
@@ -181,7 +183,7 @@ InterpreterMethodFactory.prototype
       while(parseSuccess) {
         parseSuccess = false;
         i = 0;
-        while(!parseSuccess && i < alternatives.length-1) {
+        while(!parseSuccess && i < baseCase) {
           parseSuccess = InterpreterMethodFactory
               .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
           if(parseSuccess) {

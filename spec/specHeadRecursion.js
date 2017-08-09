@@ -13,6 +13,7 @@ describe("Head recursion", function() {
     i.a = f.terminal(/a/, function() {});
     i.aa = f.nonTerminalAlternative("aa0", "a");
     i.aa0 = f.nonTerminalSequence("aa", "a", function() {});
+    i.b = f.terminal(/b/, noop);
   });
   
   it("doesn't cause an infinite loop", function() {
@@ -55,13 +56,31 @@ describe("Head recursion", function() {
   });
   
   it("can choose between many heads", function() {
-    i.b = f.terminal(/b/, noop);
     i.aaabaa = f.nonTerminalAlternative("aaabaa1", "a", "b");
     i.aaabaa1 = f.nonTerminalSequence("aaabaa", "a");
     
     expect(function(){
       i.aaabaa("ba");
     }).not.toThrow();
+  });
+  
+  it("can choose between many continuations", function() {
+    i.abab = f.nonTerminalAlternative("abab1", "abab2", "a");
+    i.abab1 = f.nonTerminalSequence("abab", "a", noop);
+    i.abab2 = f.nonTerminalSequence("abab", "b", noop);
+    
+    expect(function() {
+      i.abab("ab");
+    }).not.toThrow();
+  });
+  
+  it("doesn't parse the found base case as a continuation", function() {
+    i.abbbbb = f.nonTerminalAlternative("abbbbb1", "a", "b");
+    i.abbbbb1 = f.nonTerminalSequence("abbbbb", "b");
+    
+    expect(function(){
+      i.abbbbb("aa");
+    }).toThrowError("Trailing code: 'a'.");
   });
   
 });
