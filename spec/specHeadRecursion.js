@@ -54,4 +54,14 @@ describe("Head recursion", function() {
     }).not.toThrow();
   });
   
+  it("can choose between many heads", function() {
+    i.b = f.terminal(/b/, noop);
+    i.aaabaa = f.nonTerminalAlternative("aaabaa1", "a", "b");
+    i.aaabaa1 = f.nonTerminalSequence("aaabaa", "a");
+    
+    expect(function(){
+      i.aaabaa("ba");
+    }).not.toThrow();
+  });
+  
 });
