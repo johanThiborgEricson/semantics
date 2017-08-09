@@ -14,6 +14,7 @@ describe("Head recursion", function() {
     i.aa = f.nonTerminalAlternative("aa0", "a");
     i.aa0 = f.nonTerminalSequence("aa", "a", function() {});
     i.b = f.terminal(/b/, noop);
+    i.c = f.terminal(/c/, noop);
   });
   
   it("doesn't cause an infinite loop", function() {
@@ -75,12 +76,13 @@ describe("Head recursion", function() {
   });
   
   it("doesn't parse the found base case as a continuation", function() {
-    i.abbbbb = f.nonTerminalAlternative("abbbbb1", "a", "b");
-    i.abbbbb1 = f.nonTerminalSequence("abbbbb", "b");
+    i.program = f.nonTerminalSequence("accbcc", /a/, noop);
+    i.accbcc = f.nonTerminalAlternative("accbcc1", "a", "b");
+    i.accbcc1 = f.nonTerminalSequence("accbcc", "c");
     
     expect(function(){
-      i.abbbbb("aa");
-    }).toThrowError("Trailing code: 'a'.");
+      i.program("aa");
+    }).not.toThrow();
   });
   
 });
