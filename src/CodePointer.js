@@ -37,21 +37,6 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
-.reportCall = function(methodName) {
-  if(this.stack[methodName]) {
-    this.recursionDetected = true;
-  } else {
-    this.recursionDetected = false;
-    this.stack[methodName] = methodName;
-  }
-};
-
-CodePointer.prototype
-.recursionDone = function(methodName) {
-  delete this.stack[methodName];
-};
-
-CodePointer.prototype
 .logParseStart = function(name) {
   if(this._debugging) {
     console.log("<%s>", name);

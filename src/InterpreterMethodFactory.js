@@ -165,36 +165,11 @@ InterpreterMethodFactory.prototype
   "use strict";
   var alternatives = Array.prototype.slice.call(arguments);
   var instructionMaker = function(codePointer, interpreter, methodName) {
-    codePointer.reportCall(methodName);
-    if(codePointer.recursionDetected) {
-      return codePointer.parsedHead;
-    }
-    
     var parseSuccess = false;
     var i = 0;
-    var baseCase;
     while(!parseSuccess && i < alternatives.length) {
       parseSuccess = InterpreterMethodFactory
           .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
-      baseCase = parseSuccess?i-1:i;
-    }
-    
-    if(codePointer.recursionDetected) {
-      codePointer.parsedHead = parseSuccess;
-      while(parseSuccess) {
-        parseSuccess = false;
-        i = 0;
-        while(!parseSuccess && i < baseCase) {
-          parseSuccess = InterpreterMethodFactory
-              .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
-          if(parseSuccess) {
-            codePointer.parsedHead = parseSuccess;
-          }
-        }
-      }
-      
-      codePointer.recursionDone(methodName);
-      return codePointer.parsedHead;
     }
     
     return parseSuccess;
