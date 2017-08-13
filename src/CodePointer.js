@@ -3,7 +3,6 @@ function CodePointer(code, debugging) {
   that._code = code;
   that._debugging = debugging;
   that._pointer = 0;
-  that.stack = {};
   that.parseErrorDescription = {
     actuallCode: {
       length: Infinity,

@@ -29,3 +29,10 @@ If a recursive call has itself as its first nonTerminal, will it lead to an
 Move CodePointer method tests to specInterpreterCodePointer.js, except parse
 Clean up specDebug.js
 Distinguish between the name of the current method and the subinstructions.
+
+token.toString() -> token.toString().replace(/^\/\^?/, "/^")
+Extract two methods from makeMethod, everything before the call to instruction 
+  maker and everything after.
+  
+Todo, fix specNonTerminalalternative.js disabeled tests.
+
