@@ -12,51 +12,61 @@ InterpreterMethodFactory
   return interpreter[methodName](codePointer, methodName);
 };
 
+InterpreterMethodFactory.preInstructionMaker = 
+function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
+  var v = {};
+
+  if(code instanceof CodePointer) {
+    v.isInternalCall = true;
+    v.codePointer = code;
+    v.name = debuggingOrMethodName;
+  } else {
+    v.isInternalCall = false;
+    v.codePointer = methodFactory.CodePointer(code, debuggingOrMethodName);
+    v.name = methodFactory.nameOf(interpreter, method);
+  }
+  
+  v.codePointer.logParseStart(v.name);
+  v.backup = v.codePointer.backup();
+  
+  return v;
+};
+
+InterpreterMethodFactory.postInstructionMaker = 
+function(v, interpreter, maybeInstruction) {
+  var result;
+  if(!maybeInstruction){
+    v.codePointer.restore(v.backup);
+  }
+  
+  v.codePointer.logParseEnd(v.name, !!maybeInstruction);
+  if(v.isInternalCall) {
+    result = maybeInstruction;
+  } else { // isExternalCall
+    if(!maybeInstruction) {
+      throw new Error(v.codePointer.getParseErrorDescription());
+    } else if(v.codePointer.getUnparsed() !== "") {
+      throw new Error("Trailing code: '" + v.codePointer.getUnparsed() + "'.");
+    } else {
+      result = maybeInstruction(interpreter);
+    }
+    
+  }
+  
+  return result;
+  
+};
+
 InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
   var methodFactory = this;
   var method = function(code, debuggingOrMethodName) {
-    var codePointer;
-    var isInternalCall;
-    var name;
-    var backup;
-    var maybeInstruction;
-    var result;
-    
-    if(code instanceof CodePointer) {
-      isInternalCall = true;
-      codePointer = code;
-      name = debuggingOrMethodName;
-    } else {
-      isInternalCall = false;
-      codePointer = methodFactory.CodePointer(code, debuggingOrMethodName);
-      name = methodFactory.nameOf(this, method);
-    }
-    
-    codePointer.logParseStart(name);
-    backup = codePointer.backup();
-    maybeInstruction = instructionMaker(codePointer, this, name);
-    if(!maybeInstruction){
-      codePointer.restore(backup);
-    }
-    codePointer.logParseEnd(name, !!maybeInstruction);
-    
-    if(isInternalCall) {
-      result = maybeInstruction;
-    } else { // isExternalCall
-      if(!maybeInstruction) {
-        throw new Error(codePointer.getParseErrorDescription());
-      } else if(codePointer.getUnparsed() !== "") {
-        throw new Error("Trailing code: '" + codePointer.getUnparsed() + "'.");
-      } else {
-        result = maybeInstruction(this);
-      }
-      
-    }
-    
-    return result;
-    
+    var v = InterpreterMethodFactory.preInstructionMaker(this, methodFactory, 
+    method, code, debuggingOrMethodName);
+    var maybeInstruction = instructionMaker(v.codePointer, this, v.name);
+    return InterpreterMethodFactory.
+        postInstructionMaker(v, this, maybeInstruction);
   };
   
   return method;
