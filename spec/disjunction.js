@@ -1,0 +1,46 @@
+describe("A disjunction", function() {
+  var f = new InterpreterMethodFactory();
+  var i;
+  var id = function(x) {
+    return x;
+  };
+  
+  beforeEach(function() {
+    i = {};
+    i.a = f.terminal(/(a)/, id);
+    i.b = f.terminal(/(b)/, id);
+  });
+  
+  it("returns the first alternative if it was parsed successfully", function() {
+    i.da = f.disjunction("a");
+    
+    expect(i.da("a")).toBe("a");
+  });
+  
+  it("expects at least one alternative", function() {
+    var eString = "A disjunction needs at least one alternative.";
+    expect(function() {
+      f.disjunction();
+    }).toThrowError(eString);
+  });
+  
+  it("fails if its only alternative fails", function() {
+    i.da = f.disjunction("a");
+    
+    expect(function() {
+      i.da("b");
+    }).toThrow();
+  });
+  
+  it("returns the second alternative if the first fails to parse", function() {
+    i.dba = f.disjunction("b", "a");
+    expect(i.dba("a")).toBe("a");
+  });
+  
+  it("returns the third alternative if the first two alternatives fails to " + 
+  "parse", function() {
+    i.dba = f.disjunction("b", "b", "a");
+    expect(i.dba("a")).toBe("a");
+  });
+  
+});

@@ -35,4 +35,6 @@ Extract two methods from makeMethod, everything before the call to instruction
   maker and everything after.
   
 Todo, fix specNonTerminalalternative.js disabeled tests.
-
+Make better error message for InterpreterMethodFactory.prototype
+  .makeMethod(function(){return null;});
+  current is Expected /^undefined/ to match '[object Object]'.

@@ -179,6 +179,28 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.disjunction = function() {
+  if(arguments.length === 0) {
+    throw new Error("A disjunction needs at least one alternative.");
+  }
+  
+  var alternativesNames = arguments;
+  
+  var instructionMaker = function(codePointer, interpreter, methodName) {
+    var maybeInstruction = null;
+    var i = 0;
+    while(!maybeInstruction) {
+      maybeInstruction = InterpreterMethodFactory
+      .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
+    }
+    
+    return maybeInstruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
 .nonTerminalAsterisk = function(name, interpretation) {
   "use strict";
   var instructionMaker = function(codePointer, interpreter) {
