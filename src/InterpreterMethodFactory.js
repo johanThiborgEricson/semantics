@@ -189,7 +189,7 @@ InterpreterMethodFactory.prototype
   var instructionMaker = function(codePointer, interpreter, methodName) {
     var maybeInstruction = null;
     var i = 0;
-    while(!maybeInstruction) {
+    while(!maybeInstruction && i < alternativesNames.length) {
       maybeInstruction = InterpreterMethodFactory
       .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
     }

@@ -9,6 +9,7 @@ describe("A disjunction", function() {
     i = {};
     i.a = f.terminal(/(a)/, id);
     i.b = f.terminal(/(b)/, id);
+    i.c = f.terminal(/(c)/, id);
   });
   
   it("returns the first alternative if it was parsed successfully", function() {
@@ -24,14 +25,6 @@ describe("A disjunction", function() {
     }).toThrowError(eString);
   });
   
-  it("fails if its only alternative fails", function() {
-    i.da = f.disjunction("a");
-    
-    expect(function() {
-      i.da("b");
-    }).toThrow();
-  });
-  
   it("returns the second alternative if the first fails to parse", function() {
     i.dba = f.disjunction("b", "a");
     expect(i.dba("a")).toBe("a");
@@ -41,6 +34,14 @@ describe("A disjunction", function() {
   "parse", function() {
     i.dba = f.disjunction("b", "b", "a");
     expect(i.dba("a")).toBe("a");
+  });
+  
+  it("fails if all its alternatives fail", function() {
+    
+    i.outerDisjunction = f.disjunction("dab", "c");
+    i.dab = f.disjunction("a", "b");
+
+    expect(i.outerDisjunction("c")).toBe("c");
   });
   
 });
