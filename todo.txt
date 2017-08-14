@@ -36,3 +36,5 @@ Todo, fix specNonTerminalalternative.js disabeled tests.
 Make better error message for InterpreterMethodFactory.prototype
   .makeMethod(function(){return null;});
   current is Expected /^undefined/ to match '[object Object]'.
+Detect if recursive call is necessary by resetting and setting a boolean in 
+  head.

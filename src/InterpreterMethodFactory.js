@@ -197,11 +197,42 @@ InterpreterMethodFactory.prototype
   var alternativesNames = arguments;
   
   var instructionMaker = function(codePointer, interpreter, methodName) {
+    var cp = codePointer;
+    var p = cp._pointer;
+    var heads = cp.heads[p] = cp.heads[p] || {};
     var maybeInstruction = null;
-    var i = 0;
-    while(!maybeInstruction && i < alternativesNames.length) {
-      maybeInstruction = InterpreterMethodFactory
-      .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
+    var i;
+    var cache = null;
+    var head = {};
+    if(heads[methodName]) {
+      cp._pointer = heads[methodName].end;
+      return heads[methodName].cache;
+    } else {
+      heads[methodName] = head;
+    }
+    
+    head.end = -1;
+    var hasProgressed = true;
+    
+    while(hasProgressed) {
+      head.cache = maybeInstruction;
+      head.end = cp._pointer;
+      
+      cp._pointer = p;
+      maybeInstruction = null;
+      i = 0;
+      while(!maybeInstruction && i < alternativesNames.length) {
+        maybeInstruction = InterpreterMethodFactory
+        .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
+      }
+      
+      hasProgressed = cp._pointer > head.end;
+      
+      if(!maybeInstruction || !hasProgressed) {
+        cp._pointer = head.end;
+        maybeInstruction = head.cache;
+      }
+        
     }
     
     return maybeInstruction;
