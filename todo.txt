@@ -38,3 +38,4 @@ Make better error message for InterpreterMethodFactory.prototype
   current is Expected /^undefined/ to match '[object Object]'.
 Detect if recursive call is necessary by resetting and setting a boolean in 
   head.
+Make disjunctions greedy

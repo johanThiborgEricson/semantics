@@ -211,9 +211,18 @@ InterpreterMethodFactory.prototype
       heads[methodName] = head;
     }
     
-    head.end = -1;
-    var hasProgressed = true;
+    maybeInstruction = null;
+    i = 0;
+    while(!maybeInstruction && i < alternativesNames.length) {
+      maybeInstruction = InterpreterMethodFactory
+      .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
+    }
     
+    if(!maybeInstruction) {
+      return null;
+    }
+    var hasProgressed = true;
+
     while(hasProgressed) {
       head.cache = maybeInstruction;
       head.end = cp._pointer;
