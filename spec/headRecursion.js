@@ -66,7 +66,7 @@ describe("Head recursion", function() {
       return as1+as2+as3;
     });
     
-    expect(interpreter.as3("", true)).toBe("e1e2e3");
+    expect(interpreter.as3("")).toBe("e1e2e3");
   });
   
   it("can have many heads at the same position in the code", function() {

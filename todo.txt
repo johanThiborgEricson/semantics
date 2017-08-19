@@ -39,3 +39,10 @@ Make better error message for InterpreterMethodFactory.prototype
 Detect if recursive call is necessary by resetting and setting a boolean in 
   head.
 Make disjunctions greedy
+disjunction => or|any|longest any suggests that some will be choosen. This 
+  will not be the case if all fails. Longest is only if it is made greedy, but 
+  or will make sense to programmers even if it isn't
+terminal => atom? Borrowed from RegExps source element
+nonTerminalQuestionMark => opt? Borrowed from JS-syntax subscripts
+nonTerminalSequence => group Borrowed from RegExp (non)?capturing groups
+Move the static methods of InterpreterMethodFactory into a closure

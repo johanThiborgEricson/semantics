@@ -283,6 +283,37 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.star = function(partName, interpretation) {
+  "use strict";
+  var instructionMaker = function(codePointer, interpreter) {
+    var partInstructions = [];
+    var maybeInstruction = InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, partName, codePointer);
+    while(maybeInstruction) {
+      partInstructions.push(maybeInstruction);
+      maybeInstruction = InterpreterMethodFactory
+      .callInterpreterMethod(interpreter, partName, codePointer);
+    }
+    
+    var instruction = function(interpreter) {
+      var results = partInstructions.map(function(partInstruction) {
+        return partInstruction(interpreter);
+      });
+      
+      if(interpretation) {
+        results = interpretation.call(interpreter, results);
+      }
+      
+      return results;
+    };
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
 .nonTerminalQuestionMark = function(name, defaultReturnValue) {
   var instructionMaker = function(codePointer, interpreter) {
     var maybeInstruction = InterpreterMethodFactory
