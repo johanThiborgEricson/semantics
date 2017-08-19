@@ -171,7 +171,7 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.nonTerminalAlternative = function() {
+.nonTerminalAlternative2 = function() {
   "use strict";
   var alternatives = Array.prototype.slice.call(arguments);
   var instructionMaker = function(codePointer, interpreter, methodName) {
@@ -245,38 +245,6 @@ InterpreterMethodFactory.prototype
     }
     
     return maybeInstruction;
-  };
-  
-  return this.makeMethod(instructionMaker);
-};
-
-InterpreterMethodFactory.prototype
-.nonTerminalAsterisk = function(name, interpretation) {
-  "use strict";
-  var instructionMaker = function(codePointer, interpreter) {
-    var maybeInstruction = true;
-    var instructions = [];
-    while(maybeInstruction) {
-      maybeInstruction = InterpreterMethodFactory
-          .callInterpreterMethod(interpreter, name, codePointer);
-      instructions.push(maybeInstruction);
-    }
-    
-    instructions.pop();
-    
-    var instruction = function(interpreter) {
-      var results = instructions.map(function(subInstruction) {
-        return subInstruction(interpreter);
-      });
-      
-      if(interpretation) {
-        return interpretation.call(interpreter, results);
-      } else {
-        return results;
-      }
-    };
-    
-    return instruction;
   };
   
   return this.makeMethod(instructionMaker);
