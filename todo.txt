@@ -36,3 +36,6 @@ Move the static methods of InterpreterMethodFactory into a closure
 Write test case for debugging when the top symbol has a copied twin method.
 Add ^ to match debugging message to emphazise that it is a head match.
 Make debugging report the captured groups of a match
+Allow another this-binding than the interpreter itself.
+Add exeptions to InterpreterMethodFactory.callInterpreterMethod
+Put object result construction in group in its own method.

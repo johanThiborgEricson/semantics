@@ -218,6 +218,74 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.group = function() {
+  "use strict";
+  var partNames;
+  var interpretation = arguments[arguments.length-1];
+  if(interpretation instanceof Function) {
+    partNames = Array.prototype.slice.call(arguments, 0, -1);
+  } else {
+    interpretation = null;
+    partNames = Array.prototype.slice.call(arguments);
+  }
+  var instructionMaker = function(codePointer, interpreter) {
+    var partInstructions = [];
+
+    for(var i = 0; i < partNames.length; i++) {
+      var partName = partNames[i];
+      if(typeof partName === "string") {
+        var maybeInstruction = InterpreterMethodFactory
+          .callInterpreterMethod(interpreter, partName, codePointer);
+        if(!maybeInstruction){
+          return null;
+        }
+        maybeInstruction.partName = partName;
+        partInstructions.push(maybeInstruction);
+      } else if(partName instanceof RegExp) {
+        if(!codePointer.matchAtPointer(partName)) {
+          return null;
+        }
+      }
+      
+    }
+    
+    var instruction = function(interpreter) {
+      var result = {};
+      var interpretationArguments = [];
+      var nameCount = Object.create(null);
+      partInstructions.map(function(partInstruction) {
+        var partResult = partInstruction(interpreter);
+        interpretationArguments.push(partResult);
+        var name = partInstruction.partName;
+        if(nameCount[name] === undefined) {
+          nameCount[name] = 0;
+        }
+        
+        if(nameCount[name] === 0) {
+          result[name] = partResult;
+        } else if(nameCount[name] === 1) {
+          result[name] = [result[name], partResult];
+        } else {
+          result[name].push(partResult);
+        }
+        
+        nameCount[name]++;
+      });
+      
+      if(interpretation) {
+        result = interpretation.apply(interpreter, interpretationArguments);
+      }
+      
+      return result;
+    };
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
 .nonTerminalAlternative2 = function() {
   "use strict";
   var alternatives = Array.prototype.slice.call(arguments);
