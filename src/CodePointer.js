@@ -38,25 +38,31 @@ CodePointer.prototype
 
 CodePointer.prototype
 .matchAtPointer = function(regExp) {
-  var unparsedCode = this.getUnparsed();
-  var match = regExp.exec(unparsedCode);
-  var remainingLine = /.*/.exec(unparsedCode)[0];
+  var match = regExp.exec(this.getUnparsed());
+
+  this.reportMatch(regExp, match);
+  if(match === null || match.index > 0) {
+    this.reportParseError(regExp);
+    return null;
+  }
+  
+  this._pointer += match[0].length;
+  return match;
+};
+
+CodePointer.prototype
+.reportMatch = function(regExp, match) {
+  var remainingLine = /.*/.exec(this.getUnparsed())[0];
   
   if(match === null || match.index > 0) {
     if(this._debugging) {
       console.log("%s.exec(\"%s\") // %s", regExp.toString(), remainingLine, 
       "null");
     }
-    
-    this.reportParseError(regExp);
-    return null;
   } else if(this._debugging) {
     console.log("%s.exec(\"%s\") // %s", regExp.toString(), remainingLine, 
     match[0]);
   }
-  
-  this._pointer += match[0].length;
-  return match;
 };
 
 CodePointer.prototype
