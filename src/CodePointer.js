@@ -38,8 +38,9 @@ CodePointer.prototype
 
 CodePointer.prototype
 .matchAtPointer = function(regExp) {
-  var match = regExp.exec(this._code);
-  if(match === null) {
+  var unparsedCode = this._code.slice(this._pointer);
+  var match = regExp.exec(unparsedCode);
+  if(match === null || match.index > 0) {
     this.reportParseError(regExp);
     return null;
   }

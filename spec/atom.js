@@ -90,4 +90,13 @@ describe("An atom", function() {
     expect(interpreter.a("a")).toBe("result of interpretation");
   });
   
+  it("only accepts matches at the current position in the code", function() {
+    interpreter.b = f.atom(/b/);
+    interpreter.bb = f.nonTerminalSequence("b", "b");
+    
+    expect(function() {
+      interpreter.bb("ab");
+    }).toThrowError("Expected /^b/ to match 'ab'.");
+  });
+  
 });
