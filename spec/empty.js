@@ -1,0 +1,42 @@
+describe("The empty string atom", function() {
+  var interpreter;
+  var f = new InterpreterMethodFactory();
+  var noop = function() {};
+  
+  beforeEach(function() {
+    interpreter = {};
+  });
+  
+  it("parses nothing successfully", function() {
+    interpreter.e = f.empty(noop);
+    
+    expect(function() {
+      interpreter.e("");
+    }).not.toThrow();
+  });
+  
+  it("expects to get an interpretation", function() {
+    expect(function() {
+      f.empty();
+    }).toThrowError("The empty string atom should be called with a function");
+  });
+  
+  it("calls its interpretation and returns the result", function() {
+    var emptySpy = jasmine.createSpy("emptySpy")
+    .and.returnValue("interpretation result");
+    interpreter.e = f.empty(emptySpy);
+    
+    expect(interpreter.e("")).toBe("interpretation result");
+  });
+  
+  it("calls its interpretation as a method on the interpreter", function() {
+    interpreter.initA = f.empty(function() {
+      this.a = "a";
+    });
+    
+    interpreter.initA("");
+    
+    expect(interpreter.a).toBe("a");
+  });
+  
+});

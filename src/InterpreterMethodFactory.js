@@ -136,6 +136,24 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.empty = function(interpretation) {
+  "use strict";
+  if(!interpretation) {
+    throw new Error("The empty string atom should be called with a function");
+  }
+  
+  var instructionMaker = function(codePointer, interpreter) {
+    var instruction = function(interpreter) {
+      return interpretation.call(interpreter);
+    };
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
 .terminalSkip = function(terminal) {
   return this.terminal(terminal, function(){});
 };
