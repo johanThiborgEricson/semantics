@@ -17,19 +17,19 @@ CodePointer.prototype
 .parse = function(token) {
   var unparsedCode = this._code.slice(this._pointer);
   var match = token.exec(unparsedCode);
-  if(this._debugging) {
-    var remainingLine = /[^\n]*/.exec(unparsedCode)[0];
-    console.log("%s.exec(\"%s\")", token.toString(), remainingLine);
-  }
+  var remainingLine = /.*/.exec(unparsedCode)[0];
+
+  var isHeadMatch = match && match.index === 0;
   
-  if(!match || match.index !== 0) {
+  if(!isHeadMatch) {
     if(this._debugging) {
-      console.log("Match failed");
+      console.log("%s.exec(\"%s\") // null", token.toString(), remainingLine);
     }
     this.reportParseError(token);
     return null;
   } else if(this._debugging) {
-    console.log("Matched \"%s\"", match[0]);
+    console.log("%s.exec(\"%s\") // %s", token.toString(), remainingLine, 
+    match[0]);
   }
   
   this._pointer += match[0].length;

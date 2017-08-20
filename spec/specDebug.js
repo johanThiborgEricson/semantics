@@ -65,14 +65,12 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("</%s>", "paragraph");
   });
   
-  // todo: test for match fullness.
   they("if a match is successful, reports success, the regExp, the rest of " + 
   "the current line and the full match", function() {
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", 
-    "text");
-    expect(console.log).toHaveBeenCalledWith("Matched \"%s\"", "text");
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // %s", "/text/", 
+    "text", "text");
   });
   
   they("if a match fails, reports the failure, the regExp and the rest of " + 
@@ -81,12 +79,10 @@ describe("Debugging messages", function() {
       interpreter.paragraph("Something else", true);
     } catch(e) {}
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", 
-    "Something else");
-    expect(console.log).toHaveBeenCalledWith("Match failed");
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // null", 
+    "/text/", "Something else");
   });
   
-  // todo: the same test when called externally
   they("can tell the name of the called method, even if there are other " + 
   "methods with the same function", function() {
     interpreter.a1 = factory.terminal(/a/, function() {});
