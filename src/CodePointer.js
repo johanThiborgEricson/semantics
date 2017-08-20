@@ -51,17 +51,16 @@ CodePointer.prototype
 CodePointer.prototype
 .logParseStart = function(name) {
   if(this._debugging) {
-    console.log("<%s>", name);
+    console.log("%s: parse start", name);
   }
 };
 
 CodePointer.prototype
 .logParseEnd = function(name, parseSuccess) {
   var message 
-  = parseSuccess ? "Successfully parsed %s." : "Failed to parse %s.";
+  = parseSuccess ? "%s: parse success" : "%s: parse fail";
   if(this._debugging) {
     console.log(message, name);
-    console.log("</%s>", name);
   }
   
 };

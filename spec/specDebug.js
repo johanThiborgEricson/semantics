@@ -34,35 +34,30 @@ describe("Debugging messages", function() {
     expect(console.log).not.toHaveBeenCalled();
   });
   
-  they("look like xml and report success when called internally and " + 
-  "externally when successful", 
+  they("report parse start, end and success when called internally and " + 
+  "externally and succeeding", 
   function() {
 
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("<%s>", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", 
-    "paragraph");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s: parse start", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s: parse start", "text");
+    expect(console.log).toHaveBeenCalledWith("%s: parse success", "text");
+    expect(console.log).toHaveBeenCalledWith("%s: parse success", "paragraph");
   });
   
-  they("look like xml report failure when called internally and externally " + 
-  "when failing", 
+  they("report parse start, end and failure when called internally and " + 
+  "externally and failing", 
   function() {
 
     try {
       interpreter.paragraph("Something else\n", true);
     } catch(e) {}
     
-    expect(console.log).toHaveBeenCalledWith("<%s>", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "text");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s: parse start", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s: parse start", "text");
+    expect(console.log).toHaveBeenCalledWith("%s: parse fail", "text");
+    expect(console.log).toHaveBeenCalledWith("%s: parse fail", "paragraph");
   });
   
   they("if a match is successful, reports success, the regExp, the rest of " + 
@@ -91,8 +86,8 @@ describe("Debugging messages", function() {
 
     interpreter.aa("aa", true);
     
-    expect(console.log).toHaveBeenCalledWith("<%s>", "a1");
-    expect(console.log).toHaveBeenCalledWith("<%s>", "a2");
+    expect(console.log).toHaveBeenCalledWith("%s: parse start", "a1");
+    expect(console.log).toHaveBeenCalledWith("%s: parse start", "a2");
   });
   
 });
