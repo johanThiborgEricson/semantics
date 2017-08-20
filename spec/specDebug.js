@@ -6,8 +6,8 @@ describe("Debugging messages", function() {
   
   beforeEach(function() {
     interpreter = {};
-    interpreter.text = factory.terminal(/text/, function() {});
-    interpreter.lineBreak = factory.terminal(/\n/, function() {});
+    interpreter.text = factory.atom(/text/, function() {});
+    interpreter.lineBreak = factory.atom(/\n/, function() {});
     interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
     spyOn(console, "log");
   });
@@ -80,7 +80,7 @@ describe("Debugging messages", function() {
   
   they("can tell the name of the called method, even if there are other " + 
   "methods with the same function", function() {
-    interpreter.a1 = factory.terminal(/a/, function() {});
+    interpreter.a1 = factory.atom(/a/, function() {});
     interpreter.a2 = interpreter.a1;
     interpreter.aa = factory.nonTerminalSequence("a1", "a2", function() {});
 
