@@ -101,6 +101,35 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.atom = function(regExp, interpretation) {
+  "use strict";
+  var instructionMaker = function(codePointer, interpreter) {
+    var match = codePointer.matchAtPointer(regExp);
+    if(match === null) {
+      return null;
+    }
+    
+    var l = match.length;
+    var result = l<=2?match[l-1]:Array.prototype.slice.call(match, 1);
+    var interpretationArguments = Array.prototype.slice.call(match);
+    var fullMatch = interpretationArguments.shift(1);
+    interpretationArguments.push(fullMatch);
+    
+    var instruction = function(interpreter) {
+      if(interpretation) {
+        result = interpretation.apply(interpreter, interpretationArguments);
+      }
+      
+      return result;
+    };
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
 .terminalEmptyString = function(interpretation){
   "use strict";
   return this.terminal(/(?:)/, interpretation);

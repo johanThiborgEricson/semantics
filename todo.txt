@@ -1,48 +1,38 @@
-A terminal should call it's interpretation with the full match as its last 
-  argument.
 Shorten the names of the methods of the InterpreterMethodFactory.
 Remove the CodePointer attribute. Or move CodePointer to the same file.
-Terminal called without an interpretation should just return the matched...
-  full match? first captured group? array? array iff many? Hm...
 Error messages for bad arguments.
 Implement separated lists.
 The quantifiers should be called quantifiers, not non terminals
 Nonterminal is one word, not two.
-Refactor debugging out to method on factory or CodePointer.
-Trailing code should be printed as a parse fail.
-Print CodePointer parsing result if debugging is turned on.
-How does deffered executions get their this value?
-If a recursive call has itself as its first nonTerminal, will it lead to an 
-  infinit loop? Is this detectable? Maintain a list of successfully parsed 
-  subinstructions. Check if it current parse method name is in it. Discard on
-  parse failure. What happens if many methods are the same function?
-  var maybeInstruction = interpreter[name](cp) -> 
-  var e = new TypeError("TypeError: "+name+" is not an interpreter method");
-  if(!(interpreter[methodName] instanceof Function)) {
-    throw e;
-  }
-  var mi = interpreter[name](cp);
-  if(!(mi instanceof Function || !mi)) {
-    throw e;
-  }
-  return mi;
+var maybeInstruction = interpreter[name](cp) -> 
+var e = new TypeError("TypeError: "+name+" is not an interpreter method");
+if(!(interpreter[methodName] instanceof Function)) {
+  throw e;
+}
+var mi = interpreter[name](cp);
+return mi;
 Move CodePointer method tests to specInterpreterCodePointer.js, except parse
 Clean up specDebug.js
 Distinguish between the name of the current method and the subinstructions.
 
 token.toString() -> token.toString().replace(/^\/\^?/, "/^")
   
-Todo, fix specNonTerminalalternative.js disabeled tests.
 Make better error message for InterpreterMethodFactory.prototype
   .makeMethod(function(){return null;});
   current is Expected /^undefined/ to match '[object Object]'.
+  No, this ocurres when a nonterminal fails before codePointer.parse has been
+  called. Testable by writing a new interpreter method factory method that 
+  fails, but I think this is a failure of Semantics! itself, not a bug in 
+  the input to the interpreter. Maybe should be reported as an extention 
+  failure?
 Detect if recursive call is necessary by resetting and setting a boolean in 
   head.
-Make disjunctions greedy
+Make disjunctions greedy. Not if called or.
 disjunction => or|any|longest any suggests that some will be choosen. This 
   will not be the case if all fails. Longest is only if it is made greedy, but 
   or will make sense to programmers even if it isn't
-terminal => atom? Borrowed from RegExps source element
 nonTerminalQuestionMark => opt? Borrowed from JS-syntax subscripts
 nonTerminalSequence => group Borrowed from RegExp (non)?capturing groups
 Move the static methods of InterpreterMethodFactory into a closure
+Make logParseEnd less wordy
+Make parse less wordy

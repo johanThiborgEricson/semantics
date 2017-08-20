@@ -37,6 +37,18 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
+.matchAtPointer = function(regExp) {
+  var match = regExp.exec(this._code);
+  if(match === null) {
+    this.reportParseError(regExp);
+    return null;
+  }
+  
+  this._pointer += match[0].length;
+  return match;
+};
+
+CodePointer.prototype
 .logParseStart = function(name) {
   if(this._debugging) {
     console.log("<%s>", name);
