@@ -24,52 +24,9 @@ describe("Debugging messages", function() {
     expect(console.log).not.toHaveBeenCalled();
   });
   
-  they("look like xml when called externaly", function() {
-    interpreter.text("text", true);
-    
-    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
-  });
-  
-  they("indicate if parsing is successful when called externaly", function() {
-    interpreter.text("text", true);
-    
-    expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
-  });
-  
-  they("indicate if parsing is successful when called internaly", function() {
-    interpreter.paragraph("text\n", true);
-    
-    expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
-  });
-  
-  they("indicate if parsing has failed when called externaly", function() {
-    try {
-      interpreter.text("Something else", true);
-    } catch(e) {}
-    
-    expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "text");
-  });
-  
-  they("show the outer end tag, even on parse failure.", function() {
-    try {
-      interpreter.text("Something else", true);
-    } catch(e) {}
-    
-    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
-  });
-  
-  they("indicate if parsing has failed when called internaly", function() {
-
-    try {
-      interpreter.paragraph("Something else\n", true);
-    } catch(e) {}
-    
-    
-    expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "text");
-  });
-  
-  they("aren't showed when called internally if turned off", function() {
+  they("aren't showed when called externally internally if failing if " + 
+  "turned off", 
+  function() {
     try {
       interpreter.paragraph("Something else\n");
     } catch(e) {}
@@ -77,70 +34,59 @@ describe("Debugging messages", function() {
     expect(console.log).not.toHaveBeenCalled();
   });
   
-  they("look like xml when called internaly and externaly successfully", 
+  they("look like xml and report success when called internally and " + 
+  "externally when successful", 
   function() {
 
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
     expect(console.log).toHaveBeenCalledWith("<%s>", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
+    expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
+    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
+    expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", 
+    "paragraph");
     expect(console.log).toHaveBeenCalledWith("</%s>", "paragraph");
   });
   
-  they("look like xml when called internaly and externaly failing", function() {
+  they("look like xml report failure when called internally and externally " + 
+  "when failing", 
+  function() {
 
     try {
       interpreter.paragraph("Something else\n", true);
     } catch(e) {}
     
-    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
-    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
     expect(console.log).toHaveBeenCalledWith("<%s>", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("<%s>", "text");
+    expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "text");
+    expect(console.log).toHaveBeenCalledWith("</%s>", "text");
+    expect(console.log).toHaveBeenCalledWith("Failed to parse %s.", "paragraph");
     expect(console.log).toHaveBeenCalledWith("</%s>", "paragraph");
   });
   
-  they("report matches", function() {
-    interpreter.text("text", true);
+  // todo: test for match fullness.
+  they("if a match is successful, reports success, the regExp, the rest of " + 
+  "the current line and the full match", function() {
+    interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", "text");
-  });
-  
-  they("report the remaining code", function() {
-    interpreter.foo = factory.terminal(/foo/, function() {});
-    interpreter.bar = factory.terminal(/bar/, function() {});
-    interpreter.fooBar = factory.nonTerminalSequence("foo", "bar", function(){});
-
-    interpreter.fooBar("foobar", true);
-    
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/bar/", "bar");
-  });
-  
-  they("restrict the report to the end of the line", function() {
-    interpreter.foo = factory.terminal(/foo/, function() {});
-    interpreter.bar = factory.terminal(/bar/, function() {});
-    interpreter.fooBar = factory.nonTerminalSequence("foo", /\n/, "bar", 
-    function(){});
-
-    interpreter.fooBar("foo\nbar", true);
-    
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/foo/", "foo");
-  });
-  
-  they("report match success", function() {
-    interpreter.text("text", true);
-    
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", 
+    "text");
     expect(console.log).toHaveBeenCalledWith("Matched \"%s\"", "text");
   });
   
-  they("report match failures", function() {
+  they("if a match fails, reports the failure, the regExp and the rest of " + 
+  "the current line", function() {
     try {
-      interpreter.text("Something else", true);
+      interpreter.paragraph("Something else", true);
     } catch(e) {}
     
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", 
+    "Something else");
     expect(console.log).toHaveBeenCalledWith("Match failed");
   });
   
+  // todo: the same test when called externally
   they("can tell the name of the called method, even if there are other " + 
   "methods with the same function", function() {
     interpreter.a1 = factory.terminal(/a/, function() {});

@@ -12,7 +12,6 @@ if(!(interpreter[methodName] instanceof Function)) {
 var mi = interpreter[name](cp);
 return mi;
 Move CodePointer method tests to specInterpreterCodePointer.js, except parse
-Clean up specDebug.js
 Distinguish between the name of the current method and the subinstructions.
 
 token.toString() -> token.toString().replace(/^\/\^?/, "/^")
