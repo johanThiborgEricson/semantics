@@ -42,7 +42,6 @@ CodePointer.prototype
 
   this.reportMatch(regExp, match);
   if(match === null || match.index > 0) {
-    this.reportParseError(regExp);
     return null;
   }
   
@@ -55,6 +54,7 @@ CodePointer.prototype
   var remainingLine = /.*/.exec(this.getUnparsed())[0];
   
   if(match === null || match.index > 0) {
+    this.reportParseError(regExp);
     if(this._debugging) {
       console.log("%s.exec(\"%s\") // %s", regExp.toString(), remainingLine, 
       "null");
