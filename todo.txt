@@ -36,3 +36,4 @@ nonTerminalSequence => group Borrowed from RegExp (non)?capturing groups
 Move the static methods of InterpreterMethodFactory into a closure
 Make logParseEnd less wordy
 Make parse less wordy
+Write test case for debugging when the top symbol has a copied twin method.

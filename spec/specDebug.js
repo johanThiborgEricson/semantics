@@ -1,37 +1,30 @@
 describe("Debugging messages", function() {
   var they = it;
   var xthey = xit;
+  var interpreter;
+  var factory = new InterpreterMethodFactory();
+  
+  beforeEach(function() {
+    interpreter = {};
+    interpreter.text = factory.terminal(/text/, function() {});
+    interpreter.lineBreak = factory.terminal(/\n/, function() {});
+    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
+    spyOn(console, "log");
+  });
   
   they("can be turned on", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalled();
   });
   
   they("are turned off by default", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
     interpreter.text("text");
     
     expect(console.log).not.toHaveBeenCalled();
   });
   
   they("look like xml when called externaly", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalledWith("<%s>", "text");
@@ -39,37 +32,18 @@ describe("Debugging messages", function() {
   });
   
   they("indicate if parsing is successful when called externaly", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
   });
   
   they("indicate if parsing is successful when called internaly", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-    interpreter.lineBreak = factory.terminal(/\n/, function() {});
-    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
     interpreter.paragraph("text\n", true);
     
     expect(console.log).toHaveBeenCalledWith("Successfully parsed %s.", "text");
   });
   
   they("indicate if parsing has failed when called externaly", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     try {
       interpreter.text("Something else", true);
     } catch(e) {}
@@ -78,12 +52,6 @@ describe("Debugging messages", function() {
   });
   
   they("show the outer end tag, even on parse failure.", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     try {
       interpreter.text("Something else", true);
     } catch(e) {}
@@ -92,13 +60,6 @@ describe("Debugging messages", function() {
   });
   
   they("indicate if parsing has failed when called internaly", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-    interpreter.lineBreak = factory.terminal(/\n/, function() {});
-    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
 
     try {
       interpreter.paragraph("Something else\n", true);
@@ -109,14 +70,6 @@ describe("Debugging messages", function() {
   });
   
   they("aren't showed when called internally if turned off", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-    interpreter.lineBreak = factory.terminal(/\n/, function() {});
-    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-    factory.debugging = false;
     try {
       interpreter.paragraph("Something else\n");
     } catch(e) {}
@@ -126,13 +79,6 @@ describe("Debugging messages", function() {
   
   they("look like xml when called internaly and externaly successfully", 
   function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-    interpreter.lineBreak = factory.terminal(/\n/, function() {});
-    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
 
     interpreter.paragraph("text\n", true);
     
@@ -143,14 +89,7 @@ describe("Debugging messages", function() {
   });
   
   they("look like xml when called internaly and externaly failing", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-    interpreter.lineBreak = factory.terminal(/\n/, function() {});
-    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
-    
+
     try {
       interpreter.paragraph("Something else\n", true);
     } catch(e) {}
@@ -162,22 +101,12 @@ describe("Debugging messages", function() {
   });
   
   they("report matches", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", "/text/", "text");
   });
   
   they("report the remaining code", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
     interpreter.foo = factory.terminal(/foo/, function() {});
     interpreter.bar = factory.terminal(/bar/, function() {});
     interpreter.fooBar = factory.nonTerminalSequence("foo", "bar", function(){});
@@ -188,10 +117,6 @@ describe("Debugging messages", function() {
   });
   
   they("restrict the report to the end of the line", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
     interpreter.foo = factory.terminal(/foo/, function() {});
     interpreter.bar = factory.terminal(/bar/, function() {});
     interpreter.fooBar = factory.nonTerminalSequence("foo", /\n/, "bar", 
@@ -203,24 +128,12 @@ describe("Debugging messages", function() {
   });
   
   they("report match success", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-
     interpreter.text("text", true);
     
     expect(console.log).toHaveBeenCalledWith("Matched \"%s\"", "text");
   });
   
   they("report match failures", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
-    interpreter.text = factory.terminal(/text/, function() {});
-    
     try {
       interpreter.text("Something else", true);
     } catch(e) {}
@@ -230,10 +143,6 @@ describe("Debugging messages", function() {
   
   they("can tell the name of the called method, even if there are other " + 
   "methods with the same function", function() {
-    var interpreter = {};
-    var factory = new InterpreterMethodFactory();
-    spyOn(console, "log");
-    
     interpreter.a1 = factory.terminal(/a/, function() {});
     interpreter.a2 = interpreter.a1;
     interpreter.aa = factory.nonTerminalSequence("a1", "a2", function() {});
