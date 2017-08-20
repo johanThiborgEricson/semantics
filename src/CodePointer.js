@@ -44,7 +44,8 @@ CodePointer.prototype
   
   if(match === null || match.index > 0) {
     if(this._debugging) {
-      console.log("%s.exec(\"%s\") // null", regExp.toString(), remainingLine);
+      console.log("%s.exec(\"%s\") // %s", regExp.toString(), remainingLine, 
+      "null");
     }
     
     this.reportParseError(regExp);

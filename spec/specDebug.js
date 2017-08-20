@@ -74,8 +74,8 @@ describe("Debugging messages", function() {
       interpreter.paragraph("Something else", true);
     } catch(e) {}
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // null", 
-    "/text/", "Something else");
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // %s", 
+    "/text/", "Something else", "null");
   });
   
   they("can tell the name of the called method, even if there are other " + 
