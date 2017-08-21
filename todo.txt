@@ -1,4 +1,3 @@
-Shorten the names of the methods of the InterpreterMethodFactory.
 Remove the CodePointer attribute. Or move CodePointer to the same file.
 Error messages for bad arguments.
 Implement separated lists.
@@ -12,7 +11,6 @@ if(!(interpreter[methodName] instanceof Function)) {
 var mi = interpreter[name](cp);
 return mi;
 Move CodePointer method tests to specInterpreterCodePointer.js, except parse
-Distinguish between the name of the current method and the subinstructions.
 
 token.toString() -> token.toString().replace(/^\/\^?/, "/^")
   
@@ -30,7 +28,6 @@ Make disjunctions greedy. Not if called or.
 disjunction => or|any|longest any suggests that some will be choosen. This 
   will not be the case if all fails. Longest is only if it is made greedy, but 
   or will make sense to programmers even if it isn't
-nonTerminalQuestionMark => opt? Borrowed from JS-syntax subscripts
 Move the static methods of InterpreterMethodFactory into a closure
 Write test case for debugging when the top symbol has a copied twin method.
 Add ^ to match debugging message to emphazise that it is a head match.
@@ -40,3 +37,4 @@ Add exeptions to InterpreterMethodFactory.callInterpreterMethod
 Put object result construction in group in its own method.
 Move returning maybeInstruction or calling it and its result out of 
   postInstructionMaker
+Add length to wierd interpreter method names test in group.

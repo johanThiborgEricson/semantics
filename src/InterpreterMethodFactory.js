@@ -290,7 +290,7 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.nonTerminalQuestionMark = function(name, defaultReturnValue) {
+.opt = function(name, defaultReturnValue) {
   var instructionMaker = function(codePointer, interpreter) {
     var maybeInstruction = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, name, codePointer);
