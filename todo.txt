@@ -31,7 +31,6 @@ disjunction => or|any|longest any suggests that some will be choosen. This
   will not be the case if all fails. Longest is only if it is made greedy, but 
   or will make sense to programmers even if it isn't
 nonTerminalQuestionMark => opt? Borrowed from JS-syntax subscripts
-nonTerminalSequence => group Borrowed from RegExp (non)?capturing groups
 Move the static methods of InterpreterMethodFactory into a closure
 Write test case for debugging when the top symbol has a copied twin method.
 Add ^ to match debugging message to emphazise that it is a head match.
@@ -39,3 +38,4 @@ Make debugging report the captured groups of a match
 Allow another this-binding than the interpreter itself.
 Add exeptions to InterpreterMethodFactory.callInterpreterMethod
 Put object result construction in group in its own method.
+Replace teminal with atom in head recrusion tests

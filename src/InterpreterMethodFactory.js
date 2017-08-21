@@ -159,65 +159,6 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.nonTerminalSequence = function() {
-  "use strict";
-  var names;
-  var interpretation;
-
-  if(arguments[arguments.length - 1] instanceof Function) {
-    interpretation = arguments[arguments.length - 1];
-    names = Array.prototype.slice.call(arguments, 0, -1);
-  } else {
-    names = Array.prototype.slice.call(arguments);
-  }
-  
-  var instructionMaker = function(codePointer, interpreter) {
-    var instructions = [];
-    var stringNames = [];
-    for(var i = 0; i < names.length; i++) {
-      var name = names[i];
-      if(name instanceof RegExp) {
-        var parsingIsSuccessful = codePointer.parse(name);
-        if(!parsingIsSuccessful) {
-          return null;
-        }
-      } else { // name instanceof String
-        stringNames.push(name);
-        var maybeInstruction = InterpreterMethodFactory
-            .callInterpreterMethod(interpreter, name, codePointer);
-        if(!maybeInstruction) {
-          return null;
-        }
-        
-        instructions.push(maybeInstruction);
-      }
-      
-    }
-
-    var instruction = function(interpreter) {
-      var resultsArray = [];
-      var resultsObject = {};
-      for(var i = 0; i < stringNames.length; i++) {
-        var name = stringNames[i];
-        var result = instructions[i](interpreter);
-        resultsArray.push(result);
-        resultsObject[name] = result;
-      }
-      
-      if(interpretation) {
-        return interpretation.apply(interpreter, resultsArray);
-      } else {
-        return resultsObject;
-      }
-    };
-    
-    return instruction;
-  };
-  
-  return this.makeMethod(instructionMaker);
-};
-
-InterpreterMethodFactory.prototype
 .group = function() {
   "use strict";
   var partNames;

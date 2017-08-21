@@ -33,9 +33,9 @@ describe("A star quantifier", function() {
   });
   
   it("doesn't leave a part half parsed", function() {
-    interpreter.ab = f.nonTerminalSequence("a", "b", add);
+    interpreter.ab = f.group("a", "b", add);
     interpreter.abs = f.star("ab");
-    interpreter.absa = f.nonTerminalSequence("abs", "a");
+    interpreter.absa = f.group("abs", "a");
     
     var expected = {
       abs:["ab", "ab"], 

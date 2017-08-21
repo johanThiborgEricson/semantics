@@ -27,7 +27,7 @@ describe("An atom", function() {
   it("can be parsed at any point", function() {
     interpreter.a = f.atom(/a/);
     interpreter.b = f.atom(/b/);
-    interpreter.ab = f.nonTerminalSequence("a", "b");
+    interpreter.ab = f.group("a", "b");
     
     expect(function() {
       interpreter.ab("ab");
@@ -92,7 +92,7 @@ describe("An atom", function() {
   
   it("only accepts matches at the current position in the code", function() {
     interpreter.b = f.atom(/b/);
-    interpreter.bb = f.nonTerminalSequence("b", "b");
+    interpreter.bb = f.group("b", "b");
     
     expect(function() {
       interpreter.bb("ab");

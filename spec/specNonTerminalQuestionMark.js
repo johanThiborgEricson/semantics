@@ -20,7 +20,7 @@ describe("The question mark quantifier", function() {
     i.a = f.terminal(/a/, function() {});
     i.b = f.terminal(/b/, function() {});
     i.maybeA = f.nonTerminalQuestionMark("a");
-    i.ab = f.nonTerminalSequence("maybeA", "b", function() {});
+    i.ab = f.group("maybeA", "b", function() {});
     
     expect(function() {
       i.ab("b");

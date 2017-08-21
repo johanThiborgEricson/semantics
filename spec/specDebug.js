@@ -8,7 +8,7 @@ describe("Debugging messages", function() {
     interpreter = {};
     interpreter.text = factory.atom(/text/, function() {});
     interpreter.lineBreak = factory.atom(/\n/, function() {});
-    interpreter.paragraph = factory.nonTerminalSequence("text", "lineBreak");
+    interpreter.paragraph = factory.group("text", "lineBreak");
     spyOn(console, "log");
   });
   
@@ -82,7 +82,7 @@ describe("Debugging messages", function() {
   "methods with the same function", function() {
     interpreter.a1 = factory.atom(/a/, function() {});
     interpreter.a2 = interpreter.a1;
-    interpreter.aa = factory.nonTerminalSequence("a1", "a2", function() {});
+    interpreter.aa = factory.group("a1", "a2", function() {});
 
     interpreter.aa("aa", true);
     
