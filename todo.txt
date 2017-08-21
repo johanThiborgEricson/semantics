@@ -38,4 +38,3 @@ Make debugging report the captured groups of a match
 Allow another this-binding than the interpreter itself.
 Add exeptions to InterpreterMethodFactory.callInterpreterMethod
 Put object result construction in group in its own method.
-Replace teminal with atom in head recrusion tests
