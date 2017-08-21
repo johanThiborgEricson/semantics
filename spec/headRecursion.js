@@ -12,11 +12,11 @@ describe("Head recursion", function() {
   
   beforeEach(function() {
     interpreter = {};
-    interpreter.a = f.terminal(/(a)/, id);
-    interpreter.b = f.terminal(/(b)/, id);
+    interpreter.a = f.atom(/a/);
+    interpreter.b = f.atom(/b/);
     interpreter.baaa = f.disjunction("baaa1", "b");
     interpreter.baaa1 = f.group("baaa", "a", add);
-    interpreter.emptyCounter = f.terminalEmptyString((function() {
+    interpreter.emptyCounter = f.empty((function() {
       var i = 1;
       return function() {
         return "e" + i++;
@@ -47,7 +47,7 @@ describe("Head recursion", function() {
   
   it("doesn't recurse if the definition isn't recursive", function() {
     var calls = 0;
-    interpreter.emptyCallCounter = f.terminalEmptyString(function() {
+    interpreter.emptyCallCounter = f.empty(function() {
       calls++;
     });
     
@@ -89,7 +89,7 @@ describe("Head recursion", function() {
   it("can't parse a base case several times", function() {
     interpreter.bas = f.disjunction("bas0", "bBaseCase");
     interpreter.bas0 = f.group("bas", "a", add);
-    interpreter.bBaseCase = f.terminal(/(b)/, function() {
+    interpreter.bBaseCase = f.atom(/b/, function() {
       return "base";
     });
     

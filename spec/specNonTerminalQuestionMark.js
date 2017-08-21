@@ -4,7 +4,7 @@ describe("The question mark quantifier", function() {
     var f = new InterpreterMethodFactory();
     var i = {};
     
-    i.a = f.terminal(/a/, function() {});
+    i.a = f.atom(/a/);
     i.maybeA = f.nonTerminalQuestionMark("a");
     
     expect(function() {
@@ -17,8 +17,8 @@ describe("The question mark quantifier", function() {
     var f = new InterpreterMethodFactory();
     var i = {};
     
-    i.a = f.terminal(/a/, function() {});
-    i.b = f.terminal(/b/, function() {});
+    i.a = f.atom(/a/);
+    i.b = f.atom(/b/);
     i.maybeA = f.nonTerminalQuestionMark("a");
     i.ab = f.group("maybeA", "b", function() {});
     
@@ -32,7 +32,7 @@ describe("The question mark quantifier", function() {
     var f = new InterpreterMethodFactory();
     var i = {};
     
-    i.a = f.terminal(/a/, function() {
+    i.a = f.atom(/a/, function() {
       return "the result";
     });
     
@@ -45,7 +45,7 @@ describe("The question mark quantifier", function() {
     var f = new InterpreterMethodFactory();
     var i = {};
     
-    i.a = f.terminal(/a/, function() {
+    i.a = f.atom(/a/, function() {
       return "the result";
     });
     

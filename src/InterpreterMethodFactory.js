@@ -82,7 +82,7 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.terminal = function(token, interpretation){
+.terminal2 = function(token, interpretation){
   "use strict";
   var instructionMaker = function(codePointer, interpreter) {
     var lexeme = codePointer.parse(token);
@@ -130,7 +130,7 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.terminalEmptyString = function(interpretation){
+.terminalEmptyString2 = function(interpretation){
   "use strict";
   return this.terminal(/(?:)/, interpretation);
 };
@@ -154,7 +154,7 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.terminalSkip = function(terminal) {
+.terminalSkip2 = function(terminal) {
   return this.terminal(terminal, function(){});
 };
 

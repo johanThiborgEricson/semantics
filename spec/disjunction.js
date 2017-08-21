@@ -7,9 +7,9 @@ describe("A disjunction", function() {
   
   beforeEach(function() {
     i = {};
-    i.a = f.terminal(/(a)/, id);
-    i.b = f.terminal(/(b)/, id);
-    i.c = f.terminal(/(c)/, id);
+    i.a = f.atom(/a/);
+    i.b = f.atom(/b/);
+    i.c = f.atom(/c/);
   });
   
   it("returns the first alternative if it was parsed successfully", function() {
