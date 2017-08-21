@@ -164,7 +164,7 @@ describe("A group", function() {
   it("doesn't leave a group half parsed", function() {
     interpreter.ab = f.group("a", "b");
     interpreter.ac = f.atom(/ac/);
-    interpreter.abac = f.disjunction("ab", "ac");
+    interpreter.abac = f.or("ab", "ac");
     
     expect(interpreter.abac("ac")).toBe("ac");
   });

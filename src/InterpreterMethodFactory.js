@@ -196,10 +196,9 @@ InterpreterMethodFactory.prototype
   return this.makeMethod(instructionMaker);
 };
 
-InterpreterMethodFactory.prototype
-.disjunction = function() {
+InterpreterMethodFactory.prototype.or = function() {
   if(arguments.length === 0) {
-    throw new Error("A disjunction needs at least one alternative.");
+    throw new Error("An or needs at least one alternative.");
   }
   
   var alternativesNames = arguments;
