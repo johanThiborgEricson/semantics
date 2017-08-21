@@ -17,6 +17,8 @@ describe("A star quantifier", function() {
     interpreter.b = f.atom(/b/);
     interpreter.ab = f.atom(/[ab]/);
     interpreter.abs = f.star("ab");
+    interpreter.abc = f.atom(/a|b|c/);
+    interpreter.list = f.star("abc", /,/);
   });
   
   
@@ -53,7 +55,7 @@ describe("A star quantifier", function() {
     expect(abSpy).toHaveBeenCalledWith(["a", "b"]);
   });
   
-  it("the interpretation is called as a method of the interpreter", function() {
+  it("calls the interpretation as a method of the interpreter", function() {
     interpreter.abs = f.star("ab", function(abs) {
       this.first = abs[0];
       this.second = abs[1];
@@ -63,6 +65,20 @@ describe("A star quantifier", function() {
     
     expect(interpreter.first).toBe("a");
     expect(interpreter.second).toBe("b");
+  });
+  
+  it("skips delimiters", function() {
+    expect(interpreter.list("a,b,c")).toEqual(["a", "b", "c"]);
+  });
+  
+  it("doesn't skip a delimiter if there is only one element", function() {
+    expect(interpreter.list("a")).toEqual(["a"]);
+  });
+  
+  it("doesn't parse a trailing delimiter", function() {
+    interpreter.program = f.group("list", /,/);
+    
+    expect(interpreter.program("a,")).toEqual({list: ["a"]});
   });
   
 });
