@@ -38,3 +38,5 @@ Make debugging report the captured groups of a match
 Allow another this-binding than the interpreter itself.
 Add exeptions to InterpreterMethodFactory.callInterpreterMethod
 Put object result construction in group in its own method.
+Move returning maybeInstruction or calling it and its result out of 
+  postInstructionMaker

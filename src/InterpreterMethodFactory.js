@@ -82,25 +82,6 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.terminal2 = function(token, interpretation){
-  "use strict";
-  var instructionMaker = function(codePointer, interpreter) {
-    var lexeme = codePointer.parse(token);
-    if(!lexeme) {
-      return null;
-    }
-    
-    var instruction = function(interpreter) {
-      return interpretation.apply(interpreter, lexeme);
-    };
-    
-    return instruction;
-  };
-  
-  return this.makeMethod(instructionMaker);
-};
-
-InterpreterMethodFactory.prototype
 .atom = function(regExp, interpretation) {
   "use strict";
   var instructionMaker = function(codePointer, interpreter) {
@@ -130,12 +111,6 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.terminalEmptyString2 = function(interpretation){
-  "use strict";
-  return this.terminal(/(?:)/, interpretation);
-};
-
-InterpreterMethodFactory.prototype
 .empty = function(interpretation) {
   "use strict";
   if(!interpretation) {
@@ -151,11 +126,6 @@ InterpreterMethodFactory.prototype
   };
   
   return this.makeMethod(instructionMaker);
-};
-
-InterpreterMethodFactory.prototype
-.terminalSkip2 = function(terminal) {
-  return this.terminal(terminal, function(){});
 };
 
 InterpreterMethodFactory.prototype
@@ -221,24 +191,6 @@ InterpreterMethodFactory.prototype
     };
     
     return instruction;
-  };
-  
-  return this.makeMethod(instructionMaker);
-};
-
-InterpreterMethodFactory.prototype
-.nonTerminalAlternative2 = function() {
-  "use strict";
-  var alternatives = Array.prototype.slice.call(arguments);
-  var instructionMaker = function(codePointer, interpreter, methodName) {
-    var parseSuccess = false;
-    var i = 0;
-    while(!parseSuccess && i < alternatives.length) {
-      parseSuccess = InterpreterMethodFactory
-          .callInterpreterMethod(interpreter, alternatives[i++], codePointer);
-    }
-    
-    return parseSuccess;
   };
   
   return this.makeMethod(instructionMaker);
