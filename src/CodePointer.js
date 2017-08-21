@@ -14,29 +14,6 @@ function CodePointer(code, debugging) {
 }
 
 CodePointer.prototype
-.parse = function(token) {
-  var unparsedCode = this._code.slice(this._pointer);
-  var match = token.exec(unparsedCode);
-  var remainingLine = /.*/.exec(unparsedCode)[0];
-
-  var isHeadMatch = match && match.index === 0;
-  
-  if(!isHeadMatch) {
-    if(this._debugging) {
-      console.log("%s.exec(\"%s\") // null", token.toString(), remainingLine);
-    }
-    this.reportParseError(token);
-    return null;
-  } else if(this._debugging) {
-    console.log("%s.exec(\"%s\") // %s", token.toString(), remainingLine, 
-    match[0]);
-  }
-  
-  this._pointer += match[0].length;
-  return match.slice(1);
-};
-
-CodePointer.prototype
 .matchAtPointer = function(regExp) {
   var match = regExp.exec(this.getUnparsed());
 
