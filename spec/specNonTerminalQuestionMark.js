@@ -1,10 +1,19 @@
 describe("The question mark quantifier", function() {
   
-  it("should match the specified non terminal once", function() {
-    var f = new InterpreterMethodFactory();
-    var i = {};
-    
+  var f = new InterpreterMethodFactory();
+  var i;
+  
+  beforeEach(function() {
+    i = {};
     i.a = f.atom(/a/);
+    i.b = f.atom(/b/);
+    i.ar = f.atom(/a/, function() {
+      return "the result";
+    });
+    
+  });
+  
+  it("matches its part once", function() {
     i.maybeA = f.nonTerminalQuestionMark("a");
     
     expect(function() {
@@ -13,12 +22,7 @@ describe("The question mark quantifier", function() {
     
   });
   
- it("should match the empty string", function() {
-    var f = new InterpreterMethodFactory();
-    var i = {};
-    
-    i.a = f.atom(/a/);
-    i.b = f.atom(/b/);
+ it("matches the empty string", function() {
     i.maybeA = f.nonTerminalQuestionMark("a");
     i.ab = f.group("maybeA", "b", function() {});
     
@@ -28,30 +32,28 @@ describe("The question mark quantifier", function() {
     
   });
   
-  it("should return the result of the specified non terminal", function() {
-    var f = new InterpreterMethodFactory();
-    var i = {};
-    
-    i.a = f.atom(/a/, function() {
-      return "the result";
-    });
-    
-    i.maybeA = f.nonTerminalQuestionMark("a");
+  it("returns the result of its part", function() {
+    i.maybeA = f.nonTerminalQuestionMark("ar");
     
     expect(i.maybeA("a")).toBe("the result");
   });
   
-  it("should return the default value if it didn't match", function() {
-    var f = new InterpreterMethodFactory();
-    var i = {};
-    
-    i.a = f.atom(/a/, function() {
-      return "the result";
-    });
-    
-    i.maybeA = f.nonTerminalQuestionMark("a", "the default value");
+  it("returns the default value if it didn't match", function() {
+    i.maybeA = f.nonTerminalQuestionMark("ar", "the default value");
     
     expect(i.maybeA("")).toBe("the default value");
+  });
+  
+  it("calls its part as a method of the interpreter", function() {
+    i.charEater = f.atom(/./, function(char) {
+      this.theChar = char;
+    });
+    
+    i.opt = f.nonTerminalQuestionMark("charEater");
+    
+    i.opt("a");
+    
+    expect(i.theChar).toBe("a");
   });
   
 });
