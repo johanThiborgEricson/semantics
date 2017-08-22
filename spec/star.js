@@ -81,4 +81,11 @@ describe("A star quantifier", function() {
     expect(interpreter.program("a,")).toEqual({list: ["a"]});
   });
   
+  it("always parse delimiters between parts", function() {
+    interpreter.program = f.group("ablist", /b/);
+    interpreter.ablist = f.star("ab", /,/);
+    
+    expect(interpreter.program("ab")).toEqual({ablist:["a"]});
+  });
+  
 });

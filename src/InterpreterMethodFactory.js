@@ -276,11 +276,18 @@ InterpreterMethodFactory.prototype
     while(maybeInstruction) {
       partInstructions.push(maybeInstruction);
       var backup = codePointer.backup();
+      var match = true;
       if(delimiter) {
-        codePointer.matchAtPointer(delimiter);
+        match = codePointer.matchAtPointer(delimiter);
       }
-      maybeInstruction = InterpreterMethodFactory
-      .callInterpreterMethod(interpreter, partName, codePointer);
+      
+      if(match) {
+        maybeInstruction = InterpreterMethodFactory
+          .callInterpreterMethod(interpreter, partName, codePointer);
+      } else {
+        maybeInstruction = null;
+      }
+      
       if(!maybeInstruction) {
         codePointer.restore(backup);
       }
