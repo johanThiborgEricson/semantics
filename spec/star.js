@@ -68,7 +68,7 @@ describe("A star quantifier", function() {
   });
   
   it("skips delimiters", function() {
-    expect(interpreter.list("a,b,c", true)).toEqual(["a", "b", "c"]);
+    expect(interpreter.list("a,b,c")).toEqual(["a", "b", "c"]);
   });
   
   it("doesn't skip a delimiter if there is only one element", function() {
