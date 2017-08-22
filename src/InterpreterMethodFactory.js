@@ -262,10 +262,15 @@ InterpreterMethodFactory.prototype
   "use strict";
   var interpretation;
   var delimiter;
+  var delimiterAndPart;
   if(arguments[1] instanceof Function) {
     interpretation = arguments[1];
   } else {
     delimiter = arguments[1];
+    delimiterAndPart = this.group(delimiter, partName, function(partName) {
+      return partName;
+    });
+    
     interpretation = arguments[2];
   }
   
@@ -275,24 +280,16 @@ InterpreterMethodFactory.prototype
     .callInterpreterMethod(interpreter, partName, codePointer);
     while(maybeInstruction) {
       partInstructions.push(maybeInstruction);
-      var backup = codePointer.backup();
-      var match = true;
       if(delimiter) {
-        match = codePointer.matchAtPointer(delimiter);
-      }
-      
-      if(match) {
+        maybeInstruction = 
+        delimiterAndPart.call(interpreter, codePointer, 
+          delimiter + " and " + partName);
+      } else {
         maybeInstruction = InterpreterMethodFactory
           .callInterpreterMethod(interpreter, partName, codePointer);
-      } else {
-        maybeInstruction = null;
-      }
-      
-      if(!maybeInstruction) {
-        codePointer.restore(backup);
       }
     }
-    
+      
     var instruction = function(interpreter) {
       var results = partInstructions.map(function(partInstruction) {
         return partInstruction(interpreter);
