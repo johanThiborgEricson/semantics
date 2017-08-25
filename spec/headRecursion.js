@@ -97,4 +97,14 @@ describe("Head recursion", function() {
     
     expect(interpreter.program("bb")).toBe("baseb");
   });
+  
+  it("isn't attempted if no recursion is detected", function() {
+    spyOn(console, "log");
+    interpreter.ab = f.or("a", "b");
+    
+    interpreter.ab("b", true);
+    
+    expect(console.log).not.toHaveBeenCalledWith(
+      "Reparsing with found %s", "ab");
+  });
 });

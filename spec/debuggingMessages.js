@@ -90,4 +90,17 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("%s: parse start", "a2");
   });
   
+    
+  they("report head recursions", function() {
+    interpreter.a = factory.atom(/a/);
+    interpreter.b = factory.atom(/b/);
+    interpreter.baaa = factory.or("baaa1", "b");
+    interpreter.baaa1 = factory.group("baaa", "a");
+
+    interpreter.baaa("b", true);
+    
+    expect(console.log)
+    .toHaveBeenCalledWith("Reparsing with found %s", "baaa");
+  });
+  
 });
