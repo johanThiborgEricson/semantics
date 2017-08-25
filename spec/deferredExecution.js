@@ -12,4 +12,15 @@ describe("A deferred execution", function() {
     expect(interpretation).toHaveBeenCalled();
   });
   
+  it("fails to parse if its part fails to parse", function() {
+    var interpreter = {};
+    interpreter.ab = factory.group("deferredA", "b");
+    interpreter.b = factory.atom(/b/);
+    interpreter.a = factory.atom(/a/);
+    interpreter.deferredA = factory.deferredExecution("a");
+    interpreter.program = factory.or("ab", "b");
+    
+    expect(interpreter.program("b")).toBe("b");
+  });
+  
 });
