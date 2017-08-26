@@ -1,2 +1,2 @@
 # semantics
-Semantics! is a framework for creating interpreters for structured text, e. g. lists, markup and programming languages.
+Semantics! is an extention of regular expressions for creating interpreters of structured text. It supports dynamically merging regular expressions, recursive definitions, reuse of (merged) regular expression definitions trough variables and defining how variables at each level should be interpreteted by associating them with anonymous functions.
