@@ -94,7 +94,7 @@ describe("Debugging messages", function() {
   they("report head recursions", function() {
     interpreter.a = factory.atom(/a/);
     interpreter.b = factory.atom(/b/);
-    interpreter.baaa = factory.or("baaa1", "b");
+    interpreter.baaa = factory.hr("baaa1", "b");
     interpreter.baaa1 = factory.group("baaa", "a");
 
     interpreter.baaa("b", true);
