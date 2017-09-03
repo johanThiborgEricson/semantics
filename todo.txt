@@ -47,3 +47,5 @@ Remove capturing groups as a feature in atoms. Only the full match is supplied.
 Deferred methods should provide the this-binding themself, not explicitly.
 Deffered methods should accept parameters, which will be supplied as 
   additional arguments to the interpretation.
+Allow or to have zero alternatives. It will just fail, that is fine.
+baaa => bas in head recursion tests.

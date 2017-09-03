@@ -65,7 +65,8 @@ InterpreterMethodFactory.prototype
     var v = InterpreterMethodFactory.preInstructionMaker(this, methodFactory, 
     method, code, debuggingOrMethodName);
     
-    var maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
+    var maybeInstruction;
+    maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
     
     return InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
@@ -82,6 +83,7 @@ InterpreterMethodFactory.prototype.hr = function() {
   var alternativesNames = arguments;
   
   var instructionMaker = function(codePointer, interpreter, methodName) {
+    var maybeInstruction;
     var v = {};
     v.codePointer = codePointer;
     v.methodName = methodName;
@@ -93,35 +95,11 @@ InterpreterMethodFactory.prototype.hr = function() {
     if(heads[v.methodName]) {
       heads[v.methodName].headRecursionDetected = true;
       cp._pointer = heads[v.methodName].end;
-      return heads[v.methodName].cache;
+      maybeInstruction = heads[v.methodName].cache;
     } else {
       heads[v.methodName] = head;
-    }
-    
-    var maybeInstruction = null;
-    var i;
-    maybeInstruction = null;
-    i = 0;
-    while(!maybeInstruction && i < alternativesNames.length) {
-      maybeInstruction = InterpreterMethodFactory
-      .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
-    }
-    
-    if(!head.headRecursionDetected) {
-      return maybeInstruction;
-    }
-    
-    var hasProgressed = true;
-
-    while(hasProgressed) {
-      if(v.codePointer._debugging) {
-        console.log("Reparsing with found %s", methodName);
-      }
-      
-      head.cache = maybeInstruction;
-      head.end = cp._pointer;
-      
-      cp._pointer = p;
+      maybeInstruction = null;
+      var i;
       maybeInstruction = null;
       i = 0;
       while(!maybeInstruction && i < alternativesNames.length) {
@@ -129,13 +107,35 @@ InterpreterMethodFactory.prototype.hr = function() {
         .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
       }
       
-      hasProgressed = cp._pointer > head.end;
-      
-      if(!maybeInstruction || !hasProgressed) {
-        cp._pointer = head.end;
-        maybeInstruction = head.cache;
-      }
+      if(head.headRecursionDetected) {
+        var hasProgressed = true;
         
+        while(hasProgressed) {
+          if(v.codePointer._debugging) {
+            console.log("Reparsing with found %s", methodName);
+          }
+          
+          head.cache = maybeInstruction;
+          head.end = cp._pointer;
+          
+          cp._pointer = p;
+          maybeInstruction = null;
+          i = 0;
+          while(!maybeInstruction && i < alternativesNames.length) {
+            maybeInstruction = InterpreterMethodFactory
+            .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
+          }
+          
+          hasProgressed = cp._pointer > head.end;
+          
+          if(!maybeInstruction || !hasProgressed) {
+            cp._pointer = head.end;
+            maybeInstruction = head.cache;
+          }
+            
+        }
+      }
+      
     }
     
     return maybeInstruction;

@@ -14,7 +14,7 @@ describe("Head recursion", function() {
     interpreter = {};
     interpreter.a = f.atom(/a/);
     interpreter.b = f.atom(/b/);
-    interpreter.baaa = f.hr("baaa1", "b");
+    interpreter.baaa = f.or("baaa1", "b");
     interpreter.baaa1 = f.group("baaa", "a", add);
     interpreter.emptyCounter = f.empty((function() {
       var i = 1;
@@ -26,26 +26,26 @@ describe("Head recursion", function() {
     
   });
   
-  it("can find a base case after a recursive case", function() {
+  xit("can find a base case after a recursive case", function() {
     expect(interpreter.baaa("b")).toBe("b");
   });
   
-  it("can recurse once", function() {
+  xit("can recurse once", function() {
     expect(interpreter.baaa("ba")).toBe("ba");
   });
   
-  it("can recurse twice", function() {
+  xit("can recurse twice", function() {
     expect(interpreter.baaa("baa")).toBe("baa");
   });
   
-  it("can have empty base cases", function() {
+  xit("can have empty base cases", function() {
     interpreter.as = f.hr("as0", "emptyCounter");
     interpreter.as0 = f.group("as", "a", add);
 
     expect(interpreter.as("")).toBe("e1");
   });
   
-  it("doesn't recurse if the definition isn't recursive", function() {
+  xit("doesn't recurse if the definition isn't recursive", function() {
     var calls = 0;
     interpreter.emptyCallCounter = f.empty(function() {
       calls++;
@@ -58,7 +58,7 @@ describe("Head recursion", function() {
     expect(calls).toBe(1);
   });
   
-  it("creates new base cases for each consequtive head recursion", function() {
+  xit("creates new base cases for each consequtive head recursion", function() {
     interpreter.as = f.hr("as0", "emptyCounter");
     interpreter.as0 = f.group("as", "a", add);
     interpreter.as3 = f.group("as", "as", "as", 
@@ -69,7 +69,7 @@ describe("Head recursion", function() {
     expect(interpreter.as3("")).toBe("e1e2e3");
   });
   
-  it("can have many heads at the same position in the code", function() {
+  xit("can have many heads at the same position in the code", function() {
     interpreter.bsas = f.hr("bsas0", "bs");
     interpreter.bsas0 = f.group("bsas", "a", add);
     interpreter.bs = f.hr("bs0", "emptyCounter");
@@ -78,7 +78,7 @@ describe("Head recursion", function() {
     expect(interpreter.bsas("a")).toBe("e1a");
   });
   
-  it("can start at any point in the code", function() {
+  xit("can start at any point in the code", function() {
     interpreter.bas = f.group("b", "as", add);
     interpreter.as = f.hr("as0", "emptyCounter");
     interpreter.as0 = f.group("as", "a", add);
@@ -86,7 +86,7 @@ describe("Head recursion", function() {
     expect(interpreter.bas("ba")).toBe("be1a");
   });
   
-  it("can't parse a base case several times", function() {
+  xit("can't parse a base case several times", function() {
     interpreter.bas = f.hr("bas0", "bBaseCase");
     interpreter.bas0 = f.group("bas", "a", add);
     interpreter.bBaseCase = f.atom(/b/, function() {
@@ -98,7 +98,7 @@ describe("Head recursion", function() {
     expect(interpreter.program("bb")).toBe("baseb");
   });
   
-  it("isn't attempted if no recursion is detected", function() {
+  xit("isn't attempted if no recursion is detected", function() {
     spyOn(console, "log");
     interpreter.ab = f.hr("a", "b");
     
