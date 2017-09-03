@@ -40,3 +40,10 @@ Make a method accept many strings, concatenate them.
 The nonterminal padding behaves like group, but it returns the result of the 
   first named non regex method instead of an object. Optional index returns 
   the result of a later method instead.
+Put code pointer match in quotation marks in debugging messages.
+Implement but not in atoms. A pattern that the full match should not match, 
+  treated as parse failure.
+Remove capturing groups as a feature in atoms. Only the full match is supplied. 
+Deferred methods should provide the this-binding themself, not explicitly.
+Deffered methods should accept parameters, which will be supplied as 
+  additional arguments to the interpretation.

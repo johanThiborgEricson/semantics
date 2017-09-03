@@ -19,14 +19,14 @@ function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
   if(code instanceof CodePointer) {
     v.isInternalCall = true;
     v.codePointer = code;
-    v.name = debuggingOrMethodName;
+    v.methodName = debuggingOrMethodName;
   } else {
     v.isInternalCall = false;
     v.codePointer = methodFactory.CodePointer(code, debuggingOrMethodName);
-    v.name = methodFactory.nameOf(interpreter, method);
+    v.methodName = methodFactory.nameOf(interpreter, method);
   }
   
-  v.codePointer.logParseStart(v.name);
+  v.codePointer.logParseStart(v.methodName);
   v.backup = v.codePointer.backup();
   
   return v;
@@ -39,7 +39,7 @@ function(v, interpreter, maybeInstruction) {
     v.codePointer.restore(v.backup);
   }
   
-  v.codePointer.logParseEnd(v.name, !!maybeInstruction);
+  v.codePointer.logParseEnd(v.methodName, !!maybeInstruction);
   if(v.isInternalCall) {
     result = maybeInstruction;
   } else { // isExternalCall
@@ -64,7 +64,9 @@ InterpreterMethodFactory.prototype
   var method = function(code, debuggingOrMethodName) {
     var v = InterpreterMethodFactory.preInstructionMaker(this, methodFactory, 
     method, code, debuggingOrMethodName);
-    var maybeInstruction = instructionMaker(v.codePointer, this, v.name);
+    
+    var maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
+    
     return InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
   };
@@ -204,21 +206,24 @@ InterpreterMethodFactory.prototype.or = function() {
   var alternativesNames = arguments;
   
   var instructionMaker = function(codePointer, interpreter, methodName) {
-    var cp = codePointer;
+    var v = {};
+    v.codePointer = codePointer;
+    v.methodName = methodName;
+    var cp = v.codePointer;
     var p = cp._pointer;
     var heads = cp.heads[p] = cp.heads[p] || {};
-    var maybeInstruction = null;
-    var i;
     var cache = null;
     var head = {};
-    if(heads[methodName]) {
-      heads[methodName].headRecursionDetected = true;
-      cp._pointer = heads[methodName].end;
-      return heads[methodName].cache;
+    if(heads[v.methodName]) {
+      heads[v.methodName].headRecursionDetected = true;
+      cp._pointer = heads[v.methodName].end;
+      return heads[v.methodName].cache;
     } else {
-      heads[methodName] = head;
+      heads[v.methodName] = head;
     }
     
+    var maybeInstruction = null;
+    var i;
     maybeInstruction = null;
     i = 0;
     while(!maybeInstruction && i < alternativesNames.length) {
@@ -233,7 +238,7 @@ InterpreterMethodFactory.prototype.or = function() {
     var hasProgressed = true;
 
     while(hasProgressed) {
-      if(codePointer._debugging) {
+      if(v.codePointer._debugging) {
         console.log("Reparsing with found %s", methodName);
       }
       
