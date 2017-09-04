@@ -41,9 +41,12 @@ The nonterminal padding behaves like group, but it returns the result of the
   the result of a later method instead.
 Put code pointer match in quotation marks in debugging messages.
 Implement but not in atoms. A pattern that the full match should not match, 
-  treated as parse failure.
+  treated as parse failure. May also be a list of strings, which is easier to 
+  handle and more dynamic.
 Remove capturing groups as a feature in atoms. Only the full match is supplied. 
-Deferred methods should provide the this-binding themself, not explicitly.
+Deferred methods should provide the this-binding themself, not explicitly. 
+  Might be use cases for both scenarios. Make it optional defaulting to bind. 
+  Or just thisBinding = this||interpreter;
 Deffered methods should accept parameters, which will be supplied as 
   additional arguments to the interpretation.
 baaa => bas in head recursion tests.
@@ -51,3 +54,4 @@ remove repetition in error message of
   i.a = atom(/a/);
   i.aa = or("a", "a");
   i.aa("b");
+What is the error message of i.e("a")?
