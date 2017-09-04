@@ -2,6 +2,9 @@ describe("An atom", function() {
   
   var interpreter;
   var f = new InterpreterMethodFactory();
+  var add = function(a, b) {
+    return a+b;
+  };
   
   beforeEach(function() {
     interpreter = {};
@@ -10,29 +13,21 @@ describe("An atom", function() {
   it("can parse the empty string", function() {
     interpreter.e = f.atom(/(:?)/);
     
-    expect(function() {
-      interpreter.e("");
-    }).not.toThrow();
+    expect(interpreter.e("")).toBe("");
   });
   
   it("can parse a regExp", function() {
     interpreter.abc = f.atom(/abc/);
     
-    expect(function() {
-      interpreter.abc("abc");
-    }).not.toThrow();
-    
+    expect(interpreter.abc("abc")).toBe("abc");
   });
   
   it("can be parsed at any point", function() {
     interpreter.a = f.atom(/a/);
     interpreter.b = f.atom(/b/);
-    interpreter.ab = f.group("a", "b");
+    interpreter.ab = f.group("a", "b", add);
     
-    expect(function() {
-      interpreter.ab("ab");
-    }).not.toThrow();
-    
+    expect(interpreter.ab("ab")).toBe("ab");
   });
   
   it("returns the full match if there are no capturing groups", function() {
@@ -56,10 +51,9 @@ describe("An atom", function() {
   
   it("fails if the regular expression can't be matched", function() {
     interpreter.a = f.atom(/a/);
-    
-    expect(function() {
-      interpreter.a("b");
-    }).toThrowError("Expected /^a/ to match 'b'.");
+    interpreter.b = f.atom(/b/);
+    interpreter.ab = f.or("a", "b");
+    expect(interpreter.ab("b")).toBe("b");
   });
   
   it("calls its interpretation with its matching groups and the full match", 
@@ -91,12 +85,13 @@ describe("An atom", function() {
   });
   
   it("only accepts matches at the current position in the code", function() {
+    interpreter.a = f.atom(/a/);
     interpreter.b = f.atom(/b/);
-    interpreter.bb = f.group("b", "b");
+    interpreter.bb = f.group("b", "b", add);
+    interpreter.ab = f.group("a", "b", add);
+    interpreter.bbab = f.or("bb", "ab");
     
-    expect(function() {
-      interpreter.bb("ab");
-    }).toThrowError("Expected /^b/ to match 'ab'.");
+    expect(interpreter.bbab("ab")).toBe("ab");
   });
   
 });

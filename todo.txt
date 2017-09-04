@@ -49,3 +49,5 @@ Deffered methods should accept parameters, which will be supplied as
   additional arguments to the interpretation.
 Allow or to have zero alternatives. It will just fail, that is fine.
 baaa => bas in head recursion tests.
+remove repetition in error message of 
+  i.a = atom(/a/); i.aa = or("a", "a"); i.aa("b");
