@@ -269,10 +269,6 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype.or = function() {
-  if(arguments.length === 0) {
-    throw new Error("An or needs at least one alternative.");
-  }
-  
   var alternativesNames = arguments;
   
   var instructionMaker = function(codePointer, interpreter, methodName) {

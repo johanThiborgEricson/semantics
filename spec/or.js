@@ -18,11 +18,11 @@ describe("An or", function() {
     expect(i.da("a")).toBe("a");
   });
   
-  it("expects at least one alternative", function() {
-    var eString = "An or needs at least one alternative.";
-    expect(function() {
-      f.or();
-    }).toThrowError(eString);
+  it("always fails if it has zero alternatives", function() {
+    i.noChoice = f.or();
+    i.choice = f.or("noChoice", "a");
+    
+    expect(i.choice("a")).toBe("a");
   });
   
   it("returns the second alternative if the first fails to parse", function() {
