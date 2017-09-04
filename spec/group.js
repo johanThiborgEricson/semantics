@@ -141,27 +141,22 @@ describe("A group", function() {
   
   it("fails if a part fails to parse", function() {
     interpreter.groupA = f.group("a");
+    interpreter.ab = f.or("groupA", "b");
     
-    expect(function() {
-      interpreter.groupA("b");
-    }).toThrowError("Expected /^a/ to match 'b'.");
+    expect(interpreter.ab("b")).toBe("b");
   });
   
   it("fails if a regular expression fails to parse", function() {
     interpreter.groupA = f.group(/a/);
+    interpreter.ab = f.or("groupA", "b");
     
-    expect(function() {
-      interpreter.groupA("b");
-    }).toThrowError("Expected /^a/ to match 'b'.");
+    expect(interpreter.ab("b")).toBe("b");
   });
   
   it("doesn't fail on empty regular expressions", function() {
     interpreter.group = f.group(/(:?)/);
     
-    expect(function() {
-      interpreter.group("");
-    }).not.toThrow();
-    
+    expect(interpreter.group("")).toEqual({});
   });
   
   it("doesn't leave a group half parsed", function() {
