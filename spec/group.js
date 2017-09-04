@@ -167,4 +167,13 @@ describe("A group", function() {
     expect(interpreter.abac("ac")).toBe("ac");
   });
   
+  it("correctly reparses a part", function() {
+    interpreter.c = f.atom(/c/);
+    interpreter.ab = f.group("a", "b");
+    interpreter.ac = f.group("a", "c");
+    interpreter.abac = f.or("ab", "ac");
+    
+    expect(interpreter.abac("ac")).toEqual({a: "a", c: "c"});
+  });
+  
 });

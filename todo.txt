@@ -52,8 +52,3 @@ remove repetition in error message of
   i.a = atom(/a/);
   i.aa = or("a", "a");
   i.aa("b");
-Add test for correct reparsing of part.
-  i.ab = group("a", "b");
-  i.ac = group("a", "c");
-  i.abac = or("ab", "ac);
-  i.abac("ac");
