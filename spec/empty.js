@@ -21,12 +21,14 @@ describe("The empty string atom", function() {
     }).toThrowError("The empty string atom should be called with a function");
   });
   
-  it("calls its interpretation and returns the result", function() {
+  it("calls its interpretation with zero arguments and returns the result", 
+  function() {
     var emptySpy = jasmine.createSpy("emptySpy")
     .and.returnValue("interpretation result");
     interpreter.e = f.empty(emptySpy);
     
     expect(interpreter.e("")).toBe("interpretation result");
+    expect(emptySpy).toHaveBeenCalledWith();
   });
   
   it("calls its interpretation as a method on the interpreter", function() {
