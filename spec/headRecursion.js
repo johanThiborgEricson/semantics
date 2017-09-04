@@ -1,32 +1,24 @@
 describe("Head recursion", function() {
   
-  var f;
-  var interpreter;
-  var id = function(x) {
-    return x;
+  var f = new InterpreterMethodFactory();
+  
+  f.dummy = function(instructionMaker) {
+    return this.makeMethod(instructionMaker);
   };
   
-  var add = function(a, b) {
-    return a+b;
-  };
+  var interpreter;
+  var instructionMaker;
   
   beforeEach(function() {
-    f = new InterpreterMethodFactory();
     interpreter = {};
-    interpreter.a = f.atom(/a/);
-    interpreter.b = f.atom(/b/);
+    
+    instructionMaker = jasmine.createSpy("instructionMaker")
+    .and.returnValue(function(){});
+    
+    interpreter.dummy = f.dummy(instructionMaker);
   });
   
   it("parses each (non-)terminal twice", function() {
-    var instructionMaker = jasmine.createSpy("instructionMaker")
-    .and.returnValue(function(){});
-    
-    f.dummy = function() {
-      return this.makeMethod(instructionMaker);
-    };
-    
-    interpreter.dummy = f.dummy();
-    
     interpreter.dummy("");
     
     expect(instructionMaker).toHaveBeenCalledTimes(2);
