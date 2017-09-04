@@ -33,7 +33,6 @@ Add exeptions to InterpreterMethodFactory.callInterpreterMethod
 Put object result construction in group in its own method.
 Move returning maybeInstruction or calling it and its result out of 
   postInstructionMaker
-Add length to wierd interpreter method names test in group.
 Move methodMaker from the prototype/this so that the factory methods can be 
   called as functions, e g apply
 Make a method accept many strings, concatenate them.

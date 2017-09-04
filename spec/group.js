@@ -60,13 +60,16 @@ describe("A group", function() {
     interpreter[hop] = f.atom(/hasOwnProperty/);
     interpreter.toString = f.atom(/toString/);
     interpreter[emptyString] = f.atom(/empty/);
-    interpreter.wierdNames = f.group("hasOwnProperty", "toString", "");
+    interpreter.length = f.atom(/length/);
+    interpreter.wierdNames = f.group(
+      "hasOwnProperty", "toString", "", "length");
     
     var expected = {};
     expected[hop] = "hasOwnProperty";
     expected.toString = "toString";
     expected[emptyString] = "empty";
-    expect(interpreter.wierdNames("hasOwnPropertytoStringempty"))
+    expected.length = "length";
+    expect(interpreter.wierdNames("hasOwnPropertytoStringemptylength"))
     .toEqual(expected);
   });
   
