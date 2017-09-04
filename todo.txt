@@ -31,8 +31,6 @@ Make debugging report the captured groups of a match
 Allow another this-binding than the interpreter itself.
 Add exeptions to InterpreterMethodFactory.callInterpreterMethod
 Put object result construction in group in its own method.
-Move returning maybeInstruction or calling it and its result out of 
-  postInstructionMaker
 Move methodMaker from the prototype/this so that the factory methods can be 
   called as functions, e g apply
 Make a method accept many strings, concatenate them.
@@ -50,7 +48,7 @@ Deferred methods should provide the this-binding themself, not explicitly.
 Deffered methods should accept parameters, which will be supplied as 
   additional arguments to the interpretation.
 baaa => bas in head recursion tests.
-remove repetition in error message of 
+Remove repetition in error message of 
   i.a = atom(/a/);
   i.aa = or("a", "a");
   i.aa("b");

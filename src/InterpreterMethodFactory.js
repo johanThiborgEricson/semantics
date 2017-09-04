@@ -34,26 +34,19 @@ function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
 
 InterpreterMethodFactory.postInstructionMaker = 
 function(v, interpreter, maybeInstruction) {
-  var result;
   if(!maybeInstruction){
     v.codePointer.restore(v.backup);
   }
   
   v.codePointer.logParseEnd(v.methodName, !!maybeInstruction);
-  if(v.isInternalCall) {
-    result = maybeInstruction;
-  } else { // isExternalCall
+  if(!v.isInternalCall) {
     if(!maybeInstruction) {
       throw new Error(v.codePointer.getParseErrorDescription());
     } else if(v.codePointer.getUnparsed() !== "") {
       throw new Error("Trailing code: '" + v.codePointer.getUnparsed() + "'.");
-    } else {
-      result = maybeInstruction(interpreter);
     }
     
   }
-  
-  return result;
   
 };
 
@@ -70,8 +63,10 @@ InterpreterMethodFactory.prototype
     v.codePointer.restore(v.backup);
     maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
     
-    return InterpreterMethodFactory.
+    InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
+    
+    return v.isInternalCall?maybeInstruction:maybeInstruction(this);
   };
   
   return method;
