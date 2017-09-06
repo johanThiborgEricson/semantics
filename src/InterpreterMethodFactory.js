@@ -242,26 +242,12 @@ InterpreterMethodFactory.prototype
     }
     
     var instruction = function(interpreter) {
-      var result = {};
+      var result = new InterpreterMethodFactory.MultiPropertyObject();
       var interpretationArguments = [];
-      var nameCount = Object.create(null);
       partInstructions.map(function(partInstruction) {
         var partResult = partInstruction(interpreter);
         interpretationArguments.push(partResult);
-        var name = partInstruction.partName;
-        if(nameCount[name] === undefined) {
-          nameCount[name] = 0;
-        }
-        
-        if(nameCount[name] === 0) {
-          result[name] = partResult;
-        } else if(nameCount[name] === 1) {
-          result[name] = [result[name], partResult];
-        } else {
-          result[name].push(partResult);
-        }
-        
-        nameCount[name]++;
+        result.appendProperty(partInstruction.partName, partResult);
       });
       
       if(interpretation) {
@@ -275,6 +261,30 @@ InterpreterMethodFactory.prototype
   };
   
   return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.MultiPropertyObject = function() {
+  var nameCount = Object.create(null);
+  // Can't return this because Jasmine be bitchin'
+  return Object.create({
+    appendProperty: function(name, partResult) {
+      var result = this;
+      if(nameCount[name] === undefined) {
+        nameCount[name] = 0;
+      }
+      
+      if(nameCount[name] === 0) {
+        this[name] = partResult;
+      } else if(nameCount[name] === 1) {
+        this[name] = [this[name], partResult];
+      } else {
+        this[name].push(partResult);
+      }
+      
+      nameCount[name]++;
+    },
+  });
+
 };
 
 InterpreterMethodFactory.prototype.or = function() {

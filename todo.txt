@@ -30,7 +30,6 @@ Add ^ to match debugging message to emphazise that it is a head match.
 Make debugging report the captured groups of a match
 Allow another this-binding than the interpreter itself.
 Add exeptions to InterpreterMethodFactory.callInterpreterMethod
-Put object result construction in group in its own method.
 Move methodMaker from the prototype/this so that the factory methods can be 
   called as functions, e g apply
 Make a method accept many strings, concatenate them.
@@ -45,7 +44,7 @@ Remove capturing groups as a feature in atoms. Only the full match is supplied.
 Deferred methods should provide the this-binding themself, not explicitly. 
   Might be use cases for both scenarios. Make it optional defaulting to bind. 
   Or just thisBinding = this||interpreter;
-Deffered methods should accept parameters, which will be supplied as 
+Deferred methods should accept parameters, which will be supplied as 
   additional arguments to the interpretation.
 baaa => bas in head recursion tests.
 Remove repetition in error message of 
@@ -53,3 +52,4 @@ Remove repetition in error message of
   i.aa = or("a", "a");
   i.aa("b");
 What is the error message of i.e("a")?
+Move group object results test to multiPropertyObject.
