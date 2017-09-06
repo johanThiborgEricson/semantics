@@ -65,7 +65,10 @@ InterpreterMethodFactory.prototype
       v.codePointer.restore(heads[v.methodName].end);
       return heads[v.methodName].cache;
     } else {
-      heads[v.methodName] = {};
+      heads[v.methodName] = {
+        cache: null,
+        end: v.backup,
+      };
     }
     
     var head = heads[v.methodName];
