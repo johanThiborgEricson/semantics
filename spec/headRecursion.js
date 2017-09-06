@@ -1,12 +1,7 @@
 describe("Head recursion", function() {
   
   var f = new InterpreterMethodFactory();
-  f.noRecursion = function(spy) {
-    var instructionMaker = function() {
-      spy();
-      return function instruction() {};
-    };
-    
+  f.noRecursion = function(instructionMaker) {
     return this.makeMethod(instructionMaker);
   };
   
@@ -16,7 +11,8 @@ describe("Head recursion", function() {
   
   beforeEach(function() {
     
-    instructionMaker = jasmine.createSpy("instructionMaker");
+    instructionMaker = jasmine.createSpy("instructionMaker")
+    .and.returnValue(function instruction() {});
     
     interpreter = {
       noRecursion: f.noRecursion(instructionMaker), 
