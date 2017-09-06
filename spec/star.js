@@ -34,7 +34,7 @@ describe("A star quantifier", function() {
     expect(interpreter.abs("ab")).toEqual(["a", "b"]);
   });
   
-  it("doesn't leave a part half parsed", function() {
+  xit("doesn't leave a part half parsed", function() {
     interpreter.ab = f.group("a", "b", add);
     interpreter.abs = f.star("ab");
     interpreter.absa = f.group("abs", "a");
