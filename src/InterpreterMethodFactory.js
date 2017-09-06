@@ -60,9 +60,7 @@ InterpreterMethodFactory.prototype
     
     var maybeInstruction;
     maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
-    v.codePointer.restore(v.backup);
-    maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
-    
+
     InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
     

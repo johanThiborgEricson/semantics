@@ -1,27 +1,34 @@
 describe("Head recursion", function() {
   
   var f = new InterpreterMethodFactory();
-  
-  f.dummy = function(instructionMaker) {
+  f.noRecursion = function(spy) {
+    var instructionMaker = function() {
+      spy();
+      return function instruction() {};
+    };
+    
     return this.makeMethod(instructionMaker);
   };
   
-  var interpreter;
   var instructionMaker;
   
+  var interpreter;
+  
   beforeEach(function() {
-    interpreter = {};
     
-    instructionMaker = jasmine.createSpy("instructionMaker")
-    .and.returnValue(function(){});
+    instructionMaker = jasmine.createSpy("instructionMaker");
     
-    interpreter.dummy = f.dummy(instructionMaker);
+    interpreter = {
+      noRecursion: f.noRecursion(instructionMaker), 
+    };
+    
   });
   
-  it("parses each (non-)terminal twice", function() {
-    interpreter.dummy("");
+  it("doesn't look for recursive definitions if no head recursion is detected", 
+  function() {
+    interpreter.noRecursion("");
     
-    expect(instructionMaker).toHaveBeenCalledTimes(2);
+    expect(instructionMaker).toHaveBeenCalledTimes(1);
   });
   
 });
