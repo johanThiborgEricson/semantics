@@ -1,6 +1,22 @@
 describe("Parse result caching", function() {
   
   var f = new InterpreterMethodFactory();
+  f.parseCounter = function() {
+    var parseCount = 0;
+    var instructionMaker = function() {
+      parseCount++;
+      return (function(parseCount) {
+        return function instruction() {
+          return parseCount;
+        };
+        
+      })(parseCount);
+      
+    };
+    
+    return this.makeMethod(instructionMaker);
+  };
+  
   var interpreter;
   
   beforeEach(function() {
@@ -14,22 +30,6 @@ describe("Parse result caching", function() {
   
   it("remembers the result of parsing a terminal at the beginning of the code", 
   function() {
-    f.parseCounter = function() {
-      var parseCount = 0;
-      var instructionMaker = function() {
-        parseCount++;
-        return (function(parseCount) {
-          return function instruction() {
-            return parseCount;
-          };
-          
-        })(parseCount);
-        
-      };
-      
-      return this.makeMethod(instructionMaker);
-    };
-    
     interpreter.parseCounter = f.parseCounter();
     interpreter.doubleParseCounter = f.group("parseCounter", "parseCounter");
     
@@ -67,4 +67,13 @@ describe("Parse result caching", function() {
     expect(interpreter.acacab("ab")).toBe("ab");
   });
   
+  it("can cache results of methods with wierd names", function() {
+    var wierdName = "hasOwnProperty";
+    interpreter[wierdName] = f.parseCounter();
+    interpreter.doubleWierdName = f.group(wierdName, wierdName);
+    
+    var expected = {};
+    expected[wierdName] = [1, 1];
+    expect(interpreter.doubleWierdName("")).toEqual(expected);
+  });
 });
