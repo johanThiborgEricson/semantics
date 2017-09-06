@@ -36,4 +36,26 @@ describe("Parse result caching", function() {
     });
   });
   
+  it("continues parsing after the cached object", function() {
+    interpreter.a = f.atom(/a/);
+    interpreter.b = f.atom(/b/);
+    interpreter.c = f.atom(/c/);
+    interpreter.ab = f.group("a", "b");
+    interpreter.ac = f.group("a", "c");
+    interpreter.abac = f.or("ab", "ac");
+    
+    expect(interpreter.abac("ac")).toEqual({a: "a", c: "c"});
+  });
+  
+  it("only retrieves a cached result at the position in the code where it " + 
+  "was cached", function() {
+    interpreter.ab = f.atom(/a|b/);
+    interpreter.ab2 = f.group("ab", "ab");
+    
+    expect(interpreter.ab2("ab")).toEqual({
+      ab: ["a", "b"], 
+    });
+    
+  });
+  
 });

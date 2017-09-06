@@ -54,7 +54,12 @@ InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
   var methodFactory = this;
+  var d = 0;
   var method = function(code, debuggingOrMethodName) {
+    if(d++ > 1000) {
+      throw new Error();
+    }
+    
     var v = InterpreterMethodFactory.preInstructionMaker(this, methodFactory, 
     method, code, debuggingOrMethodName);
     
@@ -62,6 +67,7 @@ InterpreterMethodFactory.prototype
     var heads = v.codePointer.heads[v.backup] = 
         v.codePointer.heads[v.backup] || Object.create(null);
     if(heads[v.methodName]) {
+      v.codePointer.restore(heads[v.methodName].end);
       return heads[v.methodName].cache;
     } else {
       heads[v.methodName] = {};
@@ -72,6 +78,7 @@ InterpreterMethodFactory.prototype
     maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
     
     head.cache = maybeInstruction;
+    head.end = v.codePointer.backup();
     
     InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
