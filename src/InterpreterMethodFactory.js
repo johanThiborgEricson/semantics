@@ -171,15 +171,10 @@ InterpreterMethodFactory.prototype
       return null;
     }
     
-    var l = match.length;
-    var result = l<=2?match[l-1]:Array.prototype.slice.call(match, 1);
-    var interpretationArguments = Array.prototype.slice.call(match);
-    var fullMatch = interpretationArguments.shift(1);
-    interpretationArguments.push(fullMatch);
-    
+    var result = match[0];
     var instruction = function(interpreter) {
       if(interpretation) {
-        result = interpretation.apply(interpreter, interpretationArguments);
+        result = interpretation.call(interpreter, result);
       }
       
       return result;

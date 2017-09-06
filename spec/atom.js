@@ -30,23 +30,10 @@ describe("An atom", function() {
     expect(interpreter.ab("ab")).toBe("ab");
   });
   
-  it("returns the full match if there are no capturing groups", function() {
+  it("returns the match if no interpretation is supplied", function() {
     interpreter.a = f.atom(/a/);
     
     expect(interpreter.a("a")).toBe("a");
-  });
-  
-  it("returns the matching group, if there is only one", function() {
-    interpreter.a = f.atom(/padding(a)padding/);
-    
-    expect(interpreter.a("paddingapadding")).toBe("a");
-  });
-  
-  it("returns an array with all the matched groups, if there are many", 
-  function() {
-    interpreter.abc = f.atom(/pad(a)pad(b)pad(c)pad/);
-    
-    expect(interpreter.abc("padapadbpadcpad")).toEqual(["a", "b", "c"]);
   });
   
   it("fails if the regular expression can't be matched", function() {
@@ -56,14 +43,13 @@ describe("An atom", function() {
     expect(interpreter.ab("b")).toBe("b");
   });
   
-  it("calls its interpretation with its matching groups and the full match", 
-  function() {
-    var abSpy = jasmine.createSpy("abSpy");
-    interpreter.ab = f.atom(/pad(a)pad(b)pad/, abSpy);
+  it("calls its interpretation with the match", function() {
+    var aSpy = jasmine.createSpy("aSpy");
+    interpreter.a = f.atom(/a/, aSpy);
     
-    interpreter.ab("padapadbpad");
+    interpreter.a("a");
     
-    expect(abSpy).toHaveBeenCalledWith("a", "b", "padapadbpad");
+    expect(aSpy).toHaveBeenCalledWith("a");
   });
   
   it("calls its interpretation as a method of the interpreter", function() {
