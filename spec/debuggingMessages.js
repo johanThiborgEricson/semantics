@@ -91,7 +91,7 @@ describe("Debugging messages", function() {
   });
   
     
-  they("report head recursions", function() {
+  xthey("report head recursions", function() {
     interpreter.a = factory.atom(/a/);
     interpreter.b = factory.atom(/b/);
     interpreter.baaa = factory.hr("baaa1", "b");
