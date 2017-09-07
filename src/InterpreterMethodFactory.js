@@ -381,7 +381,9 @@ InterpreterMethodFactory.prototype
     }
     
     var instruction = function(interpreter) {
-      return instructionToDeferre;
+      return function() {
+        return instructionToDeferre(interpreter);
+      };
     };
     
     return instruction;
