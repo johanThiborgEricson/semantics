@@ -372,18 +372,18 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.deferredExecution = function(name) {
+.deferredExecution = function(strictThis){return function(partName) {
   "use strict";
   var instructionMaker = function(codePointer, interpreter) {
     var instructionToDeferre = InterpreterMethodFactory
-    .callInterpreterMethod(interpreter, name, codePointer);
+    .callInterpreterMethod(interpreter, partName, codePointer);
     if(!instructionToDeferre) {
       return null;
     }
     
     var instruction = function(interpreter) {
       return function() {
-        var thisBinding = this||interpreter;
+        var thisBinding = this===strictThis?interpreter:this;
         return instructionToDeferre(thisBinding);
       };
     };
@@ -392,4 +392,4 @@ InterpreterMethodFactory.prototype
   };
   
   return this.makeMethod(instructionMaker);
-};
+};}(function(){"use strict"; return this;}());
