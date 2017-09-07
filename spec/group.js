@@ -57,14 +57,19 @@ describe("A group", function() {
     // My IDE thinks "hasOwnProperty is a really bad name"...
     var hop = "hasOwnProperty"; 
     var emptyString = "";
+    interpreter.appendProperty = f.empty(function() {
+      return "appended property";
+    });
+    
     interpreter[hop] = f.atom(/hasOwnProperty/);
     interpreter.toString = f.atom(/toString/);
     interpreter[emptyString] = f.atom(/empty/);
     interpreter.length = f.atom(/length/);
     interpreter.wierdNames = f.group(
-      "hasOwnProperty", "toString", "", "length");
+      "appendProperty", "hasOwnProperty", "toString", "", "length");
     
     var expected = {};
+    expected.appendProperty = "appended property";
     expected[hop] = "hasOwnProperty";
     expected.toString = "toString";
     expected[emptyString] = "empty";

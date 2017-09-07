@@ -235,12 +235,13 @@ InterpreterMethodFactory.prototype
     }
     
     var instruction = function(interpreter) {
-      var result = new InterpreterMethodFactory.MultiPropertyObject();
+      var mpo = new InterpreterMethodFactory.MultiPropertyObject();
+      var result = {};
       var interpretationArguments = [];
       partInstructions.map(function(partInstruction) {
         var partResult = partInstruction(interpreter);
         interpretationArguments.push(partResult);
-        result.appendProperty(partInstruction.partName, partResult);
+        mpo.appendProperty.call(result, partInstruction.partName, partResult);
       });
       
       if(interpretation) {
