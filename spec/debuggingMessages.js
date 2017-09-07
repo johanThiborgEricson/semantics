@@ -64,8 +64,8 @@ describe("Debugging messages", function() {
   "the current line and the full match", function() {
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // %s", "/text/", 
-    "text", "text");
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // \"%s\"", 
+    "/text/", "text", "text");
   });
   
   they("if a match fails, reports the failure, the regExp and the rest of " + 

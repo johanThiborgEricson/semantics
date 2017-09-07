@@ -1,8 +1,5 @@
 Remove the CodePointer attribute. Or move CodePointer to the same file.
 Error messages for bad arguments.
-Implement separated lists.
-The quantifiers should be called quantifiers, not non terminals
-Nonterminal is one word, not two.
 var maybeInstruction = interpreter[name](cp) -> 
 var e = new TypeError("TypeError: "+name+" is not an interpreter method");
 if(!(interpreter[methodName] instanceof Function)) {
@@ -22,21 +19,17 @@ Make better error message for InterpreterMethodFactory.prototype
   fails, but I think this is a failure of Semantics! itself, not a bug in 
   the input to the interpreter. Maybe should be reported as an extention 
   failure?
-Detect if recursive call is necessary by resetting and setting a boolean in 
-  head.
 Move the static methods of InterpreterMethodFactory into a closure
 Write test case for debugging when the top symbol has a copied twin method.
 Add ^ to match debugging message to emphazise that it is a head match.
-Make debugging report the captured groups of a match
 Allow another this-binding than the interpreter itself.
 Add exeptions to InterpreterMethodFactory.callInterpreterMethod
-Move methodMaker from the prototype/this so that the factory methods can be 
+Move makeMethod from the prototype/this so that the factory methods can be 
   called as functions, e g apply
 Make a method accept many strings, concatenate them.
 The nonterminal padding behaves like group, but it returns the result of the 
   first named non regex method instead of an object. Optional index returns 
   the result of a later method instead.
-Put code pointer match in quotation marks in debugging messages.
 Implement but not in atoms. A pattern that the full match should not match, 
   treated as parse failure. May also be a list of strings, which is easier to 
   handle and more dynamic.
