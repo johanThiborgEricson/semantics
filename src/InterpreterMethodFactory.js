@@ -12,6 +12,17 @@ InterpreterMethodFactory
   return interpreter[methodName](codePointer, methodName);
 };
 
+InterpreterMethodFactory
+.interpretationMaybe = function(alternateResult, interpretation, 
+    staticArguments, dynamicArguments) {
+  if(!interpretation) {
+    return alternateResult;
+  }
+  
+  var interpreter = dynamicArguments[0];
+  return interpretation.apply(interpreter, staticArguments);
+};
+
 InterpreterMethodFactory.preInstructionMaker = 
 function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
   var v = {};
@@ -171,11 +182,8 @@ InterpreterMethodFactory.prototype
     
     var result = match[0];
     var instruction = function(interpreter) {
-      if(interpretation) {
-        result = interpretation.call(interpreter, result);
-      }
-      
-      return result;
+      return InterpreterMethodFactory.interpretationMaybe(
+        result, interpretation, [result], [interpreter]);
     };
     
     return instruction;
@@ -193,7 +201,8 @@ InterpreterMethodFactory.prototype
   
   var instructionMaker = function(codePointer, interpreter) {
     var instruction = function(interpreter) {
-      return interpretation.call(interpreter);
+      return InterpreterMethodFactory.interpretationMaybe(
+        "n/a", interpretation, [], [interpreter]);
     };
     
     return instruction;
@@ -244,11 +253,8 @@ InterpreterMethodFactory.prototype
         mpo.appendProperty.call(result, partInstruction.partName, partResult);
       });
       
-      if(interpretation) {
-        result = interpretation.apply(interpreter, interpretationArguments);
-      }
-      
-      return result;
+      return InterpreterMethodFactory.interpretationMaybe(
+        result, interpretation, interpretationArguments, [interpreter]);
     };
     
     return instruction;
@@ -333,11 +339,8 @@ InterpreterMethodFactory.prototype
         return partInstruction(interpreter);
       });
       
-      if(interpretation) {
-        results = interpretation.call(interpreter, results);
-      }
-      
-      return results;
+      return InterpreterMethodFactory.interpretationMaybe(
+        results, interpretation, [results], [interpreter]);
     };
     
     return instruction;
