@@ -63,20 +63,20 @@ InterpreterMethodFactory.prototype
         v.codePointer.heads[v.backup] || Object.create(null);
     if(heads[v.methodName]) {
       v.codePointer.restore(heads[v.methodName].end);
-      return heads[v.methodName].cache;
+      maybeInstruction = heads[v.methodName].cache;
     } else {
       heads[v.methodName] = {
         cache: null,
         end: v.backup,
       };
+    
+      var head = heads[v.methodName];
+      
+      maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
+      
+      head.cache = maybeInstruction;
+      head.end = maybeInstruction?v.codePointer.backup():v.backup;
     }
-    
-    var head = heads[v.methodName];
-    
-    maybeInstruction = instructionMaker(v.codePointer, this, v.methodName);
-    
-    head.cache = maybeInstruction;
-    head.end = maybeInstruction?v.codePointer.backup():v.backup;
     
     InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
