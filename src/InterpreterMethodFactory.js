@@ -259,26 +259,23 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.MultiPropertyObject = function() {
   var nameCount = Object.create(null);
-  // Can't return this because Jasmine be bitchin'
-  return Object.create({
-    appendProperty: function(name, partResult) {
-      var result = this;
-      if(nameCount[name] === undefined) {
-        nameCount[name] = 0;
-      }
-      
-      if(nameCount[name] === 0) {
-        this[name] = partResult;
-      } else if(nameCount[name] === 1) {
-        this[name] = [this[name], partResult];
-      } else {
-        this[name].push(partResult);
-      }
-      
-      nameCount[name]++;
-    },
-  });
-
+  this.appendProperty = function(name, partResult) {
+    var result = this;
+    if(nameCount[name] === undefined) {
+      nameCount[name] = 0;
+    }
+    
+    if(nameCount[name] === 0) {
+      this[name] = partResult;
+    } else if(nameCount[name] === 1) {
+      this[name] = [this[name], partResult];
+    } else {
+      this[name].push(partResult);
+    }
+    
+    nameCount[name]++;
+  };
+  
 };
 
 InterpreterMethodFactory.prototype.or = function() {
