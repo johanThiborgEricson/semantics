@@ -51,4 +51,18 @@ describe("A deferred execution", function() {
     expect(interpreter.d("a")()).toBe("a");
   });
   
+  it("may be run as a method of another object", function() {
+    interpreter.charEater = factory.atom(/./, function(char) {
+      this.eaten = char;
+    });
+    
+    interpreter.deferred = factory.deferredExecution("charEater");
+    var other = {
+      deferred: interpreter.deferred("a"),
+    };
+    
+    other.deferred();
+    expect(other.eaten).toBe("a");
+  });
+  
 });

@@ -373,6 +373,7 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.prototype
 .deferredExecution = function(name) {
+  "use strict";
   var instructionMaker = function(codePointer, interpreter) {
     var instructionToDeferre = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, name, codePointer);
@@ -382,7 +383,8 @@ InterpreterMethodFactory.prototype
     
     var instruction = function(interpreter) {
       return function() {
-        return instructionToDeferre(interpreter);
+        var thisBinding = this||interpreter;
+        return instructionToDeferre(thisBinding);
       };
     };
     
