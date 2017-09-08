@@ -48,7 +48,15 @@ describe("Head recursion", function() {
   });
   
   it("can recurse twice", function() {
-    expect(interpreter.as("aa", true)).toBe("e0aa");
+    expect(interpreter.as("aa")).toBe("e0aa");
+  });
+  
+  it("restores the state if its base case fails to parse", function() {
+    interpreter.baseCase = f.atom(/base case/);
+    interpreter.recursionFail = f.or("recursionFail", "baseCase");
+    interpreter.program = f.or("recursionFail", "a");
+    
+    expect(interpreter.program("a")).toBe("a");
   });
   
 });
