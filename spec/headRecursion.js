@@ -80,4 +80,24 @@ describe("Head recursion", function() {
     expect(interpreter.statements("e1e2\ne3\n")).toBe("e1e2\ne3\n");
   });
   
+  it("can recurse through multiple paths", function() {
+    interpreter = {
+      e: f.atom(/(?:)/),
+      b: f.atom(/b/),
+      c: f.atom(/c/),
+      bcs: f.or("bcs1", "e"),
+      bcs1: f.or("bcsb", "bcsc"),
+      bcsb: f.group("bcs", "b", add),
+      bcsc: f.group("bcs", "c", add),
+    };
+    
+    expect(interpreter.bcs("")).toBe("");
+    expect(interpreter.bcs("b")).toBe("b");
+    expect(interpreter.bcs("c")).toBe("c");
+    expect(interpreter.bcs("bb")).toBe("bb");
+    expect(interpreter.bcs("bc")).toBe("bc");
+    expect(interpreter.bcs("cb")).toBe("cb");
+    expect(interpreter.bcs("cc")).toBe("cc");
+  });
+  
 });
