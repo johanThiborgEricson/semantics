@@ -43,4 +43,12 @@ describe("Head recursion", function() {
     expect(interpreter.as("")).toBe("e0");
   });
   
+  it("can recurse once", function() {
+    expect(interpreter.as("a")).toBe("e0a");
+  });
+  
+  it("can recurse twice", function() {
+    expect(interpreter.as("aa", true)).toBe("e0aa");
+  });
+  
 });
