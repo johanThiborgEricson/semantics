@@ -11,14 +11,16 @@ describe("A star quantifier", function() {
   };
   
   beforeEach(function() {
-    interpreter = {};
-    interpreter.a = f.atom(/a/);
-    interpreter.as = f.star("a");
-    interpreter.b = f.atom(/b/);
-    interpreter.ab = f.atom(/[ab]/);
-    interpreter.abs = f.star("ab");
-    interpreter.abc = f.atom(/a|b|c/);
-    interpreter.list = f.star("abc", /,/);
+    interpreter = {
+      a: f.atom(/a/),
+      as: f.star("a"),
+      b: f.atom(/b/),
+      ab: f.atom(/[ab]/),
+      abs: f.star("ab"),
+      abc: f.atom(/a|b|c/),
+      list: f.star("abc", /,/),
+    };
+    
   });
   
   

@@ -4,15 +4,16 @@ describe("A group", function() {
   var interpreter;
   
   beforeEach(function() {
-    interpreter = {};
-    interpreter.a = f.atom(/a/);
-    interpreter.b = f.atom(/b/);
-    interpreter.ac = f.atom(/a/, (function() {
-      var i = 1;
-      return function(a) {
-        return a+i++;
-      };
-    })());
+    interpreter = {
+      a: f.atom(/a/),
+      b: f.atom(/b/),
+      ac: f.atom(/a/, (function() {
+        var i = 1;
+        return function(a) {
+          return a+i++;
+        };
+      })())
+    };
     
   });
   

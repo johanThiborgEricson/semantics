@@ -4,13 +4,15 @@ describe("The question mark quantifier", function() {
   var i;
   
   beforeEach(function() {
-    i = {};
-    i.a = f.atom(/a/);
-    i.b = f.atom(/b/);
-    i.ar = f.atom(/a/, function() {
-      return "the result";
-    });
-    
+    i = {
+      a: f.atom(/a/),
+      b: f.atom(/b/),
+      ar: f.atom(/a/, function() {
+        return "the result";
+      }),
+      
+    };
+
   });
   
   it("matches its part once", function() {

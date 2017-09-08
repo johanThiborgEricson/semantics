@@ -6,10 +6,12 @@ describe("An or", function() {
   };
   
   beforeEach(function() {
-    i = {};
-    i.a = f.atom(/a/);
-    i.b = f.atom(/b/);
-    i.c = f.atom(/c/);
+    i = {
+      a: f.atom(/a/),
+      b: f.atom(/b/),
+      c: f.atom(/c/),
+    };
+
   });
   
   it("returns the first successfully parsed alternative", function() {

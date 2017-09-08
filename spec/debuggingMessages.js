@@ -5,10 +5,13 @@ describe("Debugging messages", function() {
   var factory = new InterpreterMethodFactory();
   
   beforeEach(function() {
-    interpreter = {};
-    interpreter.text = factory.atom(/text/, function() {});
-    interpreter.lineBreak = factory.atom(/\n/, function() {});
-    interpreter.paragraph = factory.group("text", "lineBreak");
+    interpreter = {
+      text: factory.atom(/text/),
+      lineBreak: factory.atom(/\n/),
+      paragraph: factory.group("text", "lineBreak"),
+      somethingElse: factory.atom(/Something else\n?/),
+    };
+    
     spyOn(console, "log");
   });
   
@@ -27,9 +30,8 @@ describe("Debugging messages", function() {
   they("aren't showed when called externally internally if failing if " + 
   "turned off", 
   function() {
-    try {
-      interpreter.paragraph("Something else\n");
-    } catch(e) {}
+    interpreter.program = factory.or("paragraph", "somethingElse");
+    interpreter.program("Something else\n");
     
     expect(console.log).not.toHaveBeenCalled();
   });
@@ -49,10 +51,8 @@ describe("Debugging messages", function() {
   they("report parse start, end and failure when called internally and " + 
   "externally and failing", 
   function() {
-
-    try {
-      interpreter.paragraph("Something else\n", true);
-    } catch(e) {}
+    interpreter.program = factory.or("paragraph", "somethingElse");
+    interpreter.program("Something else\n", true);
     
     expect(console.log).toHaveBeenCalledWith("%s: parse start", "paragraph");
     expect(console.log).toHaveBeenCalledWith("%s: parse start", "text");
@@ -70,9 +70,8 @@ describe("Debugging messages", function() {
   
   they("if a match fails, reports the failure, the regExp and the rest of " + 
   "the current line", function() {
-    try {
-      interpreter.paragraph("Something else", true);
-    } catch(e) {}
+    interpreter.program = factory.or("paragraph", "somethingElse");
+    interpreter.program("Something else", true);
     
     expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // %s", 
     "/text/", "Something else", "null");
