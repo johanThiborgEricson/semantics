@@ -45,3 +45,5 @@ Move group object results test to multiPropertyObject.
 or(opt(group(/a/, /b/)), /ac/)))("ac")
 Is makeMethod a mixin?
 Indentation of debugging messages.
+What is the error message if a nonterminal fails without having tried to parse 
+  anything?
