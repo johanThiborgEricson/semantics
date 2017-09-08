@@ -59,4 +59,25 @@ describe("Head recursion", function() {
     expect(interpreter.program("a")).toBe("a");
   });
   
+  it("can be nested", function() {
+    interpreter = {
+      e: f.empty(function(){
+        return "";
+      }),
+      
+      newline: f.atom(/\n/),
+      statements: f.or("statements1", "e"),
+      statements1: f.group("statements", "statement", add),
+      statement: f.group("expressions", "newline", add),
+      expressions: f.or("expressions1", "e"),
+      expressions1: f.group("expressions", "expression", add),
+      expression: f.atom(/e\d/),
+    };
+    
+    expect(interpreter.statements("")).toBe("");
+    expect(interpreter.statements("\n")).toBe("\n");
+    expect(interpreter.statements("e1\n")).toBe("e1\n");
+    expect(interpreter.statements("e1e2\ne3\n")).toBe("e1e2\ne3\n");
+  });
+  
 });
