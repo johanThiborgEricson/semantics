@@ -318,24 +318,20 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.deferredExecution = function(strictThis){return function(partName) {
-  "use strict";
+.deferredExecution = function(name) {
   var instructionMaker = function(codePointer, interpreter) {
     var instructionToDeferre = InterpreterMethodFactory
-    .callInterpreterMethod(interpreter, partName, codePointer);
+    .callInterpreterMethod(interpreter, name, codePointer);
     if(!instructionToDeferre) {
       return null;
     }
     
     var instruction = function(interpreter) {
-      return function() {
-        var thisBinding = this===strictThis?interpreter:this;
-        return instructionToDeferre(thisBinding);
-      };
+      return instructionToDeferre;
     };
     
     return instruction;
   };
   
   return this.makeMethod(instructionMaker);
-};}(function(){"use strict"; return this;}());
+};
