@@ -6,8 +6,10 @@ describe("Head recursion", function() {
   };
   
   var instructionMaker;
-  
   var interpreter;
+  var add = function(a, b) {
+    return a+b;
+  };
   
   beforeEach(function() {
     
@@ -16,6 +18,16 @@ describe("Head recursion", function() {
     
     interpreter = {
       noRecursion: f.noRecursion(instructionMaker), 
+      a: f.atom(/a/),
+      as: f.or("as1", "ec"),
+      as1: f.group("as", "a", add),
+      ec: f.empty(function() {
+        var i = 0;
+        return function() {
+          return "e"+i++;
+        };
+      }()),
+      
     };
     
   });
@@ -25,6 +37,10 @@ describe("Head recursion", function() {
     interpreter.noRecursion("");
     
     expect(instructionMaker).toHaveBeenCalledTimes(1);
+  });
+  
+  it("can return a base case", function() {
+    expect(interpreter.as("")).toBe("e0");
   });
   
 });
