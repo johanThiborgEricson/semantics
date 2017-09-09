@@ -40,15 +40,30 @@ describe("The longest nonterminal", function() {
     expect(interpreter.program("ab")).toBe("ab");
   });
   
+  it("continues matching from the end of the longest match, not the last " + 
+  "match", function() {
+    interpreter = {
+      a: f.atom(/a/),
+      aa: f.atom(/aa/),
+      longest: f.longest("aa", "a"),
+      program: f.group("longest", "a"),
+    };
+    
+    expect(interpreter.program("aaa")).toEqual(
+      {
+        longest: "aa",
+        a: "a",
+      });
+  });
+  
   it("returns the longest match", function() {
     interpreter = {
       a: f.atom(/a/),
       ab: f.atom(/ab/),
-      abc: f.atom(/abc/),
-      longest: f.longest("a", "abc", "ab"),
+      longest: f.longest("a", "ab"),
     };
     
-    expect(interpreter.longest("abc")).toBe("abc");
+    expect(interpreter.longest("ab")).toBe("ab");
   });
   
   it("returns the first match if there are two equaly long ones", function() {
