@@ -40,10 +40,19 @@ describe("The question mark quantifier", function() {
     expect(i.maybeA("a")).toBe("the result");
   });
   
-  it("returns the default value if it didn't match", function() {
-    i.maybeA = f.opt("ar", "the default value");
+  it("returns the result of its interpretation if it didn't match", function() {
+    i.maybeA = f.opt("a", function() {
+      return "the default value";
+    });
     
     expect(i.maybeA("")).toBe("the default value");
+  });
+  
+  it("returns undefined it didn't match and no interpretation is supplied", 
+  function() {
+    i.maybeA = f.opt("a");
+    
+    expect(i.maybeA("")).toBe(undefined);
   });
   
   it("calls its part as a method of the interpreter", function() {

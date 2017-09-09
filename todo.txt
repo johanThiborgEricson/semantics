@@ -51,5 +51,7 @@ Todo: make instructions remember their ends so we dont need heads. Then
   restoration of the codepointer can be made in one place, post instruction 
   maker, which will reduce risks for errors, just like failed parsings are 
   restored.
-Write test for longest code pointer restoration of successful but not returned 
-  parts. group(longest(aa, a), a)(aaa)
+Opt, isPrimitive = defaultValue === null || 
+  ["undefined", "boolean", "number", "string"]
+  .indexOf(typeof defaultValue) > -1;
+  return isPrimitive?defaultValue:defaultValue();
