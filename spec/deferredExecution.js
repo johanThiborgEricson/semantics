@@ -29,4 +29,39 @@ describe("A deferred execution", function() {
     expect(interpreter.program("b")).toBe("b");
   });
   
+  it("makes a method", function() {
+    interpreter.charEater = factory.atom(/./, function(theChar) {
+      this.eatenChar = theChar;
+    });
+    
+    interpreter.methodFactory = factory.deferredExecution("charEater");
+    interpreter.method = interpreter.methodFactory("a");
+    interpreter.method();
+    
+    expect(interpreter.eatenChar).toBe("a");
+  });
+  
+  it("makes a method that can be a property of any object", function() {
+    interpreter.charEater = factory.atom(/./, function(theChar) {
+      this.eatenChar = theChar;
+    });
+    
+    interpreter.methodFactory = factory.deferredExecution("charEater");
+    var o = {
+      method: interpreter.methodFactory("a"),
+    };
+    
+    o.method();
+    
+    expect(o.eatenChar).toBe("a");
+  });
+  
+  it("returns the result of its part", function() {
+    interpreter.a = factory.atom(/a/);
+    interpreter.methodFactory = factory.deferredExecution("a");
+    interpreter.method = interpreter.methodFactory("a");
+    
+    expect(interpreter.method()).toBe("a");
+  });
+  
 });

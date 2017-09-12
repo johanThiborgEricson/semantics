@@ -52,3 +52,5 @@ Opt, isPrimitive = defaultValue === null ||
   .indexOf(typeof defaultValue) > -1;
   return isPrimitive?defaultValue:defaultValue();
 Star will return the delimiters if they are mehod names, not regexes.
+deferredExecution => methodFactory
+In deferred execution factory => f
