@@ -1,5 +1,5 @@
-describe("A deferred execution", function() {
-  var factory = new InterpreterMethodFactory();
+describe("A method factory", function() {
+  var f = new InterpreterMethodFactory();
   var interpreter;
   
   beforeEach(function() {
@@ -8,10 +8,10 @@ describe("A deferred execution", function() {
     };
   });
   
-  it("can be called later", function() {
+  it("can be called", function() {
     var interpretation = jasmine.createSpy("interpretation");
-    interpreter.instruction = factory.atom(/a/, interpretation);
-    interpreter.deferrer = factory.deferredExecution("instruction");
+    interpreter.instruction = f.atom(/a/, interpretation);
+    interpreter.deferrer = f.methodFactory("instruction");
     var callable = interpreter.deferrer("a");
     
     expect(interpretation).not.toHaveBeenCalled();
@@ -20,21 +20,21 @@ describe("A deferred execution", function() {
   });
   
   it("fails to parse if its part fails to parse", function() {
-    interpreter.ab = factory.group("deferredA", "b");
-    interpreter.b = factory.atom(/b/);
-    interpreter.a = factory.atom(/a/);
-    interpreter.deferredA = factory.deferredExecution("a");
-    interpreter.program = factory.or("ab", "b");
+    interpreter.ab = f.group("deferredA", "b");
+    interpreter.b = f.atom(/b/);
+    interpreter.a = f.atom(/a/);
+    interpreter.deferredA = f.methodFactory("a");
+    interpreter.program = f.or("ab", "b");
     
     expect(interpreter.program("b")).toBe("b");
   });
   
   it("makes a method", function() {
-    interpreter.charEater = factory.atom(/./, function(theChar) {
+    interpreter.charEater = f.atom(/./, function(theChar) {
       this.eatenChar = theChar;
     });
     
-    interpreter.methodFactory = factory.deferredExecution("charEater");
+    interpreter.methodFactory = f.methodFactory("charEater");
     interpreter.method = interpreter.methodFactory("a");
     interpreter.method();
     
@@ -42,11 +42,11 @@ describe("A deferred execution", function() {
   });
   
   it("makes a method that can be a property of any object", function() {
-    interpreter.charEater = factory.atom(/./, function(theChar) {
+    interpreter.charEater = f.atom(/./, function(theChar) {
       this.eatenChar = theChar;
     });
     
-    interpreter.methodFactory = factory.deferredExecution("charEater");
+    interpreter.methodFactory = f.methodFactory("charEater");
     var o = {
       method: interpreter.methodFactory("a"),
     };
@@ -57,8 +57,8 @@ describe("A deferred execution", function() {
   });
   
   it("returns the result of its part", function() {
-    interpreter.a = factory.atom(/a/);
-    interpreter.methodFactory = factory.deferredExecution("a");
+    interpreter.a = f.atom(/a/);
+    interpreter.methodFactory = f.methodFactory("a");
     interpreter.method = interpreter.methodFactory("a");
     
     expect(interpreter.method()).toBe("a");
