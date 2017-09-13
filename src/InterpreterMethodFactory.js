@@ -136,7 +136,7 @@ InterpreterMethodFactory.prototype
   
   var instructionMaker = function(codePointer, interpreter) {
     var match = InterpreterMethodFactory
-    .parseInsignificantAndToken(codePointer, regExp);
+    .parseInsignificantAndToken(codePointer, regExp, interpreter);
     if(match === null) {
       return null;
     }
@@ -437,11 +437,16 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.parseInsignificantAndToken 
-= function(codePointer, regExp) {
-  if(codePointer.insignificant) {
+= function(codePointer, regExp, interpreter) {
+  if(codePointer.insignificant instanceof RegExp) {
     if(!codePointer.matchAtPointer(codePointer.insignificant)) {
       return null;
     }
+  } else if(typeof codePointer.insignificant === "string") {
+    var insignificant = codePointer.insignificant;
+    delete codePointer.insignificant;
+    InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, insignificant, codePointer);
   }
   
   return codePointer.matchAtPointer(regExp);
