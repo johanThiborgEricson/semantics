@@ -439,34 +439,6 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.parseInsignificantAndToken 
 = function(codePointer, regExp, interpreter) {
-  if(codePointer.insignificant instanceof RegExp) {
-    if(!codePointer.matchAtPointer(codePointer.insignificant)) {
-      return null;
-    }
-  } else if(typeof codePointer.insignificant === "string") {
-    var insignificant = codePointer.insignificant;
-    delete codePointer.insignificant;
-    if(!InterpreterMethodFactory
-    .callInterpreterMethod(interpreter, insignificant, codePointer)) {
-      return null;
-    }
-    codePointer.insignificant = insignificant;
-  }
-  
   return codePointer.matchAtPointer(regExp);
 };
 
-InterpreterMethodFactory.prototype
-.insignificant = function(insignificant, partName) {
-  "use strict";
-  var instructionMaker = function(codePointer, interpreter) {
-    var outerInsignificant = codePointer.insignificant;
-    codePointer.insignificant = insignificant;
-    var maybeInstruction = InterpreterMethodFactory
-    .callInterpreterMethod(interpreter, partName, codePointer);
-    codePointer.insignificant = outerInsignificant;
-    return maybeInstruction;
-  };
-  
-  return this.makeMethod(instructionMaker);
-};
