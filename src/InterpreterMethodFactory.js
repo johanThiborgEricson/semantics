@@ -451,10 +451,11 @@ InterpreterMethodFactory.prototype
 .insignificant = function(insignificant, partName) {
   "use strict";
   var instructionMaker = function(codePointer, interpreter) {
+    var outerInsignificant = codePointer.insignificant;
     codePointer.insignificant = insignificant;
     var maybeInstruction = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, partName, codePointer);
-    delete codePointer.insignificant;
+    codePointer.insignificant = outerInsignificant;
     return maybeInstruction;
   };
   

@@ -9,6 +9,7 @@ describe("The insignificant meta instruction", function() {
   beforeEach(function() {
     interpreter = {
       a: f.atom(/a/),
+      b: f.atom(/b/),
       ia: f.insignificant(/i/, "a"),
     };
   });
@@ -29,6 +30,13 @@ describe("The insignificant meta instruction", function() {
     interpreter.program = f.or("ia", "fail");
     
     expect(interpreter.program("a")).toBe("failure");
+  });
+  
+  it("can be nested", function() {
+    interpreter.program = f.or("ia", "b");
+    interpreter.j = f.insignificant(/j/, "program");
+    
+    expect(interpreter.j("jb")).toBe("b");
   });
   
 });
