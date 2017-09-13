@@ -11,6 +11,8 @@ describe("The insignificant meta instruction", function() {
       a: f.atom(/a/),
       b: f.atom(/b/),
       ia: f.insignificant(/i/, "a"),
+      j: f.atom(/j/),
+      ja: f.insignificant("j", "a"),
     };
   });
   
@@ -39,11 +41,32 @@ describe("The insignificant meta instruction", function() {
     expect(interpreter.j("jb")).toBe("b");
   });
   
-  it("can skip a nonterminal", function() {
+  it("can skip one nonterminal", function() {
+    expect(interpreter.ja("ja")).toBe("a");
+  });
+  
+  it("can skip many insignificant nonterminals", function() {
     interpreter.i = f.atom(/i/);
-    interpreter.ia = f.insignificant("i", "a");
+    interpreter.ias = f.insignificant("i", "as");
+    interpreter.as = f.star("a");
     
-    expect(interpreter.ia("ia")).toBe("a");
+    expect(interpreter.ias("iaia")).toEqual(["a", "a"]);
+  });
+  
+  it("fails if its insignificant nonterminal fails", function() {
+    interpreter.fail = f.atom(/a/, fail);
+    interpreter.program = f.or("ja", "fail");
+    
+    expect(interpreter.program("a", true)).toBe("failure");
+  });
+  
+  it("effects the delimiters of a list", function() {
+    interpreter.as = f.star("a", /,/);
+    interpreter.ap = f.plus("a", /,/);
+    interpreter.ias = f.insignificant(/ /, "as");
+    interpreter.iap = f.insignificant(/ /, "ap");
+    
+    expect(interpreter.ias(" a , a")).toEqual(["a", "a"]);
   });
   
 });

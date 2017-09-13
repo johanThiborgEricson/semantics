@@ -201,7 +201,8 @@ InterpreterMethodFactory.prototype
         maybeInstruction.partName = partName;
         partInstructions.push(maybeInstruction);
       } else if(partName instanceof RegExp) {
-        if(!codePointer.matchAtPointer(partName)) {
+        if(!InterpreterMethodFactory
+            .parseInsignificantAndToken(codePointer, partName, interpreter)) {
           return null;
         }
       }
@@ -445,8 +446,11 @@ InterpreterMethodFactory.parseInsignificantAndToken
   } else if(typeof codePointer.insignificant === "string") {
     var insignificant = codePointer.insignificant;
     delete codePointer.insignificant;
-    InterpreterMethodFactory
-    .callInterpreterMethod(interpreter, insignificant, codePointer);
+    if(!InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, insignificant, codePointer)) {
+      return null;
+    }
+    codePointer.insignificant = insignificant;
   }
   
   return codePointer.matchAtPointer(regExp);
