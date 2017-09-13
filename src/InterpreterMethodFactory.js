@@ -122,6 +122,15 @@ InterpreterMethodFactory.prototype
   }
 };
 
+InterpreterMethodFactory.parseInsignificantAndToken 
+= function(codePointer, regExp) {
+  if(codePointer.insignificant) {
+    codePointer.matchAtPointer(codePointer.insignificant);
+  }
+  
+  return codePointer.matchAtPointer(regExp);
+};
+
 InterpreterMethodFactory.prototype
 .atom = function(regExp, interpretationOrButNot) {
   "use strict";
@@ -135,7 +144,8 @@ InterpreterMethodFactory.prototype
   }
   
   var instructionMaker = function(codePointer, interpreter) {
-    var match = codePointer.matchAtPointer(regExp);
+    var match = InterpreterMethodFactory
+    .parseInsignificantAndToken(codePointer, regExp);
     if(match === null) {
       return null;
     }
@@ -430,6 +440,19 @@ InterpreterMethodFactory.prototype
     };
     
     return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+InterpreterMethodFactory.prototype
+.insignificant = function(insignificant, partName) {
+  "use strict";
+  var instructionMaker = function(codePointer, interpreter) {
+    codePointer.insignificant = insignificant;
+    var maybeInstruction = InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, partName, codePointer);
+    return maybeInstruction;
   };
   
   return this.makeMethod(instructionMaker);
