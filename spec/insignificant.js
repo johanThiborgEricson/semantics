@@ -23,7 +23,14 @@ describe("The insignificant meta-nonterminal", function() {
     interpreter.program = f.insignificant(/j/, "iab");
     interpreter.iab = f.or("ia", "b");
     
-    expect(interpreter.program("jbj")).toBe("b");
+    expect(interpreter.program("jbj", true)).toBe("b");
+  });
+  
+  it("fails if the trailing insignificant fails", function() {
+    interpreter.fail = f.atom(/ia/, fail);
+    interpreter.program = f.or("ia", "fail");
+    
+    expect(interpreter.program("ia")).toBe("failure");
   });
   
 });

@@ -445,9 +445,8 @@ InterpreterMethodFactory.parseInsignificantAndToken
 
 InterpreterMethodFactory.parseInsignificant
 = function(codePointer, interpreter) {
-  if(codePointer.insignificant) {
-    codePointer.matchAtPointer(codePointer.insignificant);
-  }
+  return codePointer.insignificant?
+  codePointer.matchAtPointer(codePointer.insignificant):true;
 };
 
 InterpreterMethodFactory.prototype
@@ -459,7 +458,10 @@ InterpreterMethodFactory.prototype
     codePointer.insignificant = insignificant;
     var instruction = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, partName, codePointer);
-    InterpreterMethodFactory.parseInsignificant(codePointer, interpreter);
+    if(!InterpreterMethodFactory.parseInsignificant(codePointer, interpreter)){
+      instruction = null;
+    }
+    
     codePointer.insignificant = outerInsignificant;
     return instruction;
   };

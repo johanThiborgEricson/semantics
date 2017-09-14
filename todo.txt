@@ -54,3 +54,5 @@ Opt, isPrimitive = defaultValue === null ||
 Star will return the delimiters if they are mehod names, not regexes.
 Fix interaction between insignificant and caching.
   or(insignificant(/i/, group("a")), "a")("a") == "a";
+Only parse last insignificant if it has been parsed before 
+  insignificant(/i/, insignificant(/j/, "a"))("jaj") => "a"
