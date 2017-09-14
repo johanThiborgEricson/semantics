@@ -438,7 +438,33 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.parseInsignificantAndToken 
-= function(codePointer, regExp, interpreter) {
-  return codePointer.matchAtPointer(regExp);
+= function(codePointer, token, interpreter) {
+  this.parseInsignificant(codePointer, interpreter);
+  return codePointer.matchAtPointer(token);
 };
+
+InterpreterMethodFactory.parseInsignificant
+= function(codePointer, interpreter) {
+  if(codePointer.insignificant) {
+    codePointer.matchAtPointer(codePointer.insignificant);
+  }
+};
+
+InterpreterMethodFactory.prototype
+.insignificant = function(insignificant, partName) {
+  "use strict";
+
+  var instructionMaker = function(codePointer, interpreter) {
+    codePointer.insignificant = insignificant;
+    var instruction = InterpreterMethodFactory
+    .callInterpreterMethod(interpreter, partName, codePointer);
+    InterpreterMethodFactory.parseInsignificant(codePointer, interpreter);
+    
+    return instruction;
+  };
+  
+  return this.makeMethod(instructionMaker);
+};
+
+
 
