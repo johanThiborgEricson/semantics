@@ -44,7 +44,7 @@ describe("The insignificant meta-nonterminal", function() {
   it("can be a nonterminal", function() {
     interpreter.ja = f.insignificant("j", "a");
     
-    expect(interpreter.ja("jaj", true)).toBe("a");
+    expect(interpreter.ja("jaj")).toBe("a");
   });
   
 });
