@@ -1,6 +1,6 @@
 describe("CodePointer.getParseErrorDescription()", function() {
   it("tells what it expected and what it saw", function() {
-    var codePointer = CodePointer("ab");
+    var codePointer = new CodePointer("ab");
     codePointer.matchAtPointer(/a/);
     codePointer.matchAtPointer(/c/);
     expect(codePointer.getParseErrorDescription())
@@ -8,7 +8,7 @@ describe("CodePointer.getParseErrorDescription()", function() {
   });
   
   it("ignores calls with longer actuall code", function(){
-    var codePointer = CodePointer("abc");
+    var codePointer = new CodePointer("abc");
     codePointer.matchAtPointer(/a/);
     var backup = codePointer.backup();
     codePointer.matchAtPointer(/b/);
@@ -21,7 +21,7 @@ describe("CodePointer.getParseErrorDescription()", function() {
   
   it("remembers calls with actuall code of equal length (for alternatives)", 
   function(){
-    var codePointer = CodePointer("ab");
+    var codePointer = new CodePointer("ab");
     codePointer.matchAtPointer(/a/);
     codePointer.matchAtPointer(/c/);
     codePointer.matchAtPointer(/d/);
@@ -31,7 +31,7 @@ describe("CodePointer.getParseErrorDescription()", function() {
   
   it("forgets remembered token if called with shorter actuall code", 
   function(){
-    var codePointer = CodePointer("abc");
+    var codePointer = new CodePointer("abc");
     codePointer.matchAtPointer(/a/);
     var backup = codePointer.backup();
     codePointer.matchAtPointer(/e/);
