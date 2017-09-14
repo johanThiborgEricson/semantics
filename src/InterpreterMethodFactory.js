@@ -481,6 +481,3 @@ InterpreterMethodFactory.prototype
   
   return this.makeMethod(instructionMaker);
 };
-
-
-
