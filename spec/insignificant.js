@@ -19,4 +19,11 @@ describe("The insignificant meta-nonterminal", function() {
     expect(interpreter.ia("iai")).toBe("a");
   });
   
+  it("can be nested", function() {
+    interpreter.program = f.insignificant(/j/, "iab");
+    interpreter.iab = f.or("ia", "b");
+    
+    expect(interpreter.program("jbj")).toBe("b");
+  });
+  
 });

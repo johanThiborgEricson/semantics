@@ -455,11 +455,12 @@ InterpreterMethodFactory.prototype
   "use strict";
 
   var instructionMaker = function(codePointer, interpreter) {
+    var outerInsignificant = codePointer.insignificant;
     codePointer.insignificant = insignificant;
     var instruction = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, partName, codePointer);
     InterpreterMethodFactory.parseInsignificant(codePointer, interpreter);
-    
+    codePointer.insignificant = outerInsignificant;
     return instruction;
   };
   
