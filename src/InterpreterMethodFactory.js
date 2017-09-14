@@ -450,8 +450,15 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.prototype
 .parseInsignificant = function(codePointer, interpreter) {
-  return codePointer.insignificant?
-  codePointer.matchAtPointer(codePointer.insignificant):true;
+  if(codePointer.insignificant instanceof RegExp) {
+    return codePointer.matchAtPointer(codePointer.insignificant);
+  } else if(typeof codePointer.insignificant === "string"){
+    return this.insignificant(undefined, codePointer.insignificant)
+    .call(interpreter, codePointer, "(insignificant) " +
+    codePointer.insignificant);
+  } else {
+    return true;
+  }
 };
 
 InterpreterMethodFactory.prototype
