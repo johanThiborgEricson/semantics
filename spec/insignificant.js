@@ -33,4 +33,11 @@ describe("The insignificant meta-nonterminal", function() {
     expect(interpreter.program("ia")).toBe("failure");
   });
   
+  it("fails if a leading insignificant fails", function() {
+    interpreter.fail = f.atom(/ai/, fail);
+    interpreter.program = f.or("ia", "fail");
+    
+    expect(interpreter.program("ai")).toBe("failure");
+  });
+  
 });

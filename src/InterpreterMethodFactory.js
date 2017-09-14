@@ -439,7 +439,9 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.parseInsignificantAndToken 
 = function(codePointer, token, interpreter) {
-  this.parseInsignificant(codePointer, interpreter);
+  if(!InterpreterMethodFactory.parseInsignificant(codePointer, interpreter)) {
+    return null;
+  }
   return codePointer.matchAtPointer(token);
 };
 
