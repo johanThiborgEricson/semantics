@@ -125,6 +125,7 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .atom = function(regExp, interpretationOrButNot) {
   "use strict";
+  var that = this;
   var interpretation;
   var butNot;
   if(typeof interpretationOrButNot === "function") {
@@ -135,7 +136,7 @@ InterpreterMethodFactory.prototype
   }
   
   var instructionMaker = function(codePointer, interpreter) {
-    var match = InterpreterMethodFactory
+    var match = that
     .parseInsignificantAndToken(codePointer, regExp, interpreter);
     if(match === null) {
       return null;
@@ -179,6 +180,7 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .group = function() {
   "use strict";
+  var that = this;
   var partNames;
   var interpretation = arguments[arguments.length-1];
   if(interpretation instanceof Function) {
@@ -201,7 +203,7 @@ InterpreterMethodFactory.prototype
         maybeInstruction.partName = partName;
         partInstructions.push(maybeInstruction);
       } else if(partName instanceof RegExp) {
-        if(!InterpreterMethodFactory
+        if(!that
             .parseInsignificantAndToken(codePointer, partName, interpreter)) {
           return null;
         }
@@ -437,16 +439,17 @@ InterpreterMethodFactory.prototype
   return this.makeMethod(instructionMaker);
 };
 
-InterpreterMethodFactory.parseInsignificantAndToken 
-= function(codePointer, token, interpreter) {
-  if(!InterpreterMethodFactory.parseInsignificant(codePointer, interpreter)) {
+InterpreterMethodFactory.prototype
+.parseInsignificantAndToken = function(codePointer, token, interpreter) {
+  if(!this.parseInsignificant(codePointer, interpreter)) {
     return null;
   }
+  
   return codePointer.matchAtPointer(token);
 };
 
-InterpreterMethodFactory.parseInsignificant
-= function(codePointer, interpreter) {
+InterpreterMethodFactory.prototype
+.parseInsignificant = function(codePointer, interpreter) {
   return codePointer.insignificant?
   codePointer.matchAtPointer(codePointer.insignificant):true;
 };
@@ -454,13 +457,14 @@ InterpreterMethodFactory.parseInsignificant
 InterpreterMethodFactory.prototype
 .insignificant = function(insignificant, partName) {
   "use strict";
+  var that = this;
 
   var instructionMaker = function(codePointer, interpreter) {
     var outerInsignificant = codePointer.insignificant;
     codePointer.insignificant = insignificant;
     var instruction = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, partName, codePointer);
-    if(!InterpreterMethodFactory.parseInsignificant(codePointer, interpreter)){
+    if(!that.parseInsignificant(codePointer, interpreter)){
       instruction = null;
     }
     
