@@ -1,12 +1,5 @@
 Remove the CodePointer attribute. Or move CodePointer to the same file.
 Error messages for bad arguments.
-var maybeInstruction = interpreter[name](cp) -> 
-var e = new TypeError("TypeError: "+name+" is not an interpreter method");
-if(!(interpreter[methodName] instanceof Function)) {
-  throw e;
-}
-var mi = interpreter[name](cp);
-return mi;
 Move CodePointer method tests to specInterpreterCodePointer.js, except parse
 
 token.toString() -> token.toString().replace(/^\/\^?/, "/^")
@@ -56,3 +49,6 @@ Fix interaction between insignificant and caching.
   or(insignificant(/i/, group("a")), "a")("a") == "a";
 Only parse last insignificant if it has been parsed before 
   insignificant(/i/, insignificant(/j/, "a"))("jaj") => "a"
+No. Parse both insignificant 
+    insignificant(/i/, insignificant(/j/, "a"))("ijaji") => "a"
+Use named functions more and give them distinct names to simplify debugging.
