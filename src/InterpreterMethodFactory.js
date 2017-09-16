@@ -497,6 +497,7 @@ InterpreterMethodFactory.prototype
   var that = this;
 
   var instructionMaker = function(codePointer, interpreter) {
+    that.parseInsignificant(codePointer, interpreter);
     var instruction = that.shiftInsignificant(insignificant, partName, 
     codePointer, interpreter);
     return instruction;

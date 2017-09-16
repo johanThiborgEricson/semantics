@@ -47,4 +47,10 @@ describe("The insignificant meta-nonterminal", function() {
     expect(interpreter.ja("jaj")).toBe("a");
   });
   
+  it("becomes double padded on nesting", function() {
+    interpreter.program = f.insignificant(/j/, "ia");
+    
+    expect(interpreter.program("jiaij")).toBe("a");
+  });
+  
 });
