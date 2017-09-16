@@ -52,3 +52,4 @@ Only parse last insignificant if it has been parsed before
 No. Parse both insignificant 
     insignificant(/i/, insignificant(/j/, "a"))("ijaji") => "a"
 Use named functions more and give them distinct names to simplify debugging.
+Move error tests from codePointer to error.
