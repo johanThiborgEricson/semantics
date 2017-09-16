@@ -53,4 +53,12 @@ describe("The insignificant meta-nonterminal", function() {
     expect(interpreter.program("jiaij")).toBe("a");
   });
   
+  it("fails to parse if its outer double padding fails to parse", function() {
+    interpreter.doublePadded = f.insignificant(/j/, "ia");
+    interpreter.fail = f.atom(/iaij/, fail);
+    interpreter.program = f.or("doublePadded", "fail");
+    
+    expect(interpreter.program("iaij")).toBe("failure");
+  });
+  
 });
