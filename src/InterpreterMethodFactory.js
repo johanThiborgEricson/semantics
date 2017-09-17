@@ -106,7 +106,7 @@ InterpreterMethodFactory.prototype
     InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
     
-    return v.isInternalCall?maybeInstruction:maybeInstruction(this);
+    return v.isInternalCall?maybeInstruction:maybeInstruction.call(this);
   };
   
   return method;
@@ -146,9 +146,9 @@ InterpreterMethodFactory.prototype
       return null;
     }
     
-    var instruction = function(interpreter) {
+    var instruction = function() {
       return InterpreterMethodFactory.interpretationMaybe(
-        result, interpretation, [result], [interpreter]);
+        result, interpretation, [result], [this]);
     };
     
     return instruction;
@@ -165,9 +165,9 @@ InterpreterMethodFactory.prototype
   }
   
   var instructionMaker = function(codePointer, interpreter) {
-    var instruction = function(interpreter) {
+    var instruction = function() {
       return InterpreterMethodFactory.interpretationMaybe(
-        "n/a", interpretation, [], [interpreter]);
+        "n/a", interpretation, [], [this]);
     };
     
     return instruction;
@@ -210,18 +210,19 @@ InterpreterMethodFactory.prototype
       
     }
     
-    var instruction = function(interpreter) {
+    var instruction = function() {
+      var that = this;
       var mpo = new InterpreterMethodFactory.MultiPropertyObject();
       var result = {};
       var interpretationArguments = [];
       partInstructions.map(function(partInstruction) {
-        var partResult = partInstruction(interpreter);
+        var partResult = partInstruction.call(that);
         interpretationArguments.push(partResult);
         mpo.appendProperty.call(result, partInstruction.partName, partResult);
       });
       
       return InterpreterMethodFactory.interpretationMaybe(
-        result, interpretation, interpretationArguments, [interpreter]);
+        result, interpretation, interpretationArguments, [this]);
     };
     
     return instruction;
@@ -327,13 +328,14 @@ InterpreterMethodFactory.prototype
       }
     }
       
-    var instruction = function(interpreter) {
+    var instruction = function() {
+      var that = this;
       var results = partInstructions.map(function(partInstruction) {
-        return partInstruction(interpreter);
+        return partInstruction.call(that);
       });
       
       return InterpreterMethodFactory.interpretationMaybe(
-        results, interpretation, [results], [interpreter]);
+        results, interpretation, [results], [this]);
     };
     
     return instruction;
@@ -379,13 +381,14 @@ InterpreterMethodFactory.prototype
       }
     }
       
-    var instruction = function(interpreter) {
+    var instruction = function() {
+      var that = this;
       var results = partInstructions.map(function(partInstruction) {
-        return partInstruction(interpreter);
+        return partInstruction.call(that);
       });
       
       return InterpreterMethodFactory.interpretationMaybe(
-        results, interpretation, [results], [interpreter]);
+        results, interpretation, [results], [this]);
     };
     
     return instruction;
@@ -404,8 +407,8 @@ InterpreterMethodFactory.prototype
     if(maybeInstruction) {
       instruction = maybeInstruction;
     } else {
-      instruction = function(interpreter) {
-        return gotInterpretation?interpretation.call(interpreter):undefined;
+      instruction = function() {
+        return gotInterpretation?interpretation.call(this):undefined;
       };
     }
 
@@ -424,10 +427,8 @@ InterpreterMethodFactory.prototype
       return null;
     }
     
-    var instruction = function(interpreter) {
-      return function() {
-        return instructionToDeferre(this);
-      };
+    var instruction = function() {
+      return instructionToDeferre;
     };
     
     return instruction;
