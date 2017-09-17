@@ -53,3 +53,7 @@ No. Parse both insignificant
     insignificant(/i/, insignificant(/j/, "a"))("ijaji") => "a"
 Use named functions more and give them distinct names to simplify debugging.
 Move error tests from codePointer to error.
+Allow nonterminals to reference normal methods, to replace the empty feature.
+Unlimited quantifiers should throw if no progress, (or if their part isn't an 
+  interpreter method).
+Is f.group(); a valid command?

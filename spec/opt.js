@@ -67,4 +67,14 @@ describe("The question mark quantifier", function() {
     expect(i.theChar).toBe("a");
   });
   
+  it("calls its interpretation as a method of the interpreter", function() {
+    i.opt = f.opt("a", function() {
+      this.side = "effect";
+    });
+    
+    i.opt("");
+    
+    expect(i.side).toBe("effect");
+  });
+  
 });

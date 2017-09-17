@@ -405,7 +405,7 @@ InterpreterMethodFactory.prototype
       if(maybeInstruction) {
         result = maybeInstruction(interpreter);
       } else {
-        result = gotInterpretation?interpretation():undefined;
+        result = gotInterpretation?interpretation.call(interpreter):undefined;
       }
       
       return result;
