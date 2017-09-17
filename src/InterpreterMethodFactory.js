@@ -400,17 +400,15 @@ InterpreterMethodFactory.prototype
   var instructionMaker = function(codePointer, interpreter) {
     var maybeInstruction = InterpreterMethodFactory
     .callInterpreterMethod(interpreter, name, codePointer);
-    var instruction = function(interpreter) {
-      var result;
-      if(maybeInstruction) {
-        result = maybeInstruction(interpreter);
-      } else {
-        result = gotInterpretation?interpretation.call(interpreter):undefined;
-      }
-      
-      return result;
-    };
-    
+    var instruction;
+    if(maybeInstruction) {
+      instruction = maybeInstruction;
+    } else {
+      instruction = function(interpreter) {
+        return gotInterpretation?interpretation.call(interpreter):undefined;
+      };
+    }
+
     return instruction;
   };
   
