@@ -58,3 +58,7 @@ Unlimited quantifiers should throw if no progress, (or if their part isn't an
   interpreter method).
 Is f.group(); a valid command?
 Shouldn't interpretation and instruction be the same thing for terminals?
+  No. Each time a terminal is parsed it creates an instrunction that depends
+  on the interpretation, but it also depends on what has been parsed.
+Caheing should not be saved between parsings. Could be other text, and could be 
+  side effects if the cached value is an object.
