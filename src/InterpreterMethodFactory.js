@@ -171,7 +171,6 @@ InterpreterMethodFactory.prototype
 
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = [];
-
     for(var i = 0; i < partNames.length; i++) {
       var partName = partNames[i];
       if(typeof partName === "string") {
@@ -188,7 +187,6 @@ InterpreterMethodFactory.prototype
           return null;
         }
       }
-      
     }
     
     return function instruction() {
@@ -228,6 +226,29 @@ InterpreterMethodFactory.MultiPropertyObject = function() {
     
     nameCount[name]++;
   };
+  
+};
+
+InterpreterMethodFactory.prototype.select = function(index) {
+  var partNames = Array.prototype.slice.call(arguments, 1);
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var partInstructions = [];
+    for(var i = 0; i < partNames.length; i++) {
+      var partName = partNames[i];
+      var maybeInstruction = InterpreterMethodFactory
+        .callInterpreterMethod(interpreter, partName, codePointer);
+      partInstructions.push(maybeInstruction);
+    }
+    
+    return function instruction() {
+      var that = this;
+      var partResults = partInstructions.map(function(partInstruction) {
+        return partInstruction.call(that);
+      });
+      
+      return partResults;
+    };
+  });
   
 };
 
