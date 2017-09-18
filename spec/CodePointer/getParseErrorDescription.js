@@ -1,20 +1,20 @@
-describe("CodePointer.getParseErrorDescription()", function() {
+describe("A parse error description", function() {
   it("tells what it expected and what it saw", function() {
     var codePointer = new CodePointer("ab");
-    codePointer.matchAtPointer(/a/);
-    codePointer.matchAtPointer(/c/);
+    codePointer.parse(/a/);
+    codePointer.parse(/c/);
     expect(codePointer.getParseErrorDescription())
     .toEqual("Expected /^c/ to match 'b'.");
   });
   
   it("ignores calls with longer actuall code", function(){
     var codePointer = new CodePointer("abc");
-    codePointer.matchAtPointer(/a/);
+    codePointer.parse(/a/);
     var backup = codePointer.backup();
-    codePointer.matchAtPointer(/b/);
-    codePointer.matchAtPointer(/d/);
+    codePointer.parse(/b/);
+    codePointer.parse(/d/);
     codePointer.restore(backup);
-    codePointer.matchAtPointer(/e/);
+    codePointer.parse(/e/);
     expect(codePointer.getParseErrorDescription())
     .toEqual("Expected /^d/ to match 'c'.");
   });
@@ -22,9 +22,9 @@ describe("CodePointer.getParseErrorDescription()", function() {
   it("remembers calls with actuall code of equal length (for alternatives)", 
   function(){
     var codePointer = new CodePointer("ab");
-    codePointer.matchAtPointer(/a/);
-    codePointer.matchAtPointer(/c/);
-    codePointer.matchAtPointer(/d/);
+    codePointer.parse(/a/);
+    codePointer.parse(/c/);
+    codePointer.parse(/d/);
     expect(codePointer.getParseErrorDescription())
     .toEqual("Expected /^c|d/ to match 'b'.");
   });
@@ -32,12 +32,12 @@ describe("CodePointer.getParseErrorDescription()", function() {
   it("forgets remembered token if called with shorter actuall code", 
   function(){
     var codePointer = new CodePointer("abc");
-    codePointer.matchAtPointer(/a/);
+    codePointer.parse(/a/);
     var backup = codePointer.backup();
-    codePointer.matchAtPointer(/e/);
+    codePointer.parse(/e/);
     codePointer.restore(backup);
-    codePointer.matchAtPointer(/b/);
-    codePointer.matchAtPointer(/d/);
+    codePointer.parse(/b/);
+    codePointer.parse(/d/);
     expect(codePointer.getParseErrorDescription())
     .toEqual("Expected /^d/ to match 'c'.");
   });

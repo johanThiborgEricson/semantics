@@ -423,13 +423,13 @@ InterpreterMethodFactory.prototype
     return null;
   }
   
-  return codePointer.matchAtPointer(token);
+  return codePointer.parse(token);
 };
 
 InterpreterMethodFactory.prototype
 .parseInsignificant = function(codePointer, interpreter) {
   if(codePointer.insignificant instanceof RegExp) {
-    return codePointer.matchAtPointer(codePointer.insignificant);
+    return codePointer.parse(codePointer.insignificant);
   } else if(typeof codePointer.insignificant === "string"){
     var justInsignificantMethod = this.justInsignificant(undefined, 
     codePointer.insignificant);
