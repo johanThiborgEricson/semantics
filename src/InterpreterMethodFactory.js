@@ -269,7 +269,7 @@ InterpreterMethodFactory.prototype.wrap = function(partName, interpretation) {
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction = InterpreterMethodFactory
         .callInterpreterMethod(interpreter, partName, codePointer);
-    return function instruction() {
+    return !maybeInstruction?null:function instruction() {
       return interpretation.call(this, maybeInstruction.call(this));
     };
     
