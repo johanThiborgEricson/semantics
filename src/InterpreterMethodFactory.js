@@ -248,14 +248,20 @@ InterpreterMethodFactory.prototype.select = function(index) {
       partInstructions.push(maybeInstruction);
     }
     
-    return function instruction() {
-      var that = this;
-      var partResults = partInstructions.map(function(partInstruction) {
-        return partInstruction.call(that);
-      });
+    if(index > 0) {
+      return partInstructions[index-1];
+    } else {
+      return function instruction() {
+        var that = this;
+        var partResults = partInstructions.map(function(partInstruction) {
+          return partInstruction.call(that);
+        });
+        
+        return partResults;
+      };
       
-      return partResults;
-    };
+    }
+    
   });
   
 };

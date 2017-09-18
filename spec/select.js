@@ -2,11 +2,15 @@ describe("A selection", function() {
   
   var f = new InterpreterMethodFactory();
   var interpreter;
+  var fail = function() {
+    return "failure";
+  };
   
   beforeEach(function() {
     interpreter = {
       a: f.atom(/a/),
       b: f.atom(/b/),
+      c: f.atom(/c/),
     };
     
   });
@@ -34,15 +38,29 @@ describe("A selection", function() {
     
   });
   
-  it("calls its parts as methods of the interpreter", function() {
+  it("calls the selected part as methods of the interpreter", function() {
     interpreter.charEater = f.atom(/./, function(theChar) {
       this.eatenChar = theChar;
     });
     
-    interpreter.select = f.select(0, "charEater");
+    interpreter.select = f.select(1, "charEater");
     interpreter.select("c");
     
     expect(interpreter.eatenChar).toBe("c");
+  });
+  
+  it("only runs the selected interpretation", function() {
+    var a = jasmine.createSpy("a");
+    var b = jasmine.createSpy("b");
+    interpreter = {
+      a: f.atom(/a/, a),
+      b: f.atom(/b/, b),
+      ab: f.select(2, "a", "b"),
+    };
+    
+    interpreter.ab("ab");
+    expect(a).not.toHaveBeenCalled();
+    expect(b).toHaveBeenCalled();
   });
   
 });
