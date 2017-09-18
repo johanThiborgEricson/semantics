@@ -245,6 +245,9 @@ InterpreterMethodFactory.prototype.select = function(index) {
           codePointer, partName, interpreter);
         maybeInstruction = factory.justReturn(regex);
       }
+      if(!maybeInstruction){
+        return null;
+      }
       partInstructions.push(maybeInstruction);
     }
     
