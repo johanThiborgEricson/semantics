@@ -23,4 +23,18 @@ describe("Parsing", function() {
     expect(new CodePointer("ba").parse(/a/)).toBe(null);
   });
   
+  it("has index where it starts", function() {
+    var codePointer = new CodePointer("aa");
+    codePointer.parse(/a/);
+    
+    expect(codePointer.parse(/a/).index).toBe(1);
+  });
+  
+  it("remembers the code", function() {
+    var codePointer = new CodePointer("aa");
+    codePointer.parse(/a/);
+    
+    expect(codePointer.parse(/a/).input).toBe("aa");
+  });
+  
 });

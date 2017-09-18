@@ -16,7 +16,8 @@ CodePointer.prototype.parse = function(regularExpression) {
   if(!match || match.index > 0) {
     return null;
   }
-  
+  match.index = this._pointer;
+  match.input = this._code;
   this._pointer += match[0].length;
   return match;
 };
