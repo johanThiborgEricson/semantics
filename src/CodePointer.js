@@ -13,6 +13,10 @@ function CodePointer(code, debugging) {
 
 CodePointer.prototype.parse = function(regularExpression) {
   var match = regularExpression.exec(this.getUnparsed());
+  if(!match || match.index > 0) {
+    return null;
+  }
+  
   this._pointer += match[0].length;
   return match;
 };
