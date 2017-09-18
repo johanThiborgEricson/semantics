@@ -251,10 +251,7 @@ InterpreterMethodFactory.prototype.select = function(index) {
       partInstructions.push(maybeInstruction);
     }
     
-    if(index > 0) {
-      return partInstructions[index-1];
-    } else {
-      return function instruction() {
+    return index>0? partInstructions[index-1]:function instruction() {
         var that = this;
         var partResults = partInstructions.map(function(partInstruction) {
           return partInstruction.call(that);
@@ -262,8 +259,6 @@ InterpreterMethodFactory.prototype.select = function(index) {
         
         return partResults;
       };
-      
-    }
     
   });
   

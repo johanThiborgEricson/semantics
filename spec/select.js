@@ -36,6 +36,17 @@ describe("A selection", function() {
       expect(result[1][0]).toBe("b");
     });
     
+    it("calls all parts as methods of the interpreter", function() {
+      interpreter.charEater = f.atom(/./, function(theChar) {
+        this.eatenChar = theChar;
+      });
+      
+      interpreter.select = f.select(0, "charEater");
+      interpreter.select("c");
+      
+      expect(interpreter.eatenChar).toBe("c");
+    });
+    
   });
   
   it("calls the selected part as methods of the interpreter", function() {
