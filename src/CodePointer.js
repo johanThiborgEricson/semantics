@@ -12,6 +12,7 @@ function CodePointer(code, debugging) {
 }
 
 CodePointer.prototype.parse = function(regularExpression) {
+  regularExpression.lastIndex = 0;
   var match = regularExpression.exec(this.getUnparsed());
   if(!match || match.index > 0) {
     return null;

@@ -37,4 +37,12 @@ describe("Parsing", function() {
     expect(codePointer.parse(/a/).input).toBe("aa");
   });
   
+  it("resets global regexes", function() {
+    var globalRegex = /./g;
+    var codePointer = new CodePointer("ab");
+    codePointer.parse(globalRegex);
+    
+    expect(codePointer.parse(globalRegex)[0]).toBe("b");
+  });
+  
 });
