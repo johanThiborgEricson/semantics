@@ -43,4 +43,12 @@ describe("A wrapper", function() {
     expect(interpreter.eatenChar).toBe("a");
   });
   
+  it("returns the result of its interpretation", function() {
+    interpreter.wrapper = f.wrap("a", function() {
+      return "result";
+    });
+    
+    expect(interpreter.wrapper("a")).toBe("result");
+  });
+  
 });
