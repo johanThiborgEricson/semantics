@@ -11,6 +11,12 @@ function CodePointer(code, debugging) {
   
 }
 
+CodePointer.prototype.parse = function(regularExpression) {
+  var match = regularExpression.exec(this.getUnparsed());
+  this._pointer += match[0].length;
+  return match;
+};
+
 CodePointer.prototype
 .matchAtPointer = function(regExp) {
   var match = regExp.exec(this.getUnparsed());
