@@ -264,6 +264,19 @@ InterpreterMethodFactory.prototype.select = function(index) {
   
 };
 
+InterpreterMethodFactory.prototype.wrap = function(partName, interpretation) {
+  "use strict";
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var maybeInstruction = InterpreterMethodFactory
+        .callInterpreterMethod(interpreter, partName, codePointer);
+    return function instruction() {
+      interpretation.call(this, maybeInstruction.call(this));
+    };
+    
+  });
+  
+};
+
 InterpreterMethodFactory.prototype.justReturn = function(value) {
   return function() {
     return value;
