@@ -71,4 +71,12 @@ describe("A selection", function() {
     expect(interpreter.program("a")).toBe("failure");
   });
   
+  it("fails to parse if a regex part fails to parse", function() {
+    interpreter.abc = f.select(1, /a/, /b/, /c/);
+    interpreter.fail = f.atom(/a/, fail);
+    interpreter.program = f.or("abc", "fail");
+    
+    expect(interpreter.program("a")).toBe("failure");
+  });
+  
 });

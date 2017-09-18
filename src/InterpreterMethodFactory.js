@@ -243,7 +243,7 @@ InterpreterMethodFactory.prototype.select = function(index) {
       } else if(partName instanceof RegExp) {
         var regex = factory.parseInsignificantAndToken(
           codePointer, partName, interpreter);
-        maybeInstruction = factory.justReturn(regex);
+        maybeInstruction = regex?factory.justReturn(regex):null;
       }
       if(!maybeInstruction){
         return null;
