@@ -230,13 +230,21 @@ InterpreterMethodFactory.MultiPropertyObject = function() {
 };
 
 InterpreterMethodFactory.prototype.select = function(index) {
+  var factory = this;
   var partNames = Array.prototype.slice.call(arguments, 1);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = [];
     for(var i = 0; i < partNames.length; i++) {
       var partName = partNames[i];
-      var maybeInstruction = InterpreterMethodFactory
-        .callInterpreterMethod(interpreter, partName, codePointer);
+      var maybeInstruction;
+      if(typeof partName === "string") {
+        maybeInstruction = InterpreterMethodFactory
+          .callInterpreterMethod(interpreter, partName, codePointer);
+      } else if(partName instanceof RegExp) {
+        var regex = factory.parseInsignificantAndToken(
+          codePointer, partName, interpreter);
+        maybeInstruction = factory.justReturn(regex);
+      }
       partInstructions.push(maybeInstruction);
     }
     
@@ -250,6 +258,13 @@ InterpreterMethodFactory.prototype.select = function(index) {
     };
   });
   
+};
+
+InterpreterMethodFactory.prototype.justReturn = function(value) {
+  return function() {
+    return value;
+  };
+
 };
 
 InterpreterMethodFactory.prototype.or = function() {

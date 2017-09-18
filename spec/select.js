@@ -19,9 +19,17 @@ describe("A selection", function() {
     });
     
     it("returns the results of its parts", function() {
-      interpreter.noChoice = f.select(0, "a", "b");
+      interpreter.ab = f.select(0, "a", "b");
       
-      expect(interpreter.noChoice("ab")).toEqual(["a", "b"]);
+      expect(interpreter.ab("ab")).toEqual(["a", "b"]);
+    });
+    
+    it("can return regex matches", function() {
+      interpreter.ab = f.select(0, /a/, /b/);
+      
+      var result = interpreter.ab("ab");
+      expect(result[0][0]).toBe("a");
+      expect(result[1][0]).toBe("b");
     });
     
   });
