@@ -54,13 +54,13 @@ describe("A star quantifier", function() {
     
     interpreter.abs("ab");
     
-    expect(abSpy).toHaveBeenCalledWith(["a", "b"]);
+    expect(abSpy).toHaveBeenCalledWith("a", "b");
   });
   
   it("calls the interpretation as a method of the interpreter", function() {
-    interpreter.abs = f.star("ab", function(abs) {
-      this.first = abs[0];
-      this.second = abs[1];
+    interpreter.abs = f.star("ab", function() {
+      this.first = arguments[0];
+      this.second = arguments[1];
     });
     
     interpreter.abs("ab");

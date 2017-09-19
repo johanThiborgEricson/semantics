@@ -56,13 +56,13 @@ describe("A plus quantifier", function() {
     
     interpreter.abp("ab");
     
-    expect(abSpy).toHaveBeenCalledWith(["a", "b"]);
+    expect(abSpy).toHaveBeenCalledWith("a", "b");
   });
   
   it("calls the interpretation as a method of the interpreter", function() {
-    interpreter.abp = f.plus("ab", function(abp) {
-      this.first = abp[0];
-      this.second = abp[1];
+    interpreter.abp = f.plus("ab", function() {
+      this.first = arguments[0];
+      this.second = arguments[1];
     });
     
     interpreter.abp("ab");
