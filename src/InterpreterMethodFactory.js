@@ -228,9 +228,9 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.skipRegexes = function(codePointer, regexes) {
+.skipRegexes = function(codePointer, regexes, interpreter) {
   for(var i = 0; i < regexes.length; i++) {
-    if(!this.parseInsignificantAndToken(codePointer, regexes[i], this)){
+    if(!this.parseInsignificantAndToken(codePointer, regexes[i], interpreter)){
       return null;
     }
   }

@@ -68,3 +68,4 @@ When a method uses parse insignificant and token, is there a simple way to test
   argument?
 Delimiter and part in the quantifiers should e select or wrap.
 Error message gets double hats with parsing regexes.
+Check if methods using skip regex calls with interpreter as third argument.
