@@ -62,4 +62,25 @@ describe("A wrapper", function() {
     expect(interpreter.program("b")).toBe("failure");
   });
   
+  it("returns the result of its part if it has no interpretation", function() {
+    interpreter.wrap = f.wrap("a");
+    interpreter.a = f.atom(/a/, function() {
+      return "part result";
+    });
+    
+    expect(interpreter.wrap("a")).toBe("part result");
+  });
+  
+  it("fails to parse if its part fails to parse, even if it has no " +
+  "interpretation", function() {
+    interpreter.wrapper = f.wrap("a");
+    interpreter.fail = f.atom(/b/, function() {
+      return "failure";
+    });
+    
+    interpreter.program = f.or("wrapper", "fail");
+    
+    expect(interpreter.program("b")).toBe("failure");
+  });
+  
 });
