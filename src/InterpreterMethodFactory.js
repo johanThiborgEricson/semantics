@@ -3,6 +3,12 @@ function InterpreterMethodFactory () {
   this.CodePointer = CodePointer;
 }
 
+InterpreterMethodFactory.prototype.makeParsing = function(regex) {
+  var regexCode = regex.toString().slice(1, -1);
+  var parsingRegex = new RegExp(regexCode);
+  return parsingRegex;
+};
+
 InterpreterMethodFactory
 .callInterpreterMethod = function(interpreter, methodName, codePointer) {
   if(typeof interpreter[methodName] !== "function") {
