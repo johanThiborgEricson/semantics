@@ -207,6 +207,7 @@ InterpreterMethodFactory.prototype
       factory.skipRegexes(codePointer, parts[i].trailingRegexes, codePointer);
       partInstructions.push(maybeInstruction);
     }
+    
     if(interpretation) {
       return function instruction() {
         return interpretation.apply(this, InterpreterMethodFactory
@@ -230,11 +231,9 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.prototype
 .skipRegexes = function(codePointer, regexes, interpreter) {
-  var that = this;
-  regexes.map(function(regex) {
-    that.parseInsignificantAndToken(
-        codePointer, regex, interpreter);
-  });
+  for(var i = 0; i < regexes.length; i++) {
+    this.parseInsignificantAndToken(codePointer, regexes[i], interpreter);
+  }
 };
 
 InterpreterMethodFactory.prototype
