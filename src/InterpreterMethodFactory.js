@@ -4,8 +4,9 @@ function InterpreterMethodFactory () {
 }
 
 InterpreterMethodFactory.prototype.makeParsing = function(regex) {
-  var regexCode = regex.toString().slice(1, -1);
-  var parsingRegex = new RegExp(regexCode);
+  var regexCode = regex.toString().slice(1).replace(/\/[a-z]*$/, "");
+  var parsingRegexCode = "^" + regexCode;
+  var parsingRegex = new RegExp(parsingRegexCode);
   return parsingRegex;
 };
 
