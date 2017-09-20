@@ -171,24 +171,17 @@ InterpreterMethodFactory.prototype
   var factory = this;
   var parts = [];
   var interpretation;
-  var i = 0;
-  var argument;
-  var readRegexesFromArguments = function(args) {
-    var regexes = [];
-    while((argument = args[i++]) instanceof RegExp) {
-      regexes.push(factory.makeParsing(argument));
-    }
-    i--;
-    return regexes;
+  var p = {
+    i: 0,
   };
-  
-  var leadingRegexes = readRegexesFromArguments(arguments);
-  while(i < arguments.length) {
-    argument = arguments[i++];
+  var argument;
+  var leadingRegexes = this.readRegexesFromArguments(arguments, p);
+  while(p.i < arguments.length) {
+    argument = arguments[p.i++];
     if(typeof argument === "string") {
       parts.push({
         name: argument,
-        trailingRegexes: readRegexesFromArguments(arguments),
+        trailingRegexes: this.readRegexesFromArguments(arguments, p),
       });
     } else {
       interpretation = argument;
@@ -235,9 +228,9 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.skipRegexes = function(codePointer, regexes, interpreter) {
+.skipRegexes = function(codePointer, regexes) {
   for(var i = 0; i < regexes.length; i++) {
-    if(!this.parseInsignificantAndToken(codePointer, regexes[i], interpreter)){
+    if(!this.parseInsignificantAndToken(codePointer, regexes[i], this)){
       return null;
     }
   }
@@ -249,6 +242,17 @@ InterpreterMethodFactory.mapRunAsMethod = function(that, partInstructions) {
     return partInstruction.call(that);
   });
   
+};
+
+InterpreterMethodFactory.prototype
+.readRegexesFromArguments = function(args, p) {
+  var regexes = [];
+  var regex;
+  while((regex = args[p.i++]) instanceof RegExp) {
+    regexes.push(this.makeParsing(regex));
+  }
+  p.i--;
+  return regexes;
 };
 
 InterpreterMethodFactory.MultiPropertyObject = function() {
