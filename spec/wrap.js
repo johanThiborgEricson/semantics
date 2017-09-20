@@ -83,4 +83,10 @@ describe("A wrapper", function() {
     expect(interpreter.program("b")).toBe("failure");
   });
   
+  it("may skip many regexes", function() {
+    interpreter.bca = f.wrap(/b/, /c/, "a");
+    
+    expect(interpreter.bca("bca")).toBe("a");
+  });
+  
 });

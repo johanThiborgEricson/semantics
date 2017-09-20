@@ -67,3 +67,4 @@ When a method uses parse insignificant and token, is there a simple way to test
   write a test that ensures that it is called with the interpreter as the third 
   argument?
 Delimiter and part in the quantifiers should e select or wrap.
+Error message gets double hats with parsing regexes.

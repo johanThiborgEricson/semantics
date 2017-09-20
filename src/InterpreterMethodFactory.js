@@ -311,9 +311,19 @@ InterpreterMethodFactory.prototype.select = function(index) {
   
 };
 
-InterpreterMethodFactory.prototype.wrap = function(partName, interpretation) {
+InterpreterMethodFactory.prototype.wrap = function() {
   "use strict";
+  var factory = this;
+  var p = {
+    i: 0,
+  };
+  var leadingRegexes = this.readRegexesFromArguments(arguments, p);
+  var partName = arguments[p.i++];
+  
+  var interpretation = arguments[p.i++];
+  
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    factory.skipRegexes(codePointer, leadingRegexes, interpreter);
     var maybeInstruction = InterpreterMethodFactory
         .callInterpreterMethod(interpreter, partName, codePointer);
     if(!maybeInstruction) {
