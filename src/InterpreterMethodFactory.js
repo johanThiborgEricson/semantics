@@ -319,7 +319,7 @@ InterpreterMethodFactory.prototype.wrap = function() {
   };
   var leadingRegexes = this.readRegexesFromArguments(arguments, p);
   var partName = arguments[p.i++];
-  
+  var trailingRegexes = this.readRegexesFromArguments(arguments, p);
   var interpretation = arguments[p.i++];
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
@@ -327,7 +327,8 @@ InterpreterMethodFactory.prototype.wrap = function() {
     var parseSucess = factory.skipRegexes(codePointer, leadingRegexes, 
     interpreter) && 
     (maybeInstruction = InterpreterMethodFactory
-        .callInterpreterMethod(interpreter, partName, codePointer));
+        .callInterpreterMethod(interpreter, partName, codePointer)) &&
+    factory.skipRegexes(codePointer, trailingRegexes, interpreter);
     if(!parseSucess) {
       return null;
     }

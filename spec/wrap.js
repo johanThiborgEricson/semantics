@@ -100,4 +100,18 @@ describe("A wrapper", function() {
     expect(interpreter.program("a")).toBe("failure");
   });
   
+  it("may skip trailing regexes", function() {
+    interpreter.abc = f.wrap("a", /b/, /c/);
+    
+    expect(interpreter.abc("abc")).toBe("a");
+  });
+  
+  it("fails to parse if a leading regex fails to parse", function() {
+    interpreter.ab = f.wrap("a", /b/);
+    interpreter.fail = f.atom(/a/, fail);
+    interpreter.program = f.or("ab", "fail");
+    
+    expect(interpreter.program("a")).toBe("failure");
+  });
+  
 });
