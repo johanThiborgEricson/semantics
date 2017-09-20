@@ -172,25 +172,23 @@ InterpreterMethodFactory.prototype
   var interpretation;
   var i = 0;
   var argument;
-  var leadingRegexes = [];
-  while((argument = arguments[i++]) instanceof RegExp) {
-    leadingRegexes.push(argument);
-  }
-  i--;
+  var readRegexesFromArguments = function(args) {
+    var regexes = [];
+    while((argument = args[i++]) instanceof RegExp) {
+      regexes.push(argument);
+    }
+    i--;
+    return regexes;
+  };
   
+  var leadingRegexes = readRegexesFromArguments(arguments);
   while(i < arguments.length) {
     argument = arguments[i++];
     if(typeof argument === "string") {
-      var part = {
+      parts.push({
         name: argument,
-        trailingRegexes: [],
-      };
-      
-      while((argument = arguments[i++]) instanceof RegExp) {
-        part.trailingRegexes.push(argument);
-      }
-      i--;
-      parts.push(part);
+        trailingRegexes: readRegexesFromArguments(arguments),
+      });
     } else {
       interpretation = argument;
     }
