@@ -18,4 +18,18 @@ describe("The make parsing method transforms a regex so that it", function() {
     expect(f.makeParsing(/[/g\n]/).exec("g")[0]).toBe("g");
   });
   
+  it("may ignore case", function() {
+    expect(f.makeParsing(/a/i).exec("A")[0]).toBe("A");
+  });
+  
+  it("may not be multiline", function() {
+    expect(f.makeParsing(/a/m).exec("b\na")).toBe(null);
+  });
+  
+  it("may not be global", function() {
+    var parsingRegex = f.makeParsing(/./g);
+    expect(parsingRegex.exec("ab")[0]).toBe("a");
+    expect(parsingRegex.exec("ab")[0]).toBe("a");
+  });
+  
 });
