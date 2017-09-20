@@ -62,3 +62,4 @@ Shouldn't interpretation and instruction be the same thing for terminals?
   on the interpretation, but it also depends on what has been parsed.
 Caheing should not be saved between parsings. Could be other text, and could be 
   side effects if the cached value is an object.
+Error message should be Expected 'e' instead saw 'a'.

@@ -165,7 +165,7 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.group2 = function() {
+.group = function() {
   "use strict";
   var factory = this;
   var parts = [];
@@ -195,16 +195,20 @@ InterpreterMethodFactory.prototype
   }
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    factory.skipRegexes(codePointer, leadingRegexes, interpreter);
+    if(!factory.skipRegexes(codePointer, leadingRegexes, interpreter)){
+      return null;
+    }
     var partInstructions = [];
     for(var i = 0; i < parts.length; i++){
       var maybeInstruction = InterpreterMethodFactory
             .callInterpreterMethod(interpreter, parts[i].name, codePointer);
-      if(!maybeInstruction) {
+      if(!maybeInstruction
+        ||!factory.skipRegexes(codePointer, parts[i].trailingRegexes, 
+        codePointer)) {
         return null;
       }
       maybeInstruction.partName = parts[i].name;
-      factory.skipRegexes(codePointer, parts[i].trailingRegexes, codePointer);
+      
       partInstructions.push(maybeInstruction);
     }
     
@@ -232,62 +236,11 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .skipRegexes = function(codePointer, regexes, interpreter) {
   for(var i = 0; i < regexes.length; i++) {
-    this.parseInsignificantAndToken(codePointer, regexes[i], interpreter);
-  }
-};
-
-InterpreterMethodFactory.prototype
-.group = function() {
-  "use strict";
-  var that = this;
-  var partNames;
-  var interpretation = arguments[arguments.length-1];
-  if(interpretation instanceof Function) {
-    partNames = Array.prototype.slice.call(arguments, 0, -1);
-  } else {
-    interpretation = null;
-    partNames = Array.prototype.slice.call(arguments);
-  }
-
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = [];
-    for(var i = 0; i < partNames.length; i++) {
-      var partName = partNames[i];
-      if(typeof partName === "string") {
-        var maybeInstruction = InterpreterMethodFactory
-          .callInterpreterMethod(interpreter, partName, codePointer);
-        if(!maybeInstruction){
-          return null;
-        }
-        maybeInstruction.partName = partName;
-        partInstructions.push(maybeInstruction);
-      } else if(partName instanceof RegExp) {
-        if(!that
-            .parseInsignificantAndToken(codePointer, partName, interpreter)) {
-          return null;
-        }
-      }
+    if(!this.parseInsignificantAndToken(codePointer, regexes[i], interpreter)){
+      return null;
     }
-    
-    if(interpretation) {
-      return function instruction() {
-        return interpretation.apply(this, InterpreterMethodFactory
-            .mapRunAsMethod(this, partInstructions));
-      };
-    } else {
-      return function instruction() {
-        var that = this;
-        var mpo = new InterpreterMethodFactory.MultiPropertyObject();
-        var result = {};
-        partInstructions.map(function(pi) {
-          mpo.appendProperty.call(result, pi.partName, pi.call(that));
-        });
-        
-        return result;
-      };
-    }
-  });
-  
+  }
+  return true;
 };
 
 InterpreterMethodFactory.mapRunAsMethod = function(that, partInstructions) {
