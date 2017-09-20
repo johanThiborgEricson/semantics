@@ -3,6 +3,7 @@ function CodePointer(code, debugging) {
   this._debugging = debugging;
   this._pointer = 0;
   this.heads = {};
+  this.indentation = 0;
   this.parseErrorDescription = {
     actuallCode: {
       length: Infinity,
@@ -47,6 +48,7 @@ CodePointer.prototype
 .logParseStart = function(name) {
   if(this._debugging) {
     console.log("".padEnd(2*this.indentation)+"%s: parse start", name);
+    this.indentation++;
   }
 };
 
@@ -55,6 +57,7 @@ CodePointer.prototype
   var message 
   = parseSuccess ? "%s: parse success" : "%s: parse fail";
   if(this._debugging) {
+    this.indentation--;
     console.log("".padEnd(2*this.indentation)+message, name);
   }
   

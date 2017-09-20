@@ -27,12 +27,10 @@ function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
     v.isInternalCall = true;
     v.codePointer = code;
     v.methodName = debuggingOrMethodName;
-    v.codePointer.indentation++;
   } else {
     v.isInternalCall = false;
     v.codePointer = new methodFactory.CodePointer(code, debuggingOrMethodName);
     v.methodName = methodFactory.nameOf(interpreter, method);
-    v.codePointer.indentation = 0;
   }
   
   v.codePointer.logParseStart(v.methodName);
@@ -49,7 +47,6 @@ function(v, interpreter, maybeInstruction) {
   }
   
   v.codePointer.logParseEnd(v.methodName, !!maybeInstruction);
-  v.codePointer.indentation--;
   if(!v.isInternalCall) {
     if(!maybeInstruction) {
       throw new Error(v.codePointer.getParseErrorDescription());
