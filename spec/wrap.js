@@ -114,4 +114,13 @@ describe("A wrapper", function() {
     expect(interpreter.program("a")).toBe("failure");
   });
   
+  it("can have an interpretation after regexes", function() {
+    var interpretation = jasmine.createSpy("interpretation");
+    interpreter.wrap = f.wrap("a", /b/, /c/, interpretation);
+    
+    interpreter.wrap("abc");
+    
+    expect(interpretation).toHaveBeenCalledWith("a");
+  });
+  
 });
