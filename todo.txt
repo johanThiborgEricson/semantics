@@ -63,3 +63,6 @@ Shouldn't interpretation and instruction be the same thing for terminals?
 Caheing should not be saved between parsings. Could be other text, and could be 
   side effects if the cached value is an object.
 Error message should be Expected 'e' instead saw 'a'.
+When a method uses parse insignificant and token, is there a simple way to test 
+  write a test that ensures that it is called with the interpreter as the third 
+  argument?

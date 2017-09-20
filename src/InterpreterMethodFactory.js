@@ -204,7 +204,7 @@ InterpreterMethodFactory.prototype
             .callInterpreterMethod(interpreter, parts[i].name, codePointer);
       if(!maybeInstruction
         ||!factory.skipRegexes(codePointer, parts[i].trailingRegexes, 
-        codePointer)) {
+        interpreter)) {
         return null;
       }
       maybeInstruction.partName = parts[i].name;
