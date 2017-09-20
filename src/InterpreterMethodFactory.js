@@ -323,10 +323,12 @@ InterpreterMethodFactory.prototype.wrap = function() {
   var interpretation = arguments[p.i++];
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    factory.skipRegexes(codePointer, leadingRegexes, interpreter);
-    var maybeInstruction = InterpreterMethodFactory
-        .callInterpreterMethod(interpreter, partName, codePointer);
-    if(!maybeInstruction) {
+    var maybeInstruction;
+    var parseSucess = factory.skipRegexes(codePointer, leadingRegexes, 
+    interpreter) && 
+    (maybeInstruction = InterpreterMethodFactory
+        .callInterpreterMethod(interpreter, partName, codePointer));
+    if(!parseSucess) {
       return null;
     }
     return !interpretation?maybeInstruction:function instruction() {

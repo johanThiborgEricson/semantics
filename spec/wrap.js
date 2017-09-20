@@ -2,6 +2,9 @@ describe("A wrapper", function() {
   
   var f = new InterpreterMethodFactory();
   var interpreter;
+  var fail = function() {
+    return "failure";
+  };
   
   beforeEach(function() {
     interpreter = {
@@ -83,10 +86,18 @@ describe("A wrapper", function() {
     expect(interpreter.program("b")).toBe("failure");
   });
   
-  it("may skip many regexes", function() {
+  it("may skip leading regexes", function() {
     interpreter.bca = f.wrap(/b/, /c/, "a");
     
     expect(interpreter.bca("bca")).toBe("a");
+  });
+  
+  it("fails to parse if a leading regex fails to parse", function() {
+    interpreter.ba = f.wrap(/b/, "a");
+    interpreter.fail = f.atom(/a/, fail);
+    interpreter.program = f.or("ba", "fail");
+    
+    expect(interpreter.program("a")).toBe("failure");
   });
   
 });
