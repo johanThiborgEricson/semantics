@@ -5,7 +5,7 @@ function InterpreterMethodFactory () {
 
 InterpreterMethodFactory.prototype.makeParsing = function(regex) {
   var regexCode = regex.toString().slice(1).replace(/\/[a-z]*$/, "");
-  var parsingRegexCode = "^" + regexCode;
+  var parsingRegexCode = regexCode.replace(/^\^?/, "^");
   var flags = regex.ignoreCase?"i":"";
   var parsingRegex = new RegExp(parsingRegexCode, flags);
   return parsingRegex;

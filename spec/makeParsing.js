@@ -22,7 +22,7 @@ describe("The make parsing method transforms a regex so that it", function() {
     expect(f.makeParsing(/a/i).exec("A")[0]).toBe("A");
   });
   
-  it("may not be multiline", function() {
+  it("may not be multiline, until someone prove me wrong", function() {
     expect(f.makeParsing(/a/m).exec("b\na")).toBe(null);
   });
   
@@ -30,6 +30,22 @@ describe("The make parsing method transforms a regex so that it", function() {
     var parsingRegex = f.makeParsing(/./g);
     expect(parsingRegex.exec("ab")[0]).toBe("a");
     expect(parsingRegex.exec("ab")[0]).toBe("a");
+  });
+  
+  it("might explicitly begin at beginning", function() {
+    expect(f.makeParsing(/^a/).exec("a")[0]).toBe("a");
+  });
+  
+  it("might contain inversed classes", function() {
+    expect(f.makeParsing(/[^a]/).exec("b")[0]).toBe("b");
+  });
+  
+  it("might match hats", function() {
+    expect(f.makeParsing(/\^/).exec("^")[0]).toBe("^");
+  });
+  
+  it("can match lines beginning with hats", function() {
+    expect(f.makeParsing(/\n\^/).exec("\n^")[0]).toBe("\n^");
   });
   
 });
