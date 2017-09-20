@@ -18,7 +18,7 @@ describe("A group", function() {
   });
   
   it("returns an object with the result of its only part", function() {
-    interpreter.group = f.group("a");
+    interpreter.group = f.group2("a");
     
     expect(interpreter.group("a")).toEqual({a: "a"});
   });
@@ -28,28 +28,28 @@ describe("A group", function() {
       this.char = char;
     });
     
-    interpreter.group = f.group("readChar");
+    interpreter.group = f.group2("readChar");
     interpreter.group("a");
     
     expect(interpreter.char).toBe("a");
   });
   
   it("may contain many parts", function() {
-    interpreter.group = f.group("a", "b");
+    interpreter.group = f.group2("a", "b");
     
     expect(interpreter.group("ab")).toEqual({a: "a", b: "b"});
   });
   
   it("puts the results in an array if there are two parts with the same name", 
   function() {
-    interpreter.group = f.group("ac", "ac");
+    interpreter.group = f.group2("ac", "ac");
     
     expect(interpreter.group("aa")).toEqual({ac: ["a1", "a2"]});
   });
   
   it("puts the results in an array if there are many parts with the same name", 
   function() {
-    interpreter.group = f.group("ac", "ac", "ac");
+    interpreter.group = f.group2("ac", "ac", "ac");
     
     expect(interpreter.group("aaa")).toEqual({ac: ["a1", "a2", "a3"]});
   });
@@ -66,7 +66,7 @@ describe("A group", function() {
     interpreter.toString = f.atom(/toString/);
     interpreter[emptyString] = f.atom(/empty/);
     interpreter.length = f.atom(/length/);
-    interpreter.wierdNames = f.group(
+    interpreter.wierdNames = f.group2(
       "appendProperty", "hasOwnProperty", "toString", "", "length");
     
     var expected = {};
@@ -88,7 +88,7 @@ describe("A group", function() {
       return undefined;
     });
     
-    interpreter.group = f.group("emptyArray", "emptyArray", "undef", "undef");
+    interpreter.group = f.group2("emptyArray", "emptyArray", "undef", "undef");
     
     expect(interpreter.group("")).toEqual({
       emptyArray: [[], []],
@@ -99,7 +99,7 @@ describe("A group", function() {
   
   it("may have an interpretation", function() {
     var interpretation = jasmine.createSpy("interpretation");
-    interpreter.group = f.group("a", interpretation);
+    interpreter.group = f.group2("a", interpretation);
     
     interpreter.group("a");
     
@@ -107,7 +107,7 @@ describe("A group", function() {
   });
   
   it("calls the interpretation as a method of the interpreter", function() {
-    interpreter.thisChecker = f.group("a", function() {
+    interpreter.thisChecker = f.group2("a", function() {
       this.isThis = true;
     });
     
@@ -117,7 +117,7 @@ describe("A group", function() {
   });
   
   it("returns the result of the interpretation", function() {
-    interpreter.hasResult = f.group("a", function() {
+    interpreter.hasResult = f.group2("a", function() {
       return "result of interpretation";
     });
     
@@ -126,27 +126,33 @@ describe("A group", function() {
   
   it("calls the interpretation with the results of the parts", function() {
     var interpretation = jasmine.createSpy("interpretation");
-    interpreter.ac2 = f.group("ac", "ac", interpretation);
+    interpreter.ac2 = f.group2("ac", "ac", interpretation);
     
     interpreter.ac2("aa");
     
     expect(interpretation).toHaveBeenCalledWith("a1", "a2");
   });
   
-  it("skips over any regular expression", function() {
-    interpreter.paddedA = f.group(/pad/, "a", /pad/);
+  it("skips leading regular expressions", function() {
+    interpreter.padpadA = f.group2(/pad/, /pad/, "a");
     
-    expect(interpreter.paddedA("padapad")).toEqual({a: "a"});
+    expect(interpreter.padpadA("padpada")).toEqual({a: "a"});
+  });
+  
+  it("skips over trailing regular expression", function() {
+    interpreter.apadpad = f.group2("a", /pad/, /pad/);
+    
+    expect(interpreter.apadpad("apadpad")).toEqual({a: "a"});
   });
   
   it("accepts string objects", function() {
-    interpreter.group = f.group(String("a"));
+    interpreter.group = f.group2(String("a"));
     
     expect(interpreter.group("a")).toEqual({a: "a"});
   });
   
   it("fails if a part fails to parse", function() {
-    interpreter.groupA = f.group("a");
+    interpreter.groupA = f.group2("a");
     interpreter.ab = f.or("groupA", "b");
     
     expect(interpreter.ab("b")).toBe("b");

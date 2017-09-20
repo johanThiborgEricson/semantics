@@ -165,6 +165,81 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
+.group2 = function() {
+  "use strict";
+  var factory = this;
+  var parts = [];
+  var interpretation;
+  var i = 0;
+  var argument;
+  var leadingRegexes = [];
+  while((argument = arguments[i++]) instanceof RegExp) {
+    leadingRegexes.push(argument);
+  }
+  i--;
+  
+  while(i < arguments.length) {
+    argument = arguments[i++];
+    if(typeof argument === "string") {
+      var part = {
+        name: argument,
+        trailingRegexes: [],
+      };
+      
+      while((argument = arguments[i++]) instanceof RegExp) {
+        part.trailingRegexes.push(argument);
+      }
+      i--;
+      parts.push(part);
+    } else {
+      interpretation = argument;
+    }
+  }
+  
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    factory.skipRegexes(codePointer, leadingRegexes, interpreter);
+    var partInstructions = [];
+    for(var i = 0; i < parts.length; i++){
+      var maybeInstruction = InterpreterMethodFactory
+            .callInterpreterMethod(interpreter, parts[i].name, codePointer);
+      if(!maybeInstruction) {
+        return null;
+      }
+      maybeInstruction.partName = parts[i].name;
+      factory.skipRegexes(codePointer, parts[i].trailingRegexes, codePointer);
+      partInstructions.push(maybeInstruction);
+    }
+    if(interpretation) {
+      return function instruction() {
+        return interpretation.apply(this, InterpreterMethodFactory
+            .mapRunAsMethod(this, partInstructions));
+      };
+    } else {
+      return function instruction() {
+        var that = this;
+        var mpo = new InterpreterMethodFactory.MultiPropertyObject();
+        var result = {};
+        partInstructions.map(function(pi) {
+          mpo.appendProperty.call(result, pi.partName, pi.call(that));
+        });
+        
+        return result;
+      };
+    }
+  });
+  
+};
+
+InterpreterMethodFactory.prototype
+.skipRegexes = function(codePointer, regexes, interpreter) {
+  var that = this;
+  regexes.map(function(regex) {
+    that.parseInsignificantAndToken(
+        codePointer, regex, interpreter);
+  });
+};
+
+InterpreterMethodFactory.prototype
 .group = function() {
   "use strict";
   var that = this;
