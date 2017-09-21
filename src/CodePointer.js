@@ -123,3 +123,21 @@ CodePointer.prototype.getCachedResult = function(name) {
   heads[name].recursionDetected = true;
   return maybeInstruction;
 };
+
+CodePointer.prototype.stateSnapshot = function() {
+  var codePointer = this;
+  var snapshot = this.heads[this._pointer] = 
+          this.heads[this._pointer] || Object.create(null);
+  this.heads[this._pointer] = Object.create(snapshot);
+  return {
+    position: this._pointer,
+    head: snapshot,
+    getHead: function(name) {
+      return (this.head[name]=this.head[name]||{});
+    },
+    
+    restore: function() {
+      codePointer.heads[this.position] = Object.create(snapshot);
+    },
+  };
+};

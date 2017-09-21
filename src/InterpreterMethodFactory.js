@@ -70,18 +70,16 @@ InterpreterMethodFactory.prototype
     if(v.codePointer.hasCachedResult(v.methodName)) {
       maybeInstruction = v.codePointer.getCachedResult(v.methodName);
     } else {
-      var heads = v.codePointer.heads[v.backup] = 
-          v.codePointer.heads[v.backup] || Object.create(null);
-      var head = heads[v.methodName] = {};
-      v.codePointer.heads[v.backup] = Object.create(heads);
+      var state = v.codePointer.stateSnapshot();
+      var head = state.getHead(v.methodName);
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(head.recursionDetected) {
         var progress = true;
         while(progress && maybeInstruction) {
           head.cache = maybeInstruction;
           head.end = v.codePointer.backup();
-          v.codePointer.heads[v.backup] = Object.create(heads);
           v.codePointer.restore(v.backup);
+          state.restore();
           maybeInstruction = instructionMaker(v.codePointer, this);
           progress = v.codePointer.backup() > head.end;
         }
