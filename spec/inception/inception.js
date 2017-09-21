@@ -26,7 +26,7 @@ describe("The source code of CodePointer.js", function() {
     expect(codePointerSourceCode).toBeDefined();
   });
   
-  xit("can be run by the JavaScriptInterpreter", function() {
+  it("can be run by the JavaScriptInterpreter", function() {
     expect(function() {
       interpreter.program(codePointerSourceCode);
     }).not.toThrow();
