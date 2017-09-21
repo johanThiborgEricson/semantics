@@ -137,6 +137,7 @@ CodePointer.prototype.stateSnapshot = function() {
     },
     
     restore: function() {
+      codePointer._pointer = this.position;
       codePointer.heads[this.position] = Object.create(snapshot);
     },
   };

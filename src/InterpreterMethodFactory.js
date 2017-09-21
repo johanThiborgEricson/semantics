@@ -78,7 +78,6 @@ InterpreterMethodFactory.prototype
         while(progress && maybeInstruction) {
           head.cache = maybeInstruction;
           head.end = v.codePointer.backup();
-          v.codePointer.restore(v.backup);
           state.restore();
           maybeInstruction = instructionMaker(v.codePointer, this);
           progress = v.codePointer.backup() > head.end;
