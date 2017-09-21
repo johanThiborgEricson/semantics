@@ -49,7 +49,7 @@ function JavaScriptInterpreter() {
     return false;
   });
   
-  j.numericLiteral = f.atom(/\d/, function(numericLiteral){
+  j.numericLiteral = f.atom(/\d+/, function(numericLiteral){
     return Number(numericLiteral);
   });
   
@@ -261,7 +261,11 @@ function JavaScriptInterpreter() {
   j.typeChangeExpression2 = f.group(/typeof/, "typeChangeExpression", 
   function(typeChangeExpression) {return typeof typeChangeExpression;});
   
-  j.relationalExpression = f.or("typeChangeExpression");
+  j.additiveExpression = f.or("typeChangeExpression");
+  
+  j.relationalExpression = f.or("relationalExpression2", "additiveExpression");
+  j.relationalExpression2 = f.group("relationalExpression", />/, 
+  "additiveExpression", function(re, ae) {return re>ae;});
   
   j.equalityExpression = f.or("equalityExpression3", "equalityExpression4", 
   "relationalExpression");
@@ -301,15 +305,15 @@ function JavaScriptInterpreter() {
   
   j.deferredAssignmentExpression = f.methodFactory("assignmentExpression");
   
-  j.assignmentExpression = f.or("AssignmentExpressionNotLhs", 
-  "conditionalExpression");
+  j.assignmentExpression = f.or("assignmentExpression1", 
+  "assignmentExpression5", "conditionalExpression");
   
-  j.AssignmentExpressionNotLhs = f.group("leftHandSideExpression", /=/, 
-  "assignmentExpression", 
-  function(leftHandSideExpression, assignmentExpression) {
-    var lhse = leftHandSideExpression;
-    return (lhse.base[lhse.name] = assignmentExpression);
-  });
+  j.assignmentExpression1 = f.group("leftHandSideExpression", /=/, 
+  "assignmentExpression", function(lhse, assignmentExpression) {
+    return (lhse.base[lhse.name] = assignmentExpression);});
+  j.assignmentExpression5 = f.group("leftHandSideExpression", /\+=/, 
+  "assignmentExpression", function(lhse, assignmentExpression) {
+    return (lhse.base[lhse.name] += assignmentExpression);});
   
   j.expression = f.plus("assignmentExpression", /,/, 
   function() {
