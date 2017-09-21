@@ -131,6 +131,14 @@ CodePointer.prototype.stateSnapshot = function() {
   this.heads[this._pointer] = Object.create(snapshot);
   return {
     position: this._pointer,
+    hasCachedResult: function(name) {
+      return snapshot[name];
+    },
+    
+    getCachedResult: function(name) {
+      return codePointer.getCachedResult(name);
+    },
+    
     head: snapshot,
     getHead: function(name) {
       return (this.head[name]=this.head[name]||{});
@@ -140,5 +148,6 @@ CodePointer.prototype.stateSnapshot = function() {
       codePointer._pointer = this.position;
       codePointer.heads[this.position] = Object.create(snapshot);
     },
+    
   };
 };
