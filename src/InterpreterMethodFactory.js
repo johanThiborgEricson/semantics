@@ -67,13 +67,11 @@ InterpreterMethodFactory.prototype
     method, code, debuggingOrMethodName);
     
     var maybeInstruction;
-    var heads = v.codePointer.heads[v.backup] = 
-        v.codePointer.heads[v.backup] || Object.create(null);
-    if(heads[v.methodName]) {
-      maybeInstruction = heads[v.methodName].cache;
-      v.codePointer.restore(heads[v.methodName].end);
-      heads[v.methodName].recursionDetected = true;
+    if(v.codePointer.hasCachedResult(v.methodName)) {
+      maybeInstruction = v.codePointer.getCachedResult(v.methodName);
     } else {
+      var heads = v.codePointer.heads[v.backup] = 
+          v.codePointer.heads[v.backup] || Object.create(null);
       var head = heads[v.methodName] = {};
       v.codePointer.heads[v.backup] = Object.create(heads);
       maybeInstruction = instructionMaker(v.codePointer, this);

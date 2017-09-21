@@ -111,3 +111,15 @@ CodePointer.prototype
   return "Expected /^" + this.parseErrorDescription.expectedAlternatives + 
   "/ to match '" + this.parseErrorDescription.actuallCode + "'.";
 };
+
+CodePointer.prototype.hasCachedResult = function(name) {
+  return this.heads[this._pointer]&&this.heads[this._pointer][name];
+};
+
+CodePointer.prototype.getCachedResult = function(name) {
+  var heads = this.heads[this._pointer];
+  var maybeInstruction = heads[name].cache;
+  this.restore(heads[name].end);
+  heads[name].recursionDetected = true;
+  return maybeInstruction;
+};
