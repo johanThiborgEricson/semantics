@@ -122,13 +122,15 @@ CodePointer.prototype.getState = function(name) {
   var position = this.backup();
   var heads = this.getHeads();
   var head = heads[name];
+  var hasCachedResult = !!head;
+  head = heads[name] = heads[name] || {};
   return {
     backup: function()  {
       codePointer.heads[position] = Object.create(heads);
     },
     
     hasCachedResult: function() {
-      return head;
+      return hasCachedResult;
     },
     
     getCachedResult: function() {
@@ -138,10 +140,6 @@ CodePointer.prototype.getState = function(name) {
     
     reportRecursion: function() {
       head.recursionDetected = true;
-    },
-    
-    register: function() {
-      return (head = heads[name] = heads[name] || {});
     },
     
     restore: function() {

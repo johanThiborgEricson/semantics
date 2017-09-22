@@ -72,7 +72,6 @@ InterpreterMethodFactory.prototype
       maybeInstruction = state.getCachedResult();
       state.reportRecursion();
     } else {
-      state.register();
       state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(state.recursionDetected()) {
