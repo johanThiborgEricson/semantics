@@ -130,9 +130,9 @@ function JavaScriptInterpreter() {
   
   j.bindingIdentifier = f.atom(identifierName, reservedWord);
   
-  j.primaryExpression = f.longest("literal", "objectExpression");
+  j.primaryExpression = f.or("literal", "objectExpression");
   
-  j.objectExpression = f.longest("identifierExpression", 
+  j.objectExpression = f.or("identifierExpression", 
   "objectLiteral", "functionExpression", "objectExpression1", "thisExpression");
   
   j.objectExpression1 = f.wrap(/\(/, "expression", /\)/);
