@@ -2,6 +2,13 @@ describe("The operator", function() {
   
   var interpreter = new JavaScriptInterpreter();
   
+  it("postfix ++ adds that little extra, but keeps it to itself", function() {
+    expect(interpreter.program(
+      "var a=1," +
+      "b=a++;" +
+      "return {a:a,b:b};")).toEqual({a: 2, b: 1});
+  });
+  
   it("typeof returns the type of the operand", function() {
     expect(interpreter.program("return typeof 1;")).toBe("number");
   });
