@@ -62,7 +62,7 @@ InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
   var methodFactory = this;
-  var method = function(code, debuggingOrMethodName) {
+  return function method(code, debuggingOrMethodName) {
     var v = InterpreterMethodFactory.preInstructionMaker(this, methodFactory, 
     method, code, debuggingOrMethodName);
     
@@ -93,7 +93,6 @@ InterpreterMethodFactory.prototype
     return v.isInternalCall?maybeInstruction:maybeInstruction.call(this);
   };
   
-  return method;
 };
 
 InterpreterMethodFactory.prototype
