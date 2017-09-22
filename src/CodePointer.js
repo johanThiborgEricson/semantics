@@ -112,21 +112,17 @@ CodePointer.prototype
   "/ to match '" + this.parseErrorDescription.actuallCode + "'.";
 };
 
-CodePointer.prototype.getHeads = function() {
-  return (this.heads[this._pointer] = 
-      this.heads[this._pointer] || Object.create(null));
-};
-
 CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var position = this.backup();
-  var heads = this.getHeads();
+  var headss = codePointer.heads;
+  var heads = headss[position] = headss[position] || Object.create(null);
   var head = heads[name];
   var hasCachedResult = !!head;
   head = heads[name] = heads[name] || {};
   return {
     backup: function()  {
-      codePointer.heads[position] = Object.create(heads);
+      headss[position] = Object.create(heads);
     },
     
     hasCachedResult: function() {
@@ -144,7 +140,7 @@ CodePointer.prototype.getState = function(name) {
     
     restore: function() {
       codePointer.restore(position);
-      codePointer.heads[position] = Object.create(heads);
+      headss[position] = Object.create(heads);
     },
     
     recursionDetected: function() {
