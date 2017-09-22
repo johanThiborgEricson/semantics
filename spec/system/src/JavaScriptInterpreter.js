@@ -260,13 +260,15 @@ function JavaScriptInterpreter() {
     return leftHandSideExpression.base[leftHandSideExpression.name];
   });
   
-  j.typeChangeExpression = f.or("updateExpression", "typeChangeExpression1", 
-  "typeChangeExpression2");
+  j.typeChangeExpression = f.or("updateExpression", "typeChangeExpression2", 
+  "typeChangeExpression4", "typeChangeExpression6");
   
-  j.typeChangeExpression1 = f.group(/!/, "typeChangeExpression", 
-  function(typeChangeExpression) {return !typeChangeExpression;});
   j.typeChangeExpression2 = f.group(/typeof/, "typeChangeExpression", 
   function(typeChangeExpression) {return typeof typeChangeExpression;});
+  j.typeChangeExpression4 = f.group(/-/, "typeChangeExpression", 
+  function(typeChangeExpression) {return -typeChangeExpression;});
+  j.typeChangeExpression6 = f.group(/!/, "typeChangeExpression", 
+  function(typeChangeExpression) {return !typeChangeExpression;});
   
   j.multiplicativeExpression = f.or("multiplicativeExpression1", 
   "typeChangeExpression");

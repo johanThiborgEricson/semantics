@@ -9,7 +9,7 @@ describe("The operator", function() {
       "return {a:a,b:b};")).toEqual({a: 2, b: 1});
   });
   
-  it("postfix -- doesn't dra you down", function() {
+  it("postfix -- doesn't drag you down", function() {
     expect(interpreter.program(
       "var a=1," +
       "b=a--;" +
@@ -18,6 +18,11 @@ describe("The operator", function() {
   
   it("typeof returns the type of the operand", function() {
     expect(interpreter.program("return typeof 1;")).toBe("number");
+  });
+  
+  it("- argues just for fun", function() {
+    expect(interpreter.program(
+      "return -1;")).toBe(-1);
   });
   
   it("! returns the inverse of the expressions truthiness", function() {
