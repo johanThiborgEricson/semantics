@@ -124,39 +124,41 @@ CodePointer.prototype.getCachedResult = function(name) {
   return maybeInstruction;
 };
 
+CodePointer.prototype.getHeads = function() {
+  return (this.heads[this._pointer] = 
+      this.heads[this._pointer] || Object.create(null));
+};
+
 CodePointer.prototype.getState = function() {
   var codePointer = this;
-  var snapshot = this.heads[this._pointer] = 
-          this.heads[this._pointer] || Object.create(null);
-  var result = {
+  return {
+    position: codePointer.backup(),
+    heads: codePointer.getHeads(),
     backup: function()  {
-      codePointer.heads[codePointer._pointer] = Object.create(snapshot);
+      codePointer.heads[this.position] = Object.create(this.heads);
     },
     
-    position: this._pointer,
     hasCachedResult: function(name) {
-      return this.head[name];
+      return this.heads[name];
     },
     
     getCachedResult: function(name) {
-      var head = this.head[name];
+      var head = this.heads[name];
       var maybeInstruction = head.cache;
       codePointer.restore(head.end);
       head.recursionDetected = true;
       return maybeInstruction;
     },
     
-    head: snapshot,
     getHead: function(name) {
-      return (this.head[name]=this.head[name]||{});
+      return (this.heads[name]=this.heads[name]||{});
     },
     
     restore: function() {
-      codePointer._pointer = this.position;
-      codePointer.heads[this.position] = Object.create(this.head);
+      codePointer.restore(this.position);
+      codePointer.heads[this.position] = Object.create(this.heads);
     },
     
   };
   
-  return result;
 };
