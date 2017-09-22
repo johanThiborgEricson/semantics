@@ -70,6 +70,7 @@ InterpreterMethodFactory.prototype
     var state = v.codePointer.getState(v.methodName);
     if(state.hasCachedResult(v.methodName)) {
       maybeInstruction = state.getCachedResult(v.methodName);
+      state.reportRecursion();
     } else {
       state.register(v.methodName);
       state.backup();
@@ -82,7 +83,7 @@ InterpreterMethodFactory.prototype
           maybeInstruction = instructionMaker(v.codePointer, this);
           progress = state.hasProgressed(v.methodName);
         }
-        maybeInstruction = state.getCachedResult2(v.methodName);
+        maybeInstruction = state.getCachedResult(v.methodName);
       }
       state.cacheResult(maybeInstruction);
     }

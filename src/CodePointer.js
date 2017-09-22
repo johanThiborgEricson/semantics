@@ -133,8 +133,11 @@ CodePointer.prototype.getState = function(name) {
     
     getCachedResult: function() {
       codePointer.restore(head.end);
-      head.recursionDetected = true;
       return head.cache;
+    },
+    
+    reportRecursion: function() {
+      head.recursionDetected = true;
     },
     
     register: function() {
@@ -153,11 +156,6 @@ CodePointer.prototype.getState = function(name) {
     cacheResult: function(maybeInstruction) {
       head.cache = maybeInstruction;
       head.end = codePointer.backup();
-    },
-    
-    getCachedResult2: function() {
-      codePointer.restore(head.end);
-      return head.cache;
     },
     
     hasProgressed: function() {
