@@ -9,6 +9,13 @@ describe("The operator", function() {
       "return {a:a,b:b};")).toEqual({a: 2, b: 1});
   });
   
+  it("postfix -- doesn't dra you down", function() {
+    expect(interpreter.program(
+      "var a=1," +
+      "b=a--;" +
+      "return {a:a,b:b};")).toEqual({a: 0, b: 1});
+  });
+  
   it("typeof returns the type of the operand", function() {
     expect(interpreter.program("return typeof 1;")).toBe("number");
   });
