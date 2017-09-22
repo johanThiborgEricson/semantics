@@ -74,7 +74,7 @@ InterpreterMethodFactory.prototype
       var head = state.getHead(v.methodName);
       state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
-      if(head.recursionDetected) {
+      if(state.recursionDetected(v.methodName)) {
         var progress = true;
         while(progress && maybeInstruction) {
           head.cache = maybeInstruction;

@@ -147,6 +147,10 @@ CodePointer.prototype.getState = function() {
       codePointer.heads[this.position] = Object.create(this.heads);
     },
     
+    recursionDetected: function(name) {
+      return this.heads[name].recursionDetected;
+    },
+    
   };
   
 };
