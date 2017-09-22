@@ -117,7 +117,7 @@ CodePointer.prototype.getHeads = function() {
       this.heads[this._pointer] || Object.create(null));
 };
 
-CodePointer.prototype.getState = function() {
+CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var position = this.backup();
   return {
@@ -126,11 +126,11 @@ CodePointer.prototype.getState = function() {
       codePointer.heads[position] = Object.create(this.heads);
     },
     
-    hasCachedResult: function(name) {
+    hasCachedResult: function() {
       return this.heads[name];
     },
     
-    getCachedResult: function(name) {
+    getCachedResult: function() {
       var head = this.heads[name];
       var maybeInstruction = head.cache;
       codePointer.restore(head.end);
@@ -138,8 +138,8 @@ CodePointer.prototype.getState = function() {
       return maybeInstruction;
     },
     
-    register: function(name) {
-      return (this.heads[name]=this.heads[name]||{});
+    register: function() {
+      return (this.head=this.heads[name]=this.heads[name]||{});
     },
     
     restore: function() {
@@ -147,21 +147,21 @@ CodePointer.prototype.getState = function() {
       codePointer.heads[position] = Object.create(this.heads);
     },
     
-    recursionDetected: function(name) {
+    recursionDetected: function() {
       return this.heads[name].recursionDetected;
     },
     
-    cacheResult: function(name, maybeInstruction) {
+    cacheResult: function(maybeInstruction) {
       this.heads[name].cache = maybeInstruction;
       this.heads[name].end = codePointer.backup();
     },
     
-    getCachedResult2: function(name) {
+    getCachedResult2: function() {
       codePointer.restore(this.heads[name].end);
       return this.heads[name].cache;
     },
     
-    hasProgressed: function(name) {
+    hasProgressed: function() {
       return codePointer.backup() > this.heads[name].end;
     },
     

@@ -67,7 +67,7 @@ InterpreterMethodFactory.prototype
     method, code, debuggingOrMethodName);
     
     var maybeInstruction;
-    var state = v.codePointer.getState();
+    var state = v.codePointer.getState(v.methodName);
     if(state.hasCachedResult(v.methodName)) {
       maybeInstruction = state.getCachedResult(v.methodName);
     } else {
@@ -77,14 +77,14 @@ InterpreterMethodFactory.prototype
       if(state.recursionDetected(v.methodName)) {
         var progress = true;
         while(progress && maybeInstruction) {
-          state.cacheResult(v.methodName, maybeInstruction);
+          state.cacheResult(maybeInstruction);
           state.restore();
           maybeInstruction = instructionMaker(v.codePointer, this);
           progress = state.hasProgressed(v.methodName);
         }
         maybeInstruction = state.getCachedResult2(v.methodName);
       }
-      state.cacheResult(v.methodName, maybeInstruction);
+      state.cacheResult(maybeInstruction);
     }
     
     InterpreterMethodFactory.
