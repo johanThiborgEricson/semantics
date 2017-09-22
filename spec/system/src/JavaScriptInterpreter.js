@@ -271,7 +271,10 @@ function JavaScriptInterpreter() {
   j.multiplicativeExpression1 = f.group("multiplicativeExpression", /\*/,
   "typeChangeExpression", function(me, tce) {return me*tce;});
   
-  j.additiveExpression = f.or("multiplicativeExpression");
+  j.additiveExpression = f.or("additiveExpression1", 
+  "multiplicativeExpression");
+  j.additiveExpression1 = f.group("additiveExpression", /\+/, 
+  "multiplicativeExpression", function(ae, me) {return ae+me;});
   
   j.relationalExpression = f.or("relationalExpression2", "additiveExpression");
   j.relationalExpression2 = f.group("relationalExpression", />/, 
