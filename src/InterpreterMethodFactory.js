@@ -82,11 +82,11 @@ InterpreterMethodFactory.prototype
     var state = v.codePointer.getState(v.methodName);
     if(state.hasCachedResult()) {
       maybeInstruction = state.getCachedResult();
-      state.setRecursionDetected(true);
+      state.setHeadRecursionDetected(true);
     } else {
       state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
-      if(state.getRecursionDetected()) {
+      if(state.getHeadRecursionDetected()) {
         maybeInstruction = InterpreterMethodFactory.headRecurse(this, state, 
         maybeInstruction, instructionMaker, v.codePointer);
       }

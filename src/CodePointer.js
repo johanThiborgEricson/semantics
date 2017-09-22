@@ -134,8 +134,8 @@ CodePointer.prototype.getState = function(name) {
       return head.cache;
     },
     
-    setRecursionDetected: function(isRecursionDetected) {
-      head.recursionDetected = isRecursionDetected;
+    setHeadRecursionDetected: function(isHeadRecursionDetected) {
+      head.headRecursionDetected = isHeadRecursionDetected;
     },
     
     restore: function() {
@@ -143,8 +143,8 @@ CodePointer.prototype.getState = function(name) {
       headss[position] = Object.create(heads);
     },
     
-    getRecursionDetected: function() {
-      return head.recursionDetected;
+    getHeadRecursionDetected: function() {
+      return head.headRecursionDetected;
     },
     
     cacheResult: function(maybeInstruction) {
