@@ -58,6 +58,18 @@ function(v, interpreter, maybeInstruction) {
   
 };
 
+InterpreterMethodFactory.headRecurse = function(interpreter, state, 
+maybeInstruction, instructionMaker, codePointer) {
+  var progress = true;
+  while(progress && maybeInstruction) {
+    state.cacheResult(maybeInstruction);
+    state.restore();
+    maybeInstruction = instructionMaker(codePointer, interpreter);
+    progress = state.hasProgressed();
+  }
+  return state.getCachedResult();
+};
+
 InterpreterMethodFactory.prototype
 .makeMethod = function(instructionMaker) {
   "use strict";
@@ -75,14 +87,8 @@ InterpreterMethodFactory.prototype
       state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(state.getRecursionDetected()) {
-        var progress = true;
-        while(progress && maybeInstruction) {
-          state.cacheResult(maybeInstruction);
-          state.restore();
-          maybeInstruction = instructionMaker(v.codePointer, this);
-          progress = state.hasProgressed();
-        }
-        maybeInstruction = state.getCachedResult();
+        maybeInstruction = InterpreterMethodFactory.headRecurse(this, state, 
+        maybeInstruction, instructionMaker, v.codePointer);
       }
       state.cacheResult(maybeInstruction);
     }
