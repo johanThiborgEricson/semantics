@@ -280,7 +280,10 @@ function JavaScriptInterpreter() {
   j.additiveExpression1 = f.group("additiveExpression", /\+/, 
   "multiplicativeExpression", function(ae, me) {return ae+me;});
   
-  j.relationalExpression = f.or("relationalExpression2", "additiveExpression");
+  j.relationalExpression = f.or("relationalExpression1", 
+  "relationalExpression2", "additiveExpression");
+  j.relationalExpression1 = f.group("relationalExpression", /</, 
+  "additiveExpression", function(re, ae) {return re<ae;});
   j.relationalExpression2 = f.group("relationalExpression", />/, 
   "additiveExpression", function(re, ae) {return re>ae;});
   

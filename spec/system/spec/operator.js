@@ -39,6 +39,10 @@ describe("The operator", function() {
     expect(interpreter.program("return 2+3;")).toBe(5);
   });
   
+  it("< is direct", function() {
+    expect(interpreter.program("return 1<2;")).toBe(true);
+  });
+  
   it("> can test what is truly great(er)", function() {
     expect(interpreter.program("return 42>42;")).toBe(false);
   });
