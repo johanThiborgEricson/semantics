@@ -179,8 +179,8 @@ function JavaScriptInterpreter() {
     return [];
   });
   
-  j.callExpression = f.longest("newExpression", "callExpression1", 
-  "callExpression2");
+  j.callExpression = f.or("callExpression1", 
+  "callExpression2", "newExpression");
   
   j.callExpression1 = f.group("callExpression", "args", 
   function(fceQualifier, args) {
