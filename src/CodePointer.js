@@ -118,13 +118,12 @@ CodePointer.prototype.getHeads = function() {
 };
 
 CodePointer.prototype.getState = function() {
-  
   var codePointer = this;
+  var position = this.backup();
   return {
-    position: codePointer.backup(),
     heads: codePointer.getHeads(),
     backup: function()  {
-      codePointer.heads[this.position] = Object.create(this.heads);
+      codePointer.heads[position] = Object.create(this.heads);
     },
     
     hasCachedResult: function(name) {
@@ -144,8 +143,8 @@ CodePointer.prototype.getState = function() {
     },
     
     restore: function() {
-      codePointer.restore(this.position);
-      codePointer.heads[this.position] = Object.create(this.heads);
+      codePointer.restore(position);
+      codePointer.heads[position] = Object.create(this.heads);
     },
     
     recursionDetected: function(name) {
