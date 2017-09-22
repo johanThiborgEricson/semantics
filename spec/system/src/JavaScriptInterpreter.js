@@ -158,7 +158,7 @@ function JavaScriptInterpreter() {
   
   j.propertyName = f.or("identifierName");
   
-  j.newExpression = f.longest("newExpression1", "primaryExpression");
+  j.newExpression = f.or("newExpression1", "primaryExpression");
   
   j.newExpression1 = f.group(/new/, "newExpressionQualifier", "argumentsOpt", 
   function(newExpressionQualifier, argumentsOpt) {
