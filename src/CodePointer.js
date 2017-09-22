@@ -117,9 +117,8 @@ CodePointer.prototype.getState = function(name) {
   var position = this.backup();
   var headss = codePointer.heads;
   var heads = headss[position] = headss[position] || Object.create(null);
-  var head = heads[name];
-  var hasCachedResult = !!head;
-  head = heads[name] = heads[name] || {};
+  var hasCachedResult = !!heads[name];
+  var head = heads[name] = heads[name] || {};
   return {
     backup: function()  {
       headss[position] = Object.create(heads);
