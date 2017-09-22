@@ -67,11 +67,12 @@ InterpreterMethodFactory.prototype
     method, code, debuggingOrMethodName);
     
     var maybeInstruction;
-    var state = v.codePointer.stateSnapshot();
+    var state = v.codePointer.getState();
     if(state.hasCachedResult(v.methodName)) {
       maybeInstruction = state.getCachedResult(v.methodName);
     } else {
       var head = state.getHead(v.methodName);
+      state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(head.recursionDetected) {
         var progress = true;
