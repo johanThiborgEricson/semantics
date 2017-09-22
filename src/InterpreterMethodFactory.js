@@ -71,25 +71,20 @@ InterpreterMethodFactory.prototype
     if(state.hasCachedResult(v.methodName)) {
       maybeInstruction = state.getCachedResult(v.methodName);
     } else {
-      var head = state.getHead(v.methodName);
+      state.register(v.methodName);
       state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(state.recursionDetected(v.methodName)) {
         var progress = true;
         while(progress && maybeInstruction) {
-          head.cache = maybeInstruction;
-          head.end = v.codePointer.backup();
+          state.cacheResult(v.methodName, maybeInstruction);
           state.restore();
           maybeInstruction = instructionMaker(v.codePointer, this);
-          progress = v.codePointer.backup() > head.end;
+          progress = state.hasProgressed(v.methodName);
         }
-        
-        maybeInstruction = head.cache;
-        v.codePointer.restore(head.end);
+        maybeInstruction = state.getCachedResult2(v.methodName);
       }
-      
-      head.cache = maybeInstruction;
-      head.end = v.codePointer.backup();
+      state.cacheResult(v.methodName, maybeInstruction);
     }
     
     InterpreterMethodFactory.
