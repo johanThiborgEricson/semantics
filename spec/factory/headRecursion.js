@@ -11,6 +11,10 @@ describe("Head recursion", function() {
     return a+b;
   };
   
+  var id = function(x) {
+    return x;
+  };
+  
   beforeEach(function() {
     
     instructionMaker = jasmine.createSpy("instructionMaker")
@@ -19,6 +23,7 @@ describe("Head recursion", function() {
     interpreter = {
       noRecursion: f.noRecursion(instructionMaker), 
       a: f.atom(/a/),
+      b: f.atom(/b/),
       as: f.or("as1", "ec"),
       as1: f.group("as", "a", add),
       ec: f.empty(function() {
@@ -98,6 +103,33 @@ describe("Head recursion", function() {
     expect(interpreter.bcs("bc")).toBe("bc");
     expect(interpreter.bcs("cb")).toBe("cb");
     expect(interpreter.bcs("cc")).toBe("cc");
+  });
+  
+  it("can have recursive base cases", function() {
+    j = {
+      newExpression: f.atom(/new/),
+      args: f.atom(/\(args\)/),
+      qualifier: f.atom(/\.q/),
+    };
+    
+  j.callExpression = f.or("callExpression1", 
+  "callExpression2", "newExpression");
+  
+  j.callExpression1 = f.group("callExpression", "args", add);
+  
+  j.callExpression2 = f.group("callExpressionQualifier", "args", add);
+  
+  j.callExpressionQualifier = f.longest("callExpressionQualifier1", 
+  "callExpressionQualifier2");
+  
+  j.callExpressionQualifier1 = f.group("callExpression", 
+  "qualifier", add);
+  
+  j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
+  "qualifier", add);
+  
+    expect(j.callExpression("new.q.q(args)", true)).toBe("new.q.q(args)");
+    
   });
   
 });
