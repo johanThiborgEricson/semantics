@@ -120,7 +120,14 @@ CodePointer.prototype.getState = function(name) {
   var headss = codePointer.heads;
   var heads = headss[position] = headss[position] || Object.create(null);
   var hasCachedResult = !!heads[name];
-  var head = heads[name] = heads[name] || {};
+  var head = heads[name] = heads[name] || {
+    headRecursiveCachedResultStackFragments: [],
+    deleteSelf: function() {
+      delete heads[name];
+    },
+    
+  };
+  
   return {
 
     hasCachedResult: function() {
@@ -143,11 +150,21 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
+      head.headRecursiveCachedResultStackFragments.push(
+        stack.slice(lastEncounter+1, -1));
     },
     
 
     forgetCachedHeadRecursiveResults: function() {
       codePointer.restore(position);
+      head.headRecursiveCachedResultStackFragments.map(function(stackFragment) {
+        stackFragment.map(function(head) {
+          head.deleteSelf();
+        });
+        
+      });
+      
+      head.headRecursiveCachedResultStackFragments = [];
     },
     
     getHeadRecursionDetected: function() {

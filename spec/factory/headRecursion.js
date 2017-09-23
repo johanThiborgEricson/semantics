@@ -128,7 +128,7 @@ describe("Head recursion", function() {
   j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
   "qualifier", add);
   
-    expect(j.callExpression("new.q.q(args)", true)).toBe("new.q.q(args)");
+    expect(j.callExpression("new.q.q(args)")).toBe("new.q.q(args)");
     
   });
   
