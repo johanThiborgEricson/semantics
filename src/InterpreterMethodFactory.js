@@ -63,7 +63,7 @@ maybeInstruction, instructionMaker, codePointer) {
   var progress = true;
   while(progress && maybeInstruction) {
     state.cacheResult(maybeInstruction);
-    state.restore();
+    state.forgetCachedHeadRecursiveResults();
     maybeInstruction = instructionMaker(codePointer, interpreter);
     progress = state.hasProgressed();
   }
@@ -93,8 +93,7 @@ InterpreterMethodFactory.prototype
       state.cacheResult(maybeInstruction);
     }
     state.popFromStack();
-    state.selfDestruct();
-    
+
     InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);
     

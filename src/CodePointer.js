@@ -143,18 +143,10 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
-      for(var i = lastEncounter+1; i < stack.length-1; i++) {
-        stack[i].forbidCaching = true;
-      }
     },
     
-    selfDestruct: function() {
-      if(head.forbidCaching) {
-        delete heads[name];
-      }
-    },
-    
-    restore: function() {
+
+    forgetCachedHeadRecursiveResults: function() {
       codePointer.restore(position);
     },
     
