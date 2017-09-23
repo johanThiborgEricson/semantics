@@ -80,11 +80,11 @@ InterpreterMethodFactory.prototype
     
     var maybeInstruction;
     var state = v.codePointer.getState(v.methodName);
+    state.pushOnStack();
     if(state.hasCachedResult()) {
       maybeInstruction = state.getCachedResult();
       state.setHeadRecursionDetected(true);
     } else {
-      state.backup();
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(state.getHeadRecursionDetected()) {
         maybeInstruction = InterpreterMethodFactory.headRecurse(this, state, 
@@ -92,6 +92,8 @@ InterpreterMethodFactory.prototype
       }
       state.cacheResult(maybeInstruction);
     }
+    state.popFromStack();
+    state.selfDestruct();
     
     InterpreterMethodFactory.
         postInstructionMaker(v, this, maybeInstruction);

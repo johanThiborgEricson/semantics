@@ -3,6 +3,7 @@ function CodePointer(code, debugging) {
   this._debugging = debugging;
   this._pointer = 0;
   this.heads = {};
+  this.stack = [];
   this.indentation = 0;
   this.parseErrorDescription = {
     actuallCode: {
@@ -114,16 +115,14 @@ CodePointer.prototype
 
 CodePointer.prototype.getState = function(name) {
   var codePointer = this;
+  var stack = this.stack;
   var position = this.backup();
   var headss = codePointer.heads;
   var heads = headss[position] = headss[position] || Object.create(null);
   var hasCachedResult = !!heads[name];
   var head = heads[name] = heads[name] || {};
   return {
-    backup: function()  {
-      headss[position] = Object.create(heads);
-    },
-    
+
     hasCachedResult: function() {
       return hasCachedResult;
     },
@@ -133,13 +132,30 @@ CodePointer.prototype.getState = function(name) {
       return head.cache;
     },
     
+    pushOnStack: function() {
+      stack.push(head);
+    },
+    
+    popFromStack: function() {
+      stack.pop();
+    },
+    
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
+      var lastEncounter = stack.indexOf(head);
+      for(var i = lastEncounter+1; i < stack.length-1; i++) {
+        stack[i].forbidCaching = true;
+      }
+    },
+    
+    selfDestruct: function() {
+      if(head.forbidCaching) {
+        delete heads[name];
+      }
     },
     
     restore: function() {
       codePointer.restore(position);
-      headss[position] = Object.create(heads);
     },
     
     getHeadRecursionDetected: function() {
