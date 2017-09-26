@@ -2,7 +2,7 @@ function CodePointer(code, debugging) {
   this._code = code;
   this._debugging = debugging;
   this._pointer = 0;
-  this.heads = {};
+  this.positions = new Array(code.length);
   this.stack = [];
   this.indentation = 0;
   this.parseErrorDescription = {
@@ -117,8 +117,13 @@ CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var stack = this.stack;
   var position = this.backup();
-  var headss = codePointer.heads;
-  var heads = headss[position] = headss[position] || Object.create(null);
+  var positions = codePointer.positions;
+  positions[position] = positions[position] || {
+    heads: Object.create(null),
+    stack: [],
+  };
+  
+  var heads = positions[position].heads;
   var hasCachedResult = !!heads[name];
   var head = heads[name] = heads[name] || {
     headRecursiveCachedResultStackFragments: [],
