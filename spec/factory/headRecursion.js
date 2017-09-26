@@ -112,22 +112,22 @@ describe("Head recursion", function() {
       qualifier: f.atom(/\.q/),
     };
     
-  j.callExpression = f.or("callExpression1", 
-  "callExpression2", "newExpression");
-  
-  j.callExpression1 = f.group("callExpression", "args", add);
-  
-  j.callExpression2 = f.group("callExpressionQualifier", "args", add);
-  
-  j.callExpressionQualifier = f.longest("callExpressionQualifier1", 
-  "callExpressionQualifier2");
-  
-  j.callExpressionQualifier1 = f.group("callExpression", 
-  "qualifier", add);
-  
-  j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
-  "qualifier", add);
-  
+    j.callExpression = f.or("callExpression1", 
+    "callExpression2", "newExpression");
+    
+    j.callExpression1 = f.group("callExpression", "args", add);
+    
+    j.callExpression2 = f.group("callExpressionQualifier", "args", add);
+    
+    j.callExpressionQualifier = f.longest("callExpressionQualifier1", 
+    "callExpressionQualifier2");
+    
+    j.callExpressionQualifier1 = f.group("callExpression", 
+    "qualifier", add);
+    
+    j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
+    "qualifier", add);
+    
     expect(j.callExpression("new.q.q(args)")).toBe("new.q.q(args)");
     
   });

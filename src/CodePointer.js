@@ -3,7 +3,6 @@ function CodePointer(code, debugging) {
   this._debugging = debugging;
   this._pointer = 0;
   this.positions = new Array(code.length);
-  this.stack = [];
   this.indentation = 0;
   this.parseErrorDescription = {
     actuallCode: {
@@ -115,7 +114,6 @@ CodePointer.prototype
 
 CodePointer.prototype.getState = function(name) {
   var codePointer = this;
-  var stack = this.stack;
   var position = this.backup();
   var positions = codePointer.positions;
   positions[position] = positions[position] || {
@@ -124,9 +122,11 @@ CodePointer.prototype.getState = function(name) {
   };
   
   var heads = positions[position].heads;
+  var stack = positions[position].stack;
   var hasCachedResult = !!heads[name];
   var head = heads[name] = heads[name] || {
-    headRecursiveCachedResultStackFragments: [],
+    name: name,
+    recursivelyDefined: [],
     deleteSelf: function() {
       delete heads[name];
     },
@@ -155,21 +155,19 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
-      head.headRecursiveCachedResultStackFragments.push(
+      head.recursivelyDefined.push(
         stack.slice(lastEncounter+1, -1));
     },
     
 
     forgetCachedHeadRecursiveResults: function() {
       codePointer.restore(position);
-      head.headRecursiveCachedResultStackFragments.map(function(stackFragment) {
+      head.recursivelyDefined.map(function(stackFragment) {
         stackFragment.map(function(head) {
           head.deleteSelf();
         });
         
       });
-      
-      head.headRecursiveCachedResultStackFragments = [];
     },
     
     getHeadRecursionDetected: function() {

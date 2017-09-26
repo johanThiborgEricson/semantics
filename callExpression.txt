@@ -30,7 +30,6 @@ call
     callQualifier fail
 0.heads.callQualifier.recursive&&0.heads.callQualifier.cache is falsy
 no recursion
-0.heads.callQualifier.recursivelyDefined.map(remove from 0.heads)
 0.heads={call:null, call1:null, callQualifier1:null, callQualifier:null}
 0.heads={call:null, call1:null, callQualifier1:null, callQualifier:null, 
 call2:null}
@@ -66,6 +65,7 @@ position=3
 position=0
   call2
     callQualifier
+0.heads.callQualifier.recursivelyDefined.map(remove from 0.heads)
       callQualifier1
         call
 0.heads.call.recursive=true
