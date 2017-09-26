@@ -70,3 +70,4 @@ Delimiter and part in the quantifiers should e select or wrap.
 Error message gets double hats with parsing regexes.
 Check if methods using skip regex calls with interpreter as third argument.
 Retreiving cached results should report the code they have skiped.
+Longest fails if the longest has length 0.

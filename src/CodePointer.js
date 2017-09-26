@@ -170,8 +170,8 @@ CodePointer.prototype.getState = function(name) {
       });
     },
     
-    getHeadRecursionDetected: function() {
-      return head.headRecursionDetected;
+    getHeadRecursionDetected: function(maybeInstruction) {
+      return maybeInstruction&&head.headRecursionDetected;
     },
     
     cacheResult: function(maybeInstruction) {

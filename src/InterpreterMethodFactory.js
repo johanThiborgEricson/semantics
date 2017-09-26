@@ -87,7 +87,7 @@ InterpreterMethodFactory.prototype
     } else {
       state.forgetCachedHeadRecursiveResults();
       maybeInstruction = instructionMaker(v.codePointer, this);
-      if(state.getHeadRecursionDetected()) {
+      if(state.getHeadRecursionDetected(maybeInstruction)) {
         maybeInstruction = InterpreterMethodFactory.headRecurse(this, state, 
         maybeInstruction, instructionMaker, v.codePointer);
       }
