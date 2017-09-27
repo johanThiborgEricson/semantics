@@ -110,7 +110,7 @@ describe("Head recursion", function() {
     expect(interpreter.statements("e1e2\ne3\n")).toBe("e1e2\ne3\n");
   });
   
-  it("can recurse through multiple paths", function() {
+  xit("can recurse through multiple paths", function() {
     interpreter = {
       e: f.atom(/(?:)/),
       b: f.atom(/b/),

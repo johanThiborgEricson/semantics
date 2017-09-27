@@ -127,6 +127,7 @@ CodePointer.prototype.getState = function(name) {
   var stack = this.stack;
   var hasCachedResult = !!heads[name];
   var head = heads[name] = heads[name] || {
+    recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
       delete heads[name];
@@ -156,15 +157,48 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
-      codePointer.recursivelyDefined = stack.slice(lastEncounter+1, -1);
+      head.recursivelyDefined = stack.slice(lastEncounter+1, -1);
     },
     
 
     forgetCachedHeadRecursiveResults: function() {
+      var headCaches;
+      var headName;
+      var cacheString = function(headName) {
+        var code = "null";
+        if(typeof heads[headName].end == "number") {
+          code = codePointer._code.slice(position, heads[headName].end);
+        }
+        return heads[headName].name + "=" + code + ", ";
+      };
+      
+      if(codePointer._debugging) {
+        headCaches = "";
+        for(headName in heads) {
+          headCaches += cacheString(headName);
+        }
+        console.log("heads={%s}", headCaches);
+        
+        var rds = "[";
+        codePointer.recursivelyDefined.map(function(rd) {
+          rds += rd.name + ", ";
+        });
+        
+        rds += "]";
+        
+        console.log("recursivelyDefined=%s", rds);
+      }
       codePointer.restore(position);
-      codePointer.recursivelyDefined.map(function(recursivelyDefined) {
+      head.recursivelyDefined.map(function(recursivelyDefined) {
         recursivelyDefined.deleteSelf();
       });
+      if(codePointer._debugging) {
+        headCaches = "";
+        for(headName in heads) {
+          headCaches += cacheString(headName);
+        }
+        console.log("heads={%s}", headCaches);
+      }
     },
     
     getHeadRecursionDetected: function() {
