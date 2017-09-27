@@ -80,6 +80,14 @@ describe("Head recursion", function() {
     expect(interpreter.abscs("abc")).toBe("abc");
   });
   
+  it("can occur inside many nested nonterminals", function() {
+    interpreter.abcs = f.or("abcs1", "a");
+    interpreter.abcs1 = f.group("abcsb", "c", add);
+    interpreter.abcsb = f.group("abcs", "b", add);
+    
+    expect(interpreter.abcs("abc", true)).toBe("abc");
+  });
+  
   xit("can be nested", function() {
     interpreter = {
       e: f.empty(function(){

@@ -5,6 +5,7 @@ function CodePointer(code, debugging) {
   this.positions = new Array(code.length);
   this.indentation = 0;
   this.stack = [];
+  this.recursivelyDefined = [];
   this.parseErrorDescription = {
     actuallCode: {
       length: Infinity,
@@ -155,18 +156,15 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
-      var recursivelyDefined = stack[lastEncounter+1];
-      if(recursivelyDefined !== head) {
-        codePointer.recursivelyDefined = recursivelyDefined;
-      }
+      codePointer.recursivelyDefined = stack.slice(lastEncounter+1, -1);
     },
     
 
     forgetCachedHeadRecursiveResults: function() {
       codePointer.restore(position);
-      if(codePointer.recursivelyDefined){
-        codePointer.recursivelyDefined.deleteSelf();
-      }
+      codePointer.recursivelyDefined.map(function(recursivelyDefined) {
+        recursivelyDefined.deleteSelf();
+      });
     },
     
     getHeadRecursionDetected: function() {
