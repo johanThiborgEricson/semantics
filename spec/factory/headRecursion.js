@@ -71,13 +71,13 @@ describe("Head recursion", function() {
     expect(interpreter.program("a")).toBe("a");
   });
   
-  it("can have a head recursion as its base case", function() {
+  xit("can have a head recursion as its base case", function() {
     interpreter.abs = f.or("abs1", "a");
     interpreter.abs1 = f.group("abs", "b", add);
     interpreter.abscs = f.or("abscs1", "abs");
     interpreter.abscs1 = f.group("abscs", "c", add);
     
-    expect(interpreter.abscs("abc")).toBe("abc");
+    expect(interpreter.abscs("abc", true)).toBe("abc");
   });
   
   it("can occur inside many nested nonterminals", function() {
@@ -85,7 +85,7 @@ describe("Head recursion", function() {
     interpreter.abcs1 = f.group("abcsb", "c", add);
     interpreter.abcsb = f.group("abcs", "b", add);
     
-    expect(interpreter.abcs("abc", true)).toBe("abc");
+    expect(interpreter.abcs("abc")).toBe("abc");
   });
   
   xit("can be nested", function() {

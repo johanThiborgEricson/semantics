@@ -72,3 +72,5 @@ Check if methods using skip regex calls with interpreter as third argument.
 Retreiving cached results should report the code they have skiped.
 Longest fails if the longest has length 0.
 remove : parse start from debugging message
+Debugging should report that a parsed base case isn't parsed in favor of a 
+  longer head recursion. Part of has progressed?
