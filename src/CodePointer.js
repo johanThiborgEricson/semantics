@@ -161,8 +161,8 @@ CodePointer.prototype.getState = function(name) {
       codePointer.restore(position);
     },
     
-    getHeadRecursionDetected: function(maybeInstruction) {
-      return maybeInstruction&&head.headRecursionDetected;
+    getHeadRecursionDetected: function() {
+      return head.headRecursionDetected;
     },
     
     cacheResult: function(maybeInstruction) {
