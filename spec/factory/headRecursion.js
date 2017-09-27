@@ -78,7 +78,7 @@ describe("Head recursion", function() {
     interpreter.abscs = f.or("abscs1", "abs");
     interpreter.abscs1 = f.group("abscs", "c", add);
     
-    expect(interpreter.abscs("abc", true)).toBe("abc");
+    expect(interpreter.abscs("abc")).toBe("abc");
   });
   
   it("can occur inside many nested nonterminals", function() {
@@ -153,7 +153,7 @@ describe("Head recursion", function() {
     j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
     "qualifier", add);
     
-    expect(j.callExpression("new.q.q(args)", true)).toBe("new.q.q(args)");
+    expect(j.callExpression("new.q.q(args)")).toBe("new.q.q(args)");
     
   });
   
