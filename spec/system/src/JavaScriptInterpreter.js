@@ -13,7 +13,9 @@ function JavaScriptInterpreter() {
   
   // Lexical Grammar
   
-  //j.spaces = f.star("space");
+  //j.spaces = f.star("space", function() {
+  //  return Array.prototype.slice.call(arguments).join("");
+  //});
   j.spaces = f.atom(/(\s|\n|(\/\/.*)|(\/\*\/*(\**[^\*\/]+\/*)*\*+\/))*/);
 
   j.space = f.or("whiteSpace", "lineTerminator", "singleLineComment", 
