@@ -154,7 +154,10 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
-      codePointer.recursivelyDefined = stack[lastEncounter+1];
+      var recursivelyDefined = stack[lastEncounter+1];
+      if(recursivelyDefined !== head) {
+        codePointer.recursivelyDefined = recursivelyDefined;
+      }
     },
     
 

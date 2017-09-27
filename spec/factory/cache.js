@@ -77,11 +77,11 @@ describe("Parse result caching", function() {
     expect(interpreter.doubleWierdName("")).toEqual(expected);
   });
   
-  xit("restores the code pointer after returning a cached failed parsing", 
+  it("restores the code pointer after returning a cached failed parsing", 
   function() {
     interpreter.ra = f.or("ra", "a");
     
-    expect(interpreter.ra("a", true)).toBe("a");
+    expect(interpreter.ra("a")).toBe("a");
   });
   
 });
