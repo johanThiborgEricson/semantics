@@ -33,6 +33,8 @@ describe("Head recursion", function() {
         };
       }()),
       
+      bas: f.or("bas1", "b"),
+      bas1: f.group("bas", "a", add),
     };
     
   });
@@ -46,6 +48,10 @@ describe("Head recursion", function() {
   
   it("can return a base case", function() {
     expect(interpreter.as("")).toBe("e0");
+  });
+  
+  it("can recurse once", function() {
+    expect(interpreter.bas("ba")).toBe("ba");
   });
   
   xit("can recurse once", function() {
