@@ -1,3 +1,11 @@
+call registers callQualifier as recursive
+callQualifier registers callQualifier2 as recursive
+callQualifier2 caches a parse fail
+call removes callQualifier from heads
+A new callQualifier state is created, with nothing registered as recursive
+callQualifier doesn't remove the cache of callQualifier2 since it isn't marked
+  as a recursive definition in the new version of
+
 call
   call1
     call
