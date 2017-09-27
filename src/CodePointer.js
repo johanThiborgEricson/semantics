@@ -4,6 +4,7 @@ function CodePointer(code, debugging) {
   this._pointer = 0;
   this.positions = new Array(code.length);
   this.indentation = 0;
+  this.stack = [];
   this.parseErrorDescription = {
     actuallCode: {
       length: Infinity,
@@ -122,7 +123,7 @@ CodePointer.prototype.getState = function(name) {
   };
   
   var heads = positions[position].heads;
-  var stack = positions[position].stack;
+  var stack = this.stack;
   var hasCachedResult = !!heads[name];
   var head = heads[name] = heads[name] || {
     name: name,
