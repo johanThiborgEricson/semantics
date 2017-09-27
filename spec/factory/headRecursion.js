@@ -47,19 +47,19 @@ describe("Head recursion", function() {
   });
   
   it("can return a base case", function() {
-    expect(interpreter.as("")).toBe("e0");
+    expect(interpreter.bas("b")).toBe("b");
   });
   
   it("can recurse once", function() {
     expect(interpreter.bas("ba")).toBe("ba");
   });
   
-  xit("can recurse once", function() {
-    expect(interpreter.as("a")).toBe("e0a");
+  it("can have an empty base case", function() {
+    expect(interpreter.as("")).toBe("e0");
   });
   
-  xit("can recurse twice", function() {
-    expect(interpreter.as("aa")).toBe("e0aa");
+  it("can recurse twice", function() {
+    expect(interpreter.bas("baa")).toBe("baa");
   });
   
   it("restores the state if its base case fails to parse", function() {
