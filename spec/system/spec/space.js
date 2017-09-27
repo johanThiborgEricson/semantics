@@ -15,12 +15,12 @@ describe("An input insignificant space", function() {
   });
   
   it("can be empty", function() {
-    expect(interpreter.spaces("")).toEqual([]);
+    expect(interpreter.spaces("")).toEqual("");
   });
   
   it("can be an one line comment", function() {
     expect(interpreter.spaces("// comment 1. \n"))
-        .toEqual(["// comment 1. ", "\n"]);
+        .toEqual("// comment 1. \n");
   });
   
   describe("can be a multiline comment that", function() {
