@@ -165,57 +165,14 @@ CodePointer.prototype.getState = function(name) {
         }
       });
       
-      if(codePointer._debugging) {
-        var rds = "[";
-        recursivelyDefined.map(function(rd) {
-          rds += rd.name + ", ";
-        });
-        
-        rds += "]";
-        
-        console.log("%s.recursivelyDefined=%s", name, rds);
-      }
     },
     
 
     forgetCachedHeadRecursiveResults: function() {
-      var headCaches;
-      var headName;
-      var cacheString = function(headName) {
-        var code = "null";
-        if(heads[headName].cache&&typeof heads[headName].end == "number") {
-          code = codePointer._code.slice(position, heads[headName].end);
-        }
-        return heads[headName].name + "=" + code + ", ";
-      };
-      
-      if(codePointer._debugging) {
-        headCaches = "";
-        for(headName in heads) {
-          headCaches += cacheString(headName);
-        }
-        console.log("heads={%s}", headCaches);
-        
-        var rds = "[";
-        recursivelyDefined.map(function(rd) {
-          rds += rd.name + ", ";
-        });
-        
-        rds += "]";
-        
-        console.log("%s.recursivelyDefined=%s", name, rds);
-      }
       codePointer.restore(position);
       recursivelyDefined.map(function(recursivelyDefined) {
         recursivelyDefined.deleteSelf();
       });
-      if(codePointer._debugging) {
-        headCaches = "";
-        for(headName in heads) {
-          headCaches += cacheString(headName);
-        }
-        console.log("heads={%s}", headCaches);
-      }
     },
     
     getHeadRecursionDetected: function() {
