@@ -24,6 +24,7 @@ describe("Head recursion", function() {
       noRecursion: f.noRecursion(instructionMaker), 
       a: f.atom(/a/),
       b: f.atom(/b/),
+      c: f.atom(/c/),
       as: f.or("as1", "ec"),
       as1: f.group("as", "a", add),
       ec: f.empty(function() {
@@ -68,6 +69,15 @@ describe("Head recursion", function() {
     interpreter.program = f.or("recursionFail", "a");
     
     expect(interpreter.program("a")).toBe("a");
+  });
+  
+  it("can have a head recursion as its base case", function() {
+    interpreter.abs = f.or("abs1", "a");
+    interpreter.abs1 = f.group("abs", "b", add);
+    interpreter.abscs = f.or("abscs1", "abs");
+    interpreter.abscs1 = f.group("abscs", "c", add);
+    
+    expect(interpreter.abscs("abc")).toBe("abc");
   });
   
   xit("can be nested", function() {
