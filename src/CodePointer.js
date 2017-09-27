@@ -5,6 +5,7 @@ function CodePointer(code, debugging) {
   this.positions = new Array(code.length);
   this.indentation = 0;
   this.stack = [];
+  this.recursivelyDefined = Object.create(null);
   this.parseErrorDescription = {
     actuallCode: {
       length: Infinity,
@@ -125,6 +126,8 @@ CodePointer.prototype.getState = function(name) {
   var heads = positions[position].heads;
   var stack = this.stack;
   var hasCachedResult = !!heads[name];
+  var recursivelyDefined = this.recursivelyDefined[name] = 
+      this.recursivelyDefined[name] || [];
   var head = heads[name] = heads[name] || {
     recursivelyDefined: [],
     name: name,
@@ -157,14 +160,14 @@ CodePointer.prototype.getState = function(name) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
       stack.slice(lastEncounter+1, -1).map(function(rd) {
-        if(head.recursivelyDefined.indexOf(rd) === -1){
-          head.recursivelyDefined.push(rd);
+        if(recursivelyDefined.indexOf(rd) === -1){
+          recursivelyDefined.push(rd);
         }
       });
       
       if(codePointer._debugging) {
         var rds = "[";
-        head.recursivelyDefined.map(function(rd) {
+        recursivelyDefined.map(function(rd) {
           rds += rd.name + ", ";
         });
         
@@ -194,7 +197,7 @@ CodePointer.prototype.getState = function(name) {
         console.log("heads={%s}", headCaches);
         
         var rds = "[";
-        head.recursivelyDefined.map(function(rd) {
+        recursivelyDefined.map(function(rd) {
           rds += rd.name + ", ";
         });
         
@@ -203,7 +206,7 @@ CodePointer.prototype.getState = function(name) {
         console.log("%s.recursivelyDefined=%s", name, rds);
       }
       codePointer.restore(position);
-      head.recursivelyDefined.map(function(recursivelyDefined) {
+      recursivelyDefined.map(function(recursivelyDefined) {
         recursivelyDefined.deleteSelf();
       });
       if(codePointer._debugging) {
