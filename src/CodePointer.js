@@ -5,7 +5,6 @@ function CodePointer(code, debugging) {
   this.positions = new Array(code.length);
   this.indentation = 0;
   this.stack = [];
-  this.recursivelyDefined = [];
   this.parseErrorDescription = {
     actuallCode: {
       length: Infinity,
@@ -157,7 +156,22 @@ CodePointer.prototype.getState = function(name) {
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
       var lastEncounter = stack.indexOf(head);
-      head.recursivelyDefined = stack.slice(lastEncounter+1, -1);
+      stack.slice(lastEncounter+1, -1).map(function(rd) {
+        if(head.recursivelyDefined.indexOf(rd) === -1){
+          head.recursivelyDefined.push(rd);
+        }
+      });
+      
+      if(codePointer._debugging) {
+        var rds = "[";
+        head.recursivelyDefined.map(function(rd) {
+          rds += rd.name + ", ";
+        });
+        
+        rds += "]";
+        
+        console.log("%s.recursivelyDefined=%s", name, rds);
+      }
     },
     
 
@@ -166,7 +180,7 @@ CodePointer.prototype.getState = function(name) {
       var headName;
       var cacheString = function(headName) {
         var code = "null";
-        if(typeof heads[headName].end == "number") {
+        if(heads[headName].cache&&typeof heads[headName].end == "number") {
           code = codePointer._code.slice(position, heads[headName].end);
         }
         return heads[headName].name + "=" + code + ", ";
@@ -180,13 +194,13 @@ CodePointer.prototype.getState = function(name) {
         console.log("heads={%s}", headCaches);
         
         var rds = "[";
-        codePointer.recursivelyDefined.map(function(rd) {
+        head.recursivelyDefined.map(function(rd) {
           rds += rd.name + ", ";
         });
         
         rds += "]";
         
-        console.log("recursivelyDefined=%s", rds);
+        console.log("%s.recursivelyDefined=%s", name, rds);
       }
       codePointer.restore(position);
       head.recursivelyDefined.map(function(recursivelyDefined) {
