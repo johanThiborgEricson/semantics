@@ -89,7 +89,7 @@ describe("Head recursion", function() {
     expect(interpreter.abcs("abc")).toBe("abc");
   });
   
-  it("can be nested", function() {
+  xit("can be nested", function() {
     interpreter = {
       e: f.empty(function(){
         return "";
@@ -130,30 +130,30 @@ describe("Head recursion", function() {
     expect(interpreter.bcs("cc")).toBe("cc");
   });
   
-  xit("can have recursive base cases", function() {
+  it("can have recursive base cases", function() {
     j = {
       newExpression: f.atom(/new/),
       args: f.atom(/\(args\)/),
       qualifier: f.atom(/\.q/),
     };
     
-    j.callExpression = f.or("callExpression1", 
-    "callExpression2", "newExpression");
+    j.call = f.or("call1", 
+    "call2", "newExpression");
     
-    j.callExpression1 = f.group("callExpression", "args", add);
+    j.call1 = f.group("call", "args", add);
     
-    j.callExpression2 = f.group("callExpressionQualifier", "args", add);
+    j.call2 = f.group("callQualifier", "args", add);
     
-    j.callExpressionQualifier = f.longest("callExpressionQualifier1", 
-    "callExpressionQualifier2");
+    j.callQualifier = f.longest("callQualifier1", 
+    "callQualifier2");
     
-    j.callExpressionQualifier1 = f.group("callExpression", 
+    j.callQualifier1 = f.group("call", 
     "qualifier", add);
     
-    j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
+    j.callQualifier2 = f.group("callQualifier", 
     "qualifier", add);
     
-    expect(j.callExpression("new.q.q(args)")).toBe("new.q.q(args)");
+    expect(j.call("new.q.q(args)")).toBe("new.q.q(args)");
     
   });
   
