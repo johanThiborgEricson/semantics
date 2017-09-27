@@ -71,7 +71,8 @@ describe("Head recursion", function() {
     expect(interpreter.program("a")).toBe("a");
   });
   
-  xit("can have a head recursion as its base case", function() {
+  it("forgets any recursive definitions before trying to parse a nonterminal", 
+  function() {
     interpreter.abs = f.or("abs1", "a");
     interpreter.abs1 = f.group("abs", "b", add);
     interpreter.abscs = f.or("abscs1", "abs");
