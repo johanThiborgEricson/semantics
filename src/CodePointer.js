@@ -89,7 +89,11 @@ CodePointer.prototype
   if(this.attempts.regexes.length === 0) {
     return "Parse error";
   }
-  var hat = "^".padStart(this.attempts.position+1);
+  var rowStart = this._code.lastIndexOf("\n", this.attempts.position)+1;
+  var rowEnd = this._code.indexOf("\n", this.attempts.position);
+  rowEnd = rowEnd === -1?this._code.length:rowEnd;
+  var row = this._code.slice(rowStart, rowEnd);
+  var hat = "^".padStart(this.attempts.position+1-rowStart);
   var regexesTail = this.attempts.regexes.slice();
   var regexesHead = regexesTail.pop();
   var disjunction;
@@ -100,7 +104,7 @@ CodePointer.prototype
   }
   
   return "Expected\n" + 
-          this._code + "\n" +
+          row + "\n" +
           hat + "\n" +
           "to match " + disjunction;
 };

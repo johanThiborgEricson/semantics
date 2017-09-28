@@ -39,6 +39,23 @@ describe("A parse error description", function() {
     .toBe("Expected\nab\n ^\nto match /c/");
   });
   
+  it("can occure at the last line", function() {
+    var codePointer = new CodePointer("a\nbc");
+    codePointer.parse(/a\n/);
+    codePointer.parse(/b/);
+    codePointer.parse(/d/);
+    expect(codePointer.getParseErrorDescription())
+    .toBe("Expected\nbc\n ^\nto match /d/");
+  });
+  
+  it("can occure at an intermediate line", function() {
+    var codePointer = new CodePointer("a\nb\nc");
+    codePointer.parse(/a\n/);
+    codePointer.parse(/c/);
+    expect(codePointer.getParseErrorDescription())
+    .toBe("Expected\nb\n^\nto match /c/");
+  });
+  
   xit("ignores calls with longer actuall code", function(){
     var codePointer = new CodePointer("abc");
     codePointer.parse(/a/);
