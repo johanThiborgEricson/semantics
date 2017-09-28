@@ -111,7 +111,7 @@ CodePointer.prototype
   if(this.attempts.regexes.length === 1) {
     disjunction = regexesHead.toString();
   } else {
-    disjunction = regexesTail.join(", ") + " or " + regexesHead.toString();
+    disjunction = regexesTail.join(" ") + " or " + regexesHead.toString();
   }
   
   return "Expected\n" + 

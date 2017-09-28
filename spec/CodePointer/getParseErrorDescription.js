@@ -22,7 +22,7 @@ describe("A parse error description", function() {
     codePointer.parse(/d/);
     codePointer.parse(/e/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\na\n^\nto be parsed by /b/, /c/, /d/ or /e/");
+    .toBe("Expected\na\n^\nto be parsed by /b/ /c/ /d/ or /e/");
   });
   
   it("falls back to a generic message if nothing is parsed", function() {
