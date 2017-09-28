@@ -31,7 +31,7 @@ describe("A parse error description", function() {
     .toBe("Parse error");
   });
   
-  it("can occure on the first line", function() {
+  it("can occur on the first line", function() {
     var codePointer = new CodePointer("ab");
     codePointer.parse(/a/);
     codePointer.parse(/c/);
@@ -39,7 +39,7 @@ describe("A parse error description", function() {
     .toBe("Expected\nab\n ^\nto match /c/");
   });
   
-  it("can occure at the last line", function() {
+  it("can occur at the last line", function() {
     var codePointer = new CodePointer("a\nbc");
     codePointer.parse(/a\n/);
     codePointer.parse(/b/);
@@ -48,7 +48,7 @@ describe("A parse error description", function() {
     .toBe("Expected\nbc\n ^\nto match /d/");
   });
   
-  it("can occure at an intermediate line", function() {
+  it("can occur at an intermediate line", function() {
     var codePointer = new CodePointer("a\nb\nc");
     codePointer.parse(/a\n/);
     codePointer.parse(/c/);
@@ -56,7 +56,7 @@ describe("A parse error description", function() {
     .toBe("Expected\nb\n^\nto match /c/");
   });
   
-  xit("ignores calls with longer actuall code", function(){
+  it("reports only the last attempts", function(){
     var codePointer = new CodePointer("abc");
     codePointer.parse(/a/);
     var backup = codePointer.backup();
@@ -65,20 +65,10 @@ describe("A parse error description", function() {
     codePointer.restore(backup);
     codePointer.parse(/e/);
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected /^d/ to match 'c'.");
+    .toBe("Expected\nabc\n  ^\nto match /d/");
   });
   
-  xit("remembers calls with actuall code of equal length (for alternatives)", 
-  function(){
-    var codePointer = new CodePointer("ab");
-    codePointer.parse(/a/);
-    codePointer.parse(/c/);
-    codePointer.parse(/d/);
-    expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected /^c|d/ to match 'b'.");
-  });
-  
-  xit("forgets remembered token if called with shorter actuall code", 
+  it("forgets remembered token if called with shorter actuall code", 
   function(){
     var codePointer = new CodePointer("abc");
     codePointer.parse(/a/);
@@ -88,7 +78,7 @@ describe("A parse error description", function() {
     codePointer.parse(/b/);
     codePointer.parse(/d/);
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected /^d/ to match 'c'.");
+    .toBe("Expected\nabc\n  ^\nto match /d/");
   });
   
 });

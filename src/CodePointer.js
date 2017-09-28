@@ -7,7 +7,7 @@ function CodePointer(code, debugging) {
   this.stack = [];
   this.recursivelyDefined = Object.create(null);
   this.attempts = {
-    position: Infinity,
+    position: 0,
     regexes: [],
   };
 }
@@ -80,8 +80,15 @@ CodePointer.prototype
 
 CodePointer.prototype
 .reportParseError = function(regex) {
-  this.attempts.position = this._pointer;
-  this.attempts.regexes.push(regex);
+  if(this._pointer > this.attempts.position){
+    this.attempts = {
+      position: this._pointer,
+      regexes: [],
+    };
+  }
+  if(this._pointer === this.attempts.position){
+    this.attempts.regexes.push(regex);
+  }
 };
 
 CodePointer.prototype
