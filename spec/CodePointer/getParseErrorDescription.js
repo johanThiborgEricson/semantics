@@ -15,6 +15,22 @@ describe("A parse error description", function() {
     .toEqual("Expected\na\n^\nto match /b/ or /c/");
   });
   
+  it("might report many parse errors", function() {
+    var codePointer = new CodePointer("a");
+    codePointer.parse(/b/);
+    codePointer.parse(/c/);
+    codePointer.parse(/d/);
+    codePointer.parse(/e/);
+    expect(codePointer.getParseErrorDescription())
+    .toEqual("Expected\na\n^\nto match /b/, /c/, /d/ or /e/");
+  });
+  
+  it("falls back to a generic message if nothing is parsed", function() {
+    var codePointer = new CodePointer("");
+    expect(codePointer.getParseErrorDescription())
+    .toEqual("Parse error");
+  });
+  
   xit("ignores calls with longer actuall code", function(){
     var codePointer = new CodePointer("abc");
     codePointer.parse(/a/);
