@@ -89,4 +89,17 @@ describe("A parse error description", function() {
     .toBe("Trailing code: \"b\"");
   });
   
+  it("is reported by the interpreter, even if it succeeds with trailing code", 
+  function() {
+    var f = new InterpreterMethodFactory();
+    var interpreter = {
+      maybeA: f.opt("a"),
+      a: f.atom(/a/),
+    };
+    
+    expect(function() {
+      interpreter.maybeA("b");
+    }).toThrowError("Expected\nb\n^\nto match /^a/");
+  });
+  
 });

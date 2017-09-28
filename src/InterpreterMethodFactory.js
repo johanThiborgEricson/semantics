@@ -48,10 +48,8 @@ function(v, interpreter, maybeInstruction) {
   
   v.codePointer.logParseEnd(v.methodName, !!maybeInstruction);
   if(!v.isInternalCall) {
-    if(!maybeInstruction) {
+    if(!maybeInstruction||v.codePointer.getUnparsed() !== "") {
       throw new Error(v.codePointer.getParseErrorDescription());
-    } else if(v.codePointer.getUnparsed() !== "") {
-      throw new Error("Trailing code: '" + v.codePointer.getUnparsed() + "'.");
     }
     
   }
