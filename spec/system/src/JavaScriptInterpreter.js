@@ -282,10 +282,12 @@ function JavaScriptInterpreter() {
   j.multiplicativeExpression1 = f.group("multiplicativeExpression", /\*/,
   "typeChangeExpression", function(me, tce) {return me*tce;});
   
-  j.additiveExpression = f.or("additiveExpression1", 
+  j.additiveExpression = f.or("additiveExpression1", "additiveExpression2", 
   "multiplicativeExpression");
   j.additiveExpression1 = f.group("additiveExpression", /\+/, 
   "multiplicativeExpression", function(ae, me) {return ae+me;});
+  j.additiveExpression2 = f.group("additiveExpression", /-/, 
+  "multiplicativeExpression", function(ae, me) {return ae-me;});
   
   j.relationalExpression = f.or("relationalExpression1", 
   "relationalExpression2", "additiveExpression");

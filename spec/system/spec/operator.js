@@ -35,8 +35,12 @@ describe("The operator", function() {
     expect(interpreter.program("return 3*5;")).toBe(15);
   });
   
-  it("can add two and two", function() {
+  it("+ can add two and two", function() {
     expect(interpreter.program("return 2+3;")).toBe(5);
+  });
+  
+  it("- has a problem with the concepts \"yours\" and \"mine\"", function() {
+    expect(interpreter.program("return 2-5;")).toBe(-3);
   });
   
   it("< is direct", function() {
