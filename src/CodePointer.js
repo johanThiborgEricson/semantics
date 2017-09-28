@@ -82,36 +82,12 @@ CodePointer.prototype
 
 CodePointer.prototype
 .reportParseError = function(token) {
-  var stripedToken = token.toString().slice(1, -1);
-  var tokenAlternatives = stripedToken;
-  var currentUnparsed = this.getUnparsed();
-  var currentLength = currentUnparsed.length;
-  var previousLength = this.parseErrorDescription.actuallCode.length;
   
-  if(currentLength > previousLength) {
-    return;
-  }
-  
-  if(currentLength < previousLength) {
-    this.parseErrorDescription.expectedAlternatives = undefined;
-  }
-  
-  if(this.parseErrorDescription.expectedAlternatives) {
-    tokenAlternatives = 
-    this.parseErrorDescription.expectedAlternatives + "|" + stripedToken;
-  }
-  
-  this.parseErrorDescription = {
-    expectedAlternatives: tokenAlternatives,
-    actuallCode: currentUnparsed,
-  };
-
 };
 
 CodePointer.prototype
 .getParseErrorDescription = function() {
-  return "Expected /^" + this.parseErrorDescription.expectedAlternatives + 
-  "/ to match '" + this.parseErrorDescription.actuallCode + "'.";
+  
 };
 
 CodePointer.prototype.getState = function(name) {
