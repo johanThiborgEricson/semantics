@@ -34,4 +34,44 @@ describe("The iteration statement", function() {
     
   });
   
+  describe("for in", function() {
+    
+    it("doesn't iterate if the object has no properties", function() {
+      expect(interpreter.program(
+        "var a=1," +
+        "o=Object.create(null);" +
+        "for(var v in o){" +
+          "a=0;" +
+        "}" +
+        "return a;", window)).toBe(1);
+    });
+    
+    it("doesn't iterate if the object has no properties", function() {
+      expect(interpreter.program(
+        "var a=[]," +
+        "o={" +
+          "a:1," +
+          "b:2" +
+        "};" +
+        "for(var pName in o){" +
+          "if(o.hasOwnProperty(pName)){" +
+            "a.push(pName);" +
+          "}" +
+        "}" +
+        "return a;")).toEqual(["a", "b"]);
+    });
+    
+    it("may cause an early return", function() {
+      expect(interpreter.program(
+        "var o={" +
+          "a:1" +
+        "};" +
+        "for(var pName in o){" +
+          "return 1;" +
+        "}" +
+        "return 0;")).toBe(1);
+    });
+    
+  });
+  
 });

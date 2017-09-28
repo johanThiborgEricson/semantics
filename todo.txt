@@ -79,3 +79,5 @@ Move recursively defined to position. It is safer if each position discovers
   its reursive definitions, so that old discorvered 
 Make parse error descriptions report atempts to parse a newline/parse at a 
   newline.
+But not should report parse failure (including the but not array?) Just the 
+  rejecting element? regex and rejecting element inside parantheses?

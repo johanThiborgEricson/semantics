@@ -387,6 +387,7 @@ function JavaScriptInterpreter() {
   j.variableDeclaration = f.group("bindingIdentifier", 
   "initialiserOpt", function(bindingIdentifier, initialiserOpt) {
     this.executionContext.variables[bindingIdentifier] = initialiserOpt;
+    return bindingIdentifier;
   });
   
   j.initialiser = f.wrap(/=/, "assignmentExpression");
@@ -411,12 +412,25 @@ function JavaScriptInterpreter() {
   
   j.deferredExpression = f.methodFactory("expression");
   
-  j.iterationStatement = f.or("iterationStatement2");
+  j.iterationStatement = f.or("iterationStatement2", "iterationStatement6");
   
   j.iterationStatement2 = f.group(/while/, /\(/, "deferredExpression", /\)/, 
   "deferredStatementOrBlock", 
   function(deferredExpression, deferredStatementOrBlock) {
     while(deferredExpression.call(this)) {
+      var returnValue = deferredStatementOrBlock.call(this);
+      if(returnValue[0] === "return") {
+        return returnValue;
+      }
+    }
+    return ["normal", undefined];
+  });
+  
+  j.iterationStatement6 = f.group(/for/, /\(/, /var/, "variableDeclaration", 
+  /in/, "expression", /\)/, "deferredStatementOrBlock", 
+  function(variableDeclaration, expression, deferredStatementOrBlock) {
+    for(var propertyName in expression) {
+      this.executionContext.variables[variableDeclaration] = propertyName;
       var returnValue = deferredStatementOrBlock.call(this);
       if(returnValue[0] === "return") {
         return returnValue;
