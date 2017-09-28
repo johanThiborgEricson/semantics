@@ -81,10 +81,8 @@ CodePointer.prototype
 CodePointer.prototype
 .reportParseError = function(regex) {
   if(this._pointer > this.attempts.position){
-    this.attempts = {
-      position: this._pointer,
-      regexes: [],
-    };
+    this.attempts.position = this._pointer;
+    this.attempts.regexes = [];
   }
   if(this._pointer === this.attempts.position){
     this.attempts.regexes.push(regex);
