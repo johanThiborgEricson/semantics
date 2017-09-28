@@ -135,7 +135,7 @@ function JavaScriptInterpreter() {
   
   j.primaryExpression = f.or("literal", "objectExpression");
   
-  j.objectExpression = f.or("identifierExpression", 
+  j.objectExpression = f.or("identifierExpression", "arrayLiteral", 
   "objectLiteral", "functionExpression", "objectExpression1", "thisExpression");
   
   j.objectExpression1 = f.wrap(/\(/, "expression", /\)/);
@@ -143,6 +143,10 @@ function JavaScriptInterpreter() {
   j.thisExpression = f.atom(/this/, function() {
     return this.executionContext.thisBinding;
   });
+  
+  j.arrayLiteral = f.wrap(/\[/, "elementList", /\]/);
+  
+  j.elementList = f.star("assignmentExpression", /,/);
   
   j.objectLiteral = f.group(/\{/, "propertyNameAndValueList", /,?/, /\}/, 
   function(propertyAndValueList) {

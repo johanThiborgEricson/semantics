@@ -18,4 +18,16 @@ describe("A literal", function() {
     expect(interpreter.program("return false;")).toBe(false);
   });
   
+  describe("array", function() {
+    
+    it("may be empty", function() {
+      expect(interpreter.program("return [];")).toEqual([]);
+    });
+    
+    it("may contain elements", function() {
+      expect(interpreter.program("return [1,2];")).toEqual([1, 2]);
+    });
+    
+  });
+  
 });
