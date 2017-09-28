@@ -371,8 +371,9 @@ function JavaScriptInterpreter() {
   
   j.deferredStatementList = f.methodFactory("statementList");
 
-  j.statement = f.or("variableStatement", "ifStatement", 
-  "returnStatement", "throwStatement", "functionDeclaration", "expressionStatement");
+  j.statement = f.or("variableStatement", "ifStatement", "iterationStatement", 
+  "returnStatement", "throwStatement", "functionDeclaration", 
+  "expressionStatement");
   
   j.deferredStatement = f.methodFactory("statement");
   
@@ -406,6 +407,19 @@ function JavaScriptInterpreter() {
     } else {
       return deferredElseStatementOpt.call(this);
     }
+  });
+  
+  j.deferredExpression = f.methodFactory("expression");
+  
+  j.iterationStatement = f.or("iterationStatement2");
+  
+  j.iterationStatement2 = f.group(/while/, /\(/, "deferredExpression", /\)/, 
+  "deferredStatementOrBlock", 
+  function(deferredExpression, deferredStatementOrBlock) {
+    while(deferredExpression.call(this)) {
+      deferredStatementOrBlock.call(this);
+    }
+    return ["normal", undefined];
   });
   
   j.deferredElseStatementOpt = f.methodFactory("elseStatementOpt");
