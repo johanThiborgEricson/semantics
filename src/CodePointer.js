@@ -86,8 +86,14 @@ CodePointer.prototype
 
 CodePointer.prototype
 .getParseErrorDescription = function() {
-  var regex = this.attempts.regexes[0];
-  var disjunction = regex.toString();
+  var regexes = this.attempts.regexes;
+  var disjunction;
+  if(this.attempts.regexes.length === 1) {
+    disjunction = regexes[0].toString();
+  } else {
+    disjunction = regexes[0].toString() + " or " + regexes[1].toString();
+  }
+  
   return "Expected\n" + this._code + "\n^\nto match " + disjunction;
 };
 
