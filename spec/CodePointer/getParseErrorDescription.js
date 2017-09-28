@@ -4,7 +4,7 @@ describe("A parse error description", function() {
     var codePointer = new CodePointer("a");
     codePointer.parse(/b/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\na\n^\nto match /b/");
+    .toBe("Expected\na\n^\nto be parsed by /b/");
   });
   
   it("might report two parse errors", function() {
@@ -12,7 +12,7 @@ describe("A parse error description", function() {
     codePointer.parse(/b/);
     codePointer.parse(/c/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\na\n^\nto match /b/ or /c/");
+    .toBe("Expected\na\n^\nto be parsed by /b/ or /c/");
   });
   
   it("might report many parse errors", function() {
@@ -22,7 +22,7 @@ describe("A parse error description", function() {
     codePointer.parse(/d/);
     codePointer.parse(/e/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\na\n^\nto match /b/, /c/, /d/ or /e/");
+    .toBe("Expected\na\n^\nto be parsed by /b/, /c/, /d/ or /e/");
   });
   
   it("falls back to a generic message if nothing is parsed", function() {
@@ -36,7 +36,7 @@ describe("A parse error description", function() {
     codePointer.parse(/a/);
     codePointer.parse(/c/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\nab\n ^\nto match /c/");
+    .toBe("Expected\nab\n ^\nto be parsed by /c/");
   });
   
   it("can occur at the last line", function() {
@@ -45,7 +45,7 @@ describe("A parse error description", function() {
     codePointer.parse(/b/);
     codePointer.parse(/d/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\nbc\n ^\nto match /d/");
+    .toBe("Expected\nbc\n ^\nto be parsed by /d/");
   });
   
   it("can occur at an intermediate line", function() {
@@ -53,7 +53,7 @@ describe("A parse error description", function() {
     codePointer.parse(/a\n/);
     codePointer.parse(/c/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\nb\n^\nto match /c/");
+    .toBe("Expected\nb\n^\nto be parsed by /c/");
   });
   
   it("reports only the last attempts", function(){
@@ -65,7 +65,7 @@ describe("A parse error description", function() {
     codePointer.restore(backup);
     codePointer.parse(/e/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\nabc\n  ^\nto match /d/");
+    .toBe("Expected\nabc\n  ^\nto be parsed by /d/");
   });
   
   it("forgets remembered token if called with shorter actuall code", 
@@ -78,7 +78,7 @@ describe("A parse error description", function() {
     codePointer.parse(/b/);
     codePointer.parse(/d/);
     expect(codePointer.getParseErrorDescription())
-    .toBe("Expected\nabc\n  ^\nto match /d/");
+    .toBe("Expected\nabc\n  ^\nto be parsed by /d/");
   });
   
   it("reports the trailing code if the last attempt was successful", 
@@ -99,7 +99,7 @@ describe("A parse error description", function() {
     
     expect(function() {
       interpreter.maybeA("b");
-    }).toThrowError("Expected\nb\n^\nto match /^a/");
+    }).toThrowError("Expected\nb\n^\nto be parsed by /^a/");
   });
   
 });

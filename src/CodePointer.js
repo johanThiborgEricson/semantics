@@ -114,7 +114,7 @@ CodePointer.prototype
   return "Expected\n" + 
           row + "\n" +
           hat + "\n" +
-          "to match " + disjunction;
+          "to be parsed by " + disjunction;
 };
 
 CodePointer.prototype.getState = function(name) {
