@@ -81,4 +81,12 @@ describe("A parse error description", function() {
     .toBe("Expected\nabc\n  ^\nto match /d/");
   });
   
+  it("reports the trailing code if the last attempt was successful", 
+  function() {
+    var codePointer = new CodePointer("ab");
+    codePointer.parse(/a/);
+    expect(codePointer.getParseErrorDescription())
+    .toBe("Trailing code: \"b\"");
+  });
+  
 });

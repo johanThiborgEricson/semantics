@@ -91,7 +91,10 @@ CodePointer.prototype
 
 CodePointer.prototype
 .getParseErrorDescription = function() {
-  if(this.attempts.regexes.length === 0) {
+  if(this._pointer > this.attempts.position){
+    return "Trailing code: \"" + this.getUnparsed() + "\"";
+  }
+  if(this.attempts.regexes.length === 0){
     return "Parse error";
   }
   var rowStart = this._code.lastIndexOf("\n", this.attempts.position)+1;

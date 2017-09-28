@@ -77,3 +77,5 @@ Debugging should report that a parsed base case isn't parsed in favor of a
 Head recursion should use position.stack, not codePointer.stack.
 Move recursively defined to position. It is safer if each position discovers
   its reursive definitions, so that old discorvered 
+Make parse error descriptions report atempts to parse a newline/parse at a 
+  newline.
