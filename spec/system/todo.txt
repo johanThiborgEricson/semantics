@@ -1,0 +1,15 @@
+Write test to check that assigning to variable statements only affects the 
+  current execution context.
+ExecutionEnvironment.variables should be lexical environment.
+Remove list quantifiers from the grammar (and from the code?).
+Which literals may have qualifiers?
+Is this a function or an object: new function() {return function() {};};
+Are the properties of window own properties?
+Write group tests to check that non returned sideffects are still run, so I 
+  don't accidentally disable them with select(4)
+Ensure that insignificant space is parsed before and after literal 
+  strings and regexes.
+Are nested regex classes allowed? Then Regex body will have to be a nonterminal.
+Finish numeric literal.
+Is type change expression: right hand side expression the right order of 
+  precedence?
