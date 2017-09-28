@@ -4,7 +4,7 @@ describe("A parse error description", function() {
     var codePointer = new CodePointer("a");
     codePointer.parse(/b/);
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected\na\n^\nto match /b/");
+    .toBe("Expected\na\n^\nto match /b/");
   });
   
   it("might report two parse errors", function() {
@@ -12,7 +12,7 @@ describe("A parse error description", function() {
     codePointer.parse(/b/);
     codePointer.parse(/c/);
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected\na\n^\nto match /b/ or /c/");
+    .toBe("Expected\na\n^\nto match /b/ or /c/");
   });
   
   it("might report many parse errors", function() {
@@ -22,13 +22,21 @@ describe("A parse error description", function() {
     codePointer.parse(/d/);
     codePointer.parse(/e/);
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected\na\n^\nto match /b/, /c/, /d/ or /e/");
+    .toBe("Expected\na\n^\nto match /b/, /c/, /d/ or /e/");
   });
   
   it("falls back to a generic message if nothing is parsed", function() {
     var codePointer = new CodePointer("");
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Parse error");
+    .toBe("Parse error");
+  });
+  
+  it("can occure on the first line", function() {
+    var codePointer = new CodePointer("ab");
+    codePointer.parse(/a/);
+    codePointer.parse(/c/);
+    expect(codePointer.getParseErrorDescription())
+    .toBe("Expected\nab\n ^\nto match /c/");
   });
   
   xit("ignores calls with longer actuall code", function(){

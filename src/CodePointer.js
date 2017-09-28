@@ -86,19 +86,23 @@ CodePointer.prototype
 
 CodePointer.prototype
 .getParseErrorDescription = function() {
-  var regexesTail = this.attempts.regexes.slice();
-  var regexesHead = regexesTail.pop();
-  var disjunction;
   if(this.attempts.regexes.length === 0) {
     return "Parse error";
   }
+  var hat = "^".padStart(this.attempts.position+1);
+  var regexesTail = this.attempts.regexes.slice();
+  var regexesHead = regexesTail.pop();
+  var disjunction;
   if(this.attempts.regexes.length === 1) {
     disjunction = regexesHead.toString();
   } else {
     disjunction = regexesTail.join(", ") + " or " + regexesHead.toString();
   }
   
-  return "Expected\n" + this._code + "\n^\nto match " + disjunction;
+  return "Expected\n" + 
+          this._code + "\n" +
+          hat + "\n" +
+          "to match " + disjunction;
 };
 
 CodePointer.prototype.getState = function(name) {
