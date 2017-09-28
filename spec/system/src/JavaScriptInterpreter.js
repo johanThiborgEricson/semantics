@@ -290,11 +290,13 @@ function JavaScriptInterpreter() {
   "multiplicativeExpression", function(ae, me) {return ae-me;});
   
   j.relationalExpression = f.or("relationalExpression1", 
-  "relationalExpression2", "additiveExpression");
+  "relationalExpression2", "relationalExpression5", "additiveExpression");
   j.relationalExpression1 = f.group("relationalExpression", /</, 
   "additiveExpression", function(re, ae) {return re<ae;});
   j.relationalExpression2 = f.group("relationalExpression", />/, 
   "additiveExpression", function(re, ae) {return re>ae;});
+  j.relationalExpression5 = f.group("relationalExpression", /instanceof/, 
+  "additiveExpression", function(re, ae) {return re instanceof ae;});
   
   j.equalityExpression = f.or("equalityExpression3", "equalityExpression4", 
   "relationalExpression");

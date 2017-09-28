@@ -60,6 +60,13 @@ describe("The operator", function() {
     expect(interpreter.program("return 42>42;")).toBe(false);
   });
   
+  it("instanceof can tell who really belongs", function() {
+    expect(interpreter.program(
+      "var C=function() {}," +
+      "o=new C();" +
+      "return o instanceof C;")).toBe(true);
+  });
+  
   it("=== can tell if two values exactly the same thing", function() {
     expect(interpreter.program("return {}==={};")).toBe(false);
   });
