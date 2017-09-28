@@ -99,7 +99,14 @@ describe("A parse error description", function() {
     
     expect(function() {
       interpreter.maybeA("b");
-    }).toThrowError("Expected\nb\n^\nto be parsed by /^a/");
+    }).toThrowError("Expected\nb\n^\nto be parsed by /a/");
   });
   
+  it("removes any beginning of input indicators from the attempted parsings", 
+  function() {
+    var codePointer = new CodePointer("a");
+    codePointer.parse(/^b/);
+    expect(codePointer.getParseErrorDescription())
+    .toBe("Expected\na\n^\nto be parsed by /b/");
+  });
 });

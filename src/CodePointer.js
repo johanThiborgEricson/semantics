@@ -102,7 +102,10 @@ CodePointer.prototype
   rowEnd = rowEnd === -1?this._code.length:rowEnd;
   var row = this._code.slice(rowStart, rowEnd);
   var hat = "^".padStart(this.attempts.position+1-rowStart);
-  var regexesTail = this.attempts.regexes.slice();
+  var regexesTail = this.attempts.regexes.map(function(regex) {
+    return regex.toString().replace(/^\/\^/, "/");
+  });
+  
   var regexesHead = regexesTail.pop();
   var disjunction;
   if(this.attempts.regexes.length === 1) {
