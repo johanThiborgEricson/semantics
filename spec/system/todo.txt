@@ -16,3 +16,5 @@ Is type change expression: right hand side expression the right order of
 Implement ellisions in arrays.
 Is returnValue a good name?
 Use {Object: Object} instead of window in for in test.
+The expressions in for(var;;) loops should be optional. Requires break 
+  statement.

@@ -94,6 +94,14 @@ describe("The iteration statement", function() {
         "return f;")).toBe(6);
     });
     
+    it("may cause an early return", function() {
+      expect(interpreter.program(
+        "for(var i=1;i<4;i++){" +
+          "return 1;" +
+        "}" +
+        "return 0;")).toBe(1);
+    });
+    
   });
   
 });

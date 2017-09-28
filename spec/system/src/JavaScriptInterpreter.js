@@ -433,7 +433,10 @@ function JavaScriptInterpreter() {
   function(variableDeclarationList, deferredExpression1, deferredExpression2, 
   deferredStatementOrBlock) {
     for( ; deferredExpression1.call(this); deferredExpression2.call(this)){
-      deferredStatementOrBlock.call(this);
+      var returnValue = deferredStatementOrBlock.call(this);
+      if(returnValue[0] === "return") {
+        return returnValue;
+      }
     }
     return ["normal", undefined];
   });
