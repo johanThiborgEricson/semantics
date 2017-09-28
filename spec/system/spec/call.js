@@ -74,4 +74,22 @@ describe("A call expression", function() {
       )).toBe(r);
   });
   
+  it("may have many qualifiers", function() {
+    expect(interpreter.program(
+      "this[n].push(x);")).toBe(1);
+  });
+  
+  xit("may have many qualifiers", function() {
+    expect(interpreter.program(
+      "var o={" +
+        "a:[]," +
+        "m:function(n, x){" +
+          "this[n].push(x);" +
+        "}" +
+      "};" +
+      "o.m('a', 1);" +
+      "return o.a[0];"
+      )).toBe(1);
+  });
+  
 });
