@@ -412,7 +412,8 @@ function JavaScriptInterpreter() {
   
   j.deferredExpression = f.methodFactory("expression");
   
-  j.iterationStatement = f.or("iterationStatement2", "iterationStatement6");
+  j.iterationStatement = f.or("iterationStatement2", "iterationStatement4", 
+  "iterationStatement6");
   
   j.iterationStatement2 = f.group(/while/, /\(/, "deferredExpression", /\)/, 
   "deferredStatementOrBlock", 
@@ -422,6 +423,17 @@ function JavaScriptInterpreter() {
       if(returnValue[0] === "return") {
         return returnValue;
       }
+    }
+    return ["normal", undefined];
+  });
+  
+  j.iterationStatement4 = f.group(/for/, /\(/, /var/, "variableDeclarationList", 
+  /;/, "deferredExpression", /;/, "deferredExpression", /\)/, 
+  "deferredStatementOrBlock", 
+  function(variableDeclarationList, deferredExpression1, deferredExpression2, 
+  deferredStatementOrBlock) {
+    for( ; deferredExpression1.call(this); deferredExpression2.call(this)){
+      deferredStatementOrBlock.call(this);
     }
     return ["normal", undefined];
   });

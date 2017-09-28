@@ -74,4 +74,26 @@ describe("The iteration statement", function() {
     
   });
   
+  describe("for(var i;;)", function() {
+    
+    it("may iterate zero times", function() {
+      expect(interpreter.program(
+        "var a=1;" +
+        "for(var i=0;i<0;i++){" +
+          "a=0;" +
+        "}" +
+        "return a;")).toBe(1);
+    });
+    
+    it("may iterate many times", function() {
+      expect(interpreter.program(
+        "var f=1;" +
+        "for(var i=1;i<4;i++){" +
+          "f=f*i;" +
+        "}" +
+        "return f;")).toBe(6);
+    });
+    
+  });
+  
 });
