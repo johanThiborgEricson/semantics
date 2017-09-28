@@ -1,9 +1,10 @@
 describe("A parse error description", function() {
-  xit("tells what it expected and what it saw", function() {
+  
+  it("tells what it expected and what it saw", function() {
     var codePointer = new CodePointer("a");
     codePointer.parse(/b/);
     expect(codePointer.getParseErrorDescription())
-    .toEqual("Expected /^b/ but saw 'a'.");
+    .toEqual("Expected\na\n^\nto match /b/");
   });
   
   xit("ignores calls with longer actuall code", function(){

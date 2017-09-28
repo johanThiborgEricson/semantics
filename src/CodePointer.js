@@ -6,12 +6,10 @@ function CodePointer(code, debugging) {
   this.indentation = 0;
   this.stack = [];
   this.recursivelyDefined = Object.create(null);
-  this.parseErrorDescription = {
-    actuallCode: {
-      length: Infinity,
-    }
+  this.attempts = {
+    position: Infinity,
+    regexes: [],
   };
-  
 }
 
 CodePointer.prototype.parse = function(regularExpression) {
@@ -81,13 +79,16 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
-.reportParseError = function(token) {
-  
+.reportParseError = function(regex) {
+  this.attempts.position = this._pointer;
+  this.attempts.regexes.push(regex);
 };
 
 CodePointer.prototype
 .getParseErrorDescription = function() {
-  
+  var regex = this.attempts.regexes[0];
+  var disjunction = regex.toString();
+  return "Expected\n" + this._code + "\n^\nto match " + disjunction;
 };
 
 CodePointer.prototype.getState = function(name) {
