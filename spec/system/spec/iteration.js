@@ -23,6 +23,15 @@ describe("The iteration statement", function() {
         "return a;")).toEqual([0, 1]);
     });
     
+    it("can cause an early return", function() {
+      expect(interpreter.program(
+        "var i=0;" +
+        "while(i++<1){" +
+          "return 1;" +
+        "}" +
+        "return 0;")).toBe(1);
+    });
+    
   });
   
 });

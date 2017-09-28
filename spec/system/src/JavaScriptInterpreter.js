@@ -417,7 +417,10 @@ function JavaScriptInterpreter() {
   "deferredStatementOrBlock", 
   function(deferredExpression, deferredStatementOrBlock) {
     while(deferredExpression.call(this)) {
-      deferredStatementOrBlock.call(this);
+      var returnValue = deferredStatementOrBlock.call(this);
+      if(returnValue[0] === "return") {
+        return returnValue;
+      }
     }
     return ["normal", undefined];
   });
