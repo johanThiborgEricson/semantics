@@ -2,6 +2,15 @@ describe("The operator", function() {
   
   var interpreter = new JavaScriptInterpreter();
   
+  it("delete removes things from things", function() {
+    expect(interpreter.program(
+      "var o={" +
+        "p:1" +
+      "};" +
+      "delete o.p;" +
+      "return o;")).toEqual({});
+  });
+  
   it("postfix ++ adds that little extra, but keeps it to itself", function() {
     expect(interpreter.program(
       "var a=1," +

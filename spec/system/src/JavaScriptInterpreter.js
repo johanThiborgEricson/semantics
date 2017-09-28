@@ -253,14 +253,14 @@ function JavaScriptInterpreter() {
   
   j.leftHandSideExpressionBase = f.or("callExpression");
   
-  j.updateExpression = f.longest("updateExpression2", "updateExpression3", 
-  "callExpression", "rightHandSideExpression");
-  
+  j.updateExpression = f.longest("updateExpression1", "updateExpression2", 
+  "updateExpression3", "callExpression", "rightHandSideExpression");
+  j.updateExpression1 = f.wrap(/delete/, "leftHandSideExpression",  
+  function(lhse) {return delete lhse.base[lhse.name];});
   j.updateExpression2 = f.wrap("leftHandSideExpression", /\+\+/, 
-  function(lshe) {return lshe.base[lshe.name]++;});
-  
+  function(lhse) {return lhse.base[lhse.name]++;});
   j.updateExpression3 = f.wrap("leftHandSideExpression", /--/, 
-  function(lshe) {return lshe.base[lshe.name]--;});
+  function(lhse) {return lhse.base[lhse.name]--;});
   
   j.rightHandSideExpression = f.wrap("leftHandSideExpression", 
   function(leftHandSideExpression) {
