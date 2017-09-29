@@ -147,6 +147,12 @@ CodePointer.prototype.getState = function(name) {
     recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
+      if(codePointer._debugging) {
+        
+        var cachedString = heads[name] && heads[name].cache?
+        codePointer.substring(position, heads[name].end): "failed";
+        console.log("Forgetting %s=%s", name, cachedString);
+      }
       delete heads[name];
     },
     

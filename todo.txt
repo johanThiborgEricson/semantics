@@ -81,3 +81,5 @@ Make parse error descriptions report atempts to parse a newline/parse at a
   newline.
 But not should report parse failure (including the but not array?) Just the 
   rejecting element? regex and rejecting element inside parantheses?
+Use head recursive case when testing if debugging is silent when turned off.
+  Should include forgeting.

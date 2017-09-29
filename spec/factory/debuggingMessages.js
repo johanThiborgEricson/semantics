@@ -92,4 +92,23 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "a2");
   });
   
+  describe("in head recursion", function() {
+    
+    var f = factory;
+
+    it("reports forgetting intermediate results", function() {
+      interpreter.a = f.atom(/a/);
+      interpreter.abcs = f.or("abcs1", "a");
+      interpreter.abcs1 = f.wrap("abcsb", /c/);
+      interpreter.abcsb = f.wrap("abcs", /b/);
+      
+      interpreter.abcs("abc", true);
+      expect(console.log).toHaveBeenCalledWith(
+        "Forgetting %s=%s", "abcs1", "\"abc\"");
+      expect(console.log).toHaveBeenCalledWith(
+        "Forgetting %s=%s", "abcsb", "\"ab\"");
+    });
+    
+  });
+  
 });
