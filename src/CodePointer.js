@@ -145,13 +145,17 @@ CodePointer.prototype.getState = function(name) {
     recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
+      this.reportDeletion();
+      delete here.cachedHeads[name];
+    },
+    
+    reportDeletion: function() {
       if(codePointer._debugging) {
         
         var cachedString = this.cache?
         codePointer.substring(position, this.end): "failed";
         console.log("Forgetting %s=%s", name, cachedString);
       }
-      delete here.cachedHeads[name];
     },
     
   };
