@@ -156,11 +156,6 @@ CodePointer.prototype.getState = function(name) {
     
   };
   
-  if(!hasCachedResult) {
-    delete head.cache;
-    delete head.end;
-  }
-
   return {
 
     hasCachedResult: function() {
