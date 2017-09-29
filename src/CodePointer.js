@@ -12,7 +12,6 @@ function CodePointer(code, debugging) {
     
   }
   this.indentation = 0;
-  this.recursivelyDefined = Object.create(null);
   this.attempts = {
     position: 0,
     regexes: [],
