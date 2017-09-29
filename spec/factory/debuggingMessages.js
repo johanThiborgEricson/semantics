@@ -42,8 +42,8 @@ describe("Debugging messages", function() {
 
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "text");
+    expect(console.log).toHaveBeenCalledWith("%s%s", "", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "text");
     expect(console.log).toHaveBeenCalledWith("%s%s: parse success", "  ", "text");
     expect(console.log).toHaveBeenCalledWith("%s%s: parse success", "", "paragraph");
   });
@@ -54,8 +54,8 @@ describe("Debugging messages", function() {
     interpreter.program = factory.or("paragraph", "somethingElse");
     interpreter.program("Something else\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "    ", "text");
+    expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s%s", "    ", "text");
     expect(console.log).toHaveBeenCalledWith("%s%s: parse fail", "    ", "text");
     expect(console.log).toHaveBeenCalledWith("%s%s: parse fail", "  ", "paragraph");
   });
@@ -85,8 +85,8 @@ describe("Debugging messages", function() {
 
     interpreter.aa("aa", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "a1");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "a2");
+    expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "a1");
+    expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "a2");
   });
   
 });
