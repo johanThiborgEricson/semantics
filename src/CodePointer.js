@@ -139,10 +139,9 @@ CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var position = this.backup();
   var here = codePointer.positions[position];
-  var cachedHeads = here.cachedHeads;
-  var stack = here.stack;
-  var hasCachedResult = !!cachedHeads[name];
-  var head = here.allHeads[name] = here.allHeads[name] || {
+  var hasCachedResult = !!here.cachedHeads[name];
+  var head = here.allHeads[name] = here.cachedHeads[name] = 
+  here.allHeads[name] || {
     recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
@@ -152,7 +151,7 @@ CodePointer.prototype.getState = function(name) {
         codePointer.substring(position, this.end): "failed";
         console.log("Forgetting %s=%s", name, cachedString);
       }
-      delete cachedHeads[name];
+      delete here.cachedHeads[name];
     },
     
   };
@@ -161,9 +160,7 @@ CodePointer.prototype.getState = function(name) {
     delete head.cache;
     delete head.end;
   }
-  
-  cachedHeads[name] = head;
-  
+
   return {
 
     hasCachedResult: function() {
@@ -176,17 +173,17 @@ CodePointer.prototype.getState = function(name) {
     },
     
     pushOnStack: function() {
-      stack.push(head);
+      here.stack.push(head);
     },
     
     popFromStack: function() {
-      stack.pop();
+      here.stack.pop();
     },
     
     setHeadRecursionDetected: function(isHeadRecursionDetected) {
       head.headRecursionDetected = isHeadRecursionDetected;
-      var lastEncounter = stack.indexOf(head);
-      stack.slice(lastEncounter+1, -1).map(function(rd) {
+      var lastEncounter = here.stack.indexOf(head);
+      here.stack.slice(lastEncounter+1, -1).map(function(rd) {
         if(head.recursivelyDefined.indexOf(rd) === -1){
           head.recursivelyDefined.push(rd);
         }
