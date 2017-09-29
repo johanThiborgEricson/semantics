@@ -74,7 +74,7 @@ describe("A call expression", function() {
       )).toBe(r);
   });
   
-  it("may have many qualifiers", function() {
+  xit("may have many qualifiers", function() {
     expect(interpreter.program(
       "this[n].push(x);")).toBe(1);
   });
