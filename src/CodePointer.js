@@ -5,6 +5,7 @@ function CodePointer(code, debugging) {
   this.positions = [];
   for(var i = 0; i < code.length+1; i++) {
     this.positions.push({
+      allHeads: Object.create(null),
       cachedHeads: Object.create(null),
       stack: [],
       recursivelyDefined: Object.create(null),
@@ -140,11 +141,12 @@ CodePointer.prototype.getState = function(name) {
   var position = this.backup();
   var here = codePointer.positions[position];
   var cachedHeads = here.cachedHeads;
+  var allHeads = here.allHeads;
   var stack = here.stack;
   var hasCachedResult = !!cachedHeads[name];
   var recursivelyDefined = here.recursivelyDefined[name] = 
       here.recursivelyDefined[name] || [];
-  var head = cachedHeads[name] = cachedHeads[name] || {
+  var head = allHeads[name] = allHeads[name] || {
     recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
@@ -158,6 +160,14 @@ CodePointer.prototype.getState = function(name) {
     },
     
   };
+  
+  if(!hasCachedResult) {
+    delete head.cache;
+    delete head.end;
+    head.recursivelyDefined = [];
+  }
+  
+  cachedHeads[name] = head;
   
   return {
 
