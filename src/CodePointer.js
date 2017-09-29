@@ -8,7 +8,6 @@ function CodePointer(code, debugging) {
       allHeads: Object.create(null),
       cachedHeads: Object.create(null),
       stack: [],
-      recursivelyDefined: Object.create(null),
     });
     
   }
@@ -144,8 +143,6 @@ CodePointer.prototype.getState = function(name) {
   var allHeads = here.allHeads;
   var stack = here.stack;
   var hasCachedResult = !!cachedHeads[name];
-  var recursivelyDefined = here.recursivelyDefined[name] = 
-      here.recursivelyDefined[name] || [];
   var head = allHeads[name] = allHeads[name] || {
     recursivelyDefined: [],
     name: name,
@@ -161,10 +158,10 @@ CodePointer.prototype.getState = function(name) {
     
   };
   
+  var recursivelyDefined = head.recursivelyDefined;
   if(!hasCachedResult) {
     delete head.cache;
     delete head.end;
-    head.recursivelyDefined = [];
   }
   
   cachedHeads[name] = head;
