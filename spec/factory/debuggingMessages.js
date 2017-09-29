@@ -44,8 +44,10 @@ describe("Debugging messages", function() {
     
     expect(console.log).toHaveBeenCalledWith("%s%s", "", "paragraph");
     expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "text");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse success", "  ", "text");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse success", "", "paragraph");
+    expect(console.log).toHaveBeenCalledWith(
+      "%s%s: %s", "  ", "text", "parse success");
+    expect(console.log).toHaveBeenCalledWith(
+      "%s%s: %s", "", "paragraph", "parse success");
   });
   
   they("report parse start, end and failure when called internally and " + 
@@ -56,8 +58,10 @@ describe("Debugging messages", function() {
     
     expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "paragraph");
     expect(console.log).toHaveBeenCalledWith("%s%s", "    ", "text");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse fail", "    ", "text");
-    expect(console.log).toHaveBeenCalledWith("%s%s: parse fail", "  ", "paragraph");
+    expect(console.log).toHaveBeenCalledWith(
+      "%s%s: %s", "    ", "text", "parse fail");
+    expect(console.log).toHaveBeenCalledWith(
+      "%s%s: %s", "  ", "paragraph", "parse fail");
   });
   
   they("if a match is successful, reports success, the regExp, the rest of " + 
