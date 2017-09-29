@@ -2,7 +2,14 @@ function CodePointer(code, debugging) {
   this._code = code;
   this._debugging = debugging;
   this._pointer = 0;
-  this.positions = new Array(code.length);
+  this.positions = [];
+  for(var i = 0; i < code.length+1; i++) {
+    this.positions.push({
+      heads: Object.create(null),
+      stack: [],
+    });
+    
+  }
   this.indentation = 0;
   this.recursivelyDefined = Object.create(null);
   this.attempts = {
@@ -132,11 +139,6 @@ CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var position = this.backup();
   var positions = codePointer.positions;
-  positions[position] = positions[position] || {
-    heads: Object.create(null),
-    stack: [],
-  };
-  
   var heads = positions[position].heads;
   var stack = positions[position].stack;
   var hasCachedResult = !!heads[name];
