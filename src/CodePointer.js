@@ -32,7 +32,7 @@ CodePointer.prototype
 .reportMatch = function(regExp, unparsed, match) {
   if(this._debugging) {
     var remainingLine = /.*/.exec(unparsed)[0];
-    console.log("%s.exec(\"%s\")", this.hatOff(regExp), remainingLine);
+    console.log("%s\n%s", remainingLine, this.hatOff(regExp));
   }
   if(!match) {
     this.reportParseError(regExp);
