@@ -139,12 +139,12 @@ CodePointer.prototype
 CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var position = this.backup();
-  var positions = codePointer.positions;
-  var heads = positions[position].heads;
-  var stack = positions[position].stack;
+  var here = codePointer.positions[position];
+  var heads = here.heads;
+  var stack = here.stack;
   var hasCachedResult = !!heads[name];
-  var recursivelyDefined = positions[position].recursivelyDefined[name] = 
-      positions[position].recursivelyDefined[name] || [];
+  var recursivelyDefined = here.recursivelyDefined[name] = 
+      here.recursivelyDefined[name] || [];
   var head = heads[name] = heads[name] || {
     recursivelyDefined: [],
     name: name,
