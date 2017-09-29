@@ -14,7 +14,7 @@ function CodePointer(code, debugging) {
 
 CodePointer.prototype.parse = function(regularExpression) {
   regularExpression.lastIndex = 0;
-  var unparsed = this.getUnparsed();
+  var backup = this._pointer;
   var match = regularExpression.exec(this.getUnparsed());
   if(!match || match.index > 0) {
     match = null;
@@ -24,15 +24,15 @@ CodePointer.prototype.parse = function(regularExpression) {
     this._pointer += match[0].length;
   }
   
-  this.reportMatch(regularExpression, unparsed, match);
+  this.reportMatch(regularExpression, backup, match);
   return match;
 };
 
 CodePointer.prototype
-.reportMatch = function(regExp, unparsed, match) {
+.reportMatch = function(regExp, backup, match) {
   if(this._debugging) {
-    var remainingLine = /.*/.exec(unparsed)[0];
-    console.log("%s\n%s", remainingLine, this.hatOff(regExp));
+    var hatPosString = this.hatPosString(backup);
+    console.log("%s\n%s", hatPosString, this.hatOff(regExp));
   }
   if(!match) {
     this.reportParseError(regExp);
