@@ -5,7 +5,7 @@ function CodePointer(code, debugging) {
   this.positions = [];
   for(var i = 0; i < code.length+1; i++) {
     this.positions.push({
-      heads: Object.create(null),
+      cachedHeads: Object.create(null),
       stack: [],
       recursivelyDefined: Object.create(null),
     });
@@ -139,22 +139,22 @@ CodePointer.prototype.getState = function(name) {
   var codePointer = this;
   var position = this.backup();
   var here = codePointer.positions[position];
-  var heads = here.heads;
+  var cachedHeads = here.cachedHeads;
   var stack = here.stack;
-  var hasCachedResult = !!heads[name];
+  var hasCachedResult = !!cachedHeads[name];
   var recursivelyDefined = here.recursivelyDefined[name] = 
       here.recursivelyDefined[name] || [];
-  var head = heads[name] = heads[name] || {
+  var head = cachedHeads[name] = cachedHeads[name] || {
     recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
       if(codePointer._debugging) {
         
-        var cachedString = heads[name] && heads[name].cache?
-        codePointer.substring(position, heads[name].end): "failed";
+        var cachedString = cachedHeads[name] && cachedHeads[name].cache?
+        codePointer.substring(position, cachedHeads[name].end): "failed";
         console.log("Forgetting %s=%s", name, cachedString);
       }
-      delete heads[name];
+      delete cachedHeads[name];
     },
     
   };
