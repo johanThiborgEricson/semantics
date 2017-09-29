@@ -140,10 +140,9 @@ CodePointer.prototype.getState = function(name) {
   var position = this.backup();
   var here = codePointer.positions[position];
   var cachedHeads = here.cachedHeads;
-  var allHeads = here.allHeads;
   var stack = here.stack;
   var hasCachedResult = !!cachedHeads[name];
-  var head = allHeads[name] = allHeads[name] || {
+  var head = here.allHeads[name] = here.allHeads[name] || {
     recursivelyDefined: [],
     name: name,
     deleteSelf: function() {
