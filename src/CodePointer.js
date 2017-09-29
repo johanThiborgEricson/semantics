@@ -4,7 +4,6 @@ function CodePointer(code, debugging) {
   this._pointer = 0;
   this.positions = new Array(code.length);
   this.indentation = 0;
-  this.stack = [];
   this.recursivelyDefined = Object.create(null);
   this.attempts = {
     position: 0,
@@ -139,7 +138,7 @@ CodePointer.prototype.getState = function(name) {
   };
   
   var heads = positions[position].heads;
-  var stack = this.stack;
+  var stack = positions[position].stack;
   var hasCachedResult = !!heads[name];
   var recursivelyDefined = this.recursivelyDefined[name] = 
       this.recursivelyDefined[name] || [];
