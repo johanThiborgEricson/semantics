@@ -59,7 +59,7 @@ CodePointer.prototype
     this.indentation--;
     var result = parseSuccess ? "parse success" : "parse fail";
     var indentation = "".padEnd(2*this.indentation);
-    console.log("%s%s: %s", indentation, name, result);
+    console.log("%s%s %s", indentation, name, result);
   }
   
 };
