@@ -7,6 +7,7 @@ function CodePointer(code, debugging) {
     this.positions.push({
       heads: Object.create(null),
       stack: [],
+      recursivelyDefined: Object.create(null),
     });
     
   }
@@ -142,8 +143,8 @@ CodePointer.prototype.getState = function(name) {
   var heads = positions[position].heads;
   var stack = positions[position].stack;
   var hasCachedResult = !!heads[name];
-  var recursivelyDefined = this.recursivelyDefined[name] = 
-      this.recursivelyDefined[name] || [];
+  var recursivelyDefined = positions[position].recursivelyDefined[name] = 
+      positions[position].recursivelyDefined[name] || [];
   var head = heads[name] = heads[name] || {
     recursivelyDefined: [],
     name: name,
