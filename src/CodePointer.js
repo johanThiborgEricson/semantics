@@ -96,6 +96,16 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
+.hatPosString = function(position) {
+  var rowStart = this._code.lastIndexOf("\n", position)+1;
+  var rowEnd = this._code.indexOf("\n", position);
+  rowEnd = rowEnd === -1?this._code.length:rowEnd;
+  var row = this._code.slice(rowStart, rowEnd);
+  var hat = "^".padStart(position+1-rowStart);
+  return row + "\n" + hat;
+};
+
+CodePointer.prototype
 .getParseErrorDescription = function() {
   if(this._pointer > this.attempts.position){
     return "Trailing code: \"" + this.getUnparsed() + "\"";
@@ -103,11 +113,7 @@ CodePointer.prototype
   if(this.attempts.regexes.length === 0){
     return "Parse error";
   }
-  var rowStart = this._code.lastIndexOf("\n", this.attempts.position)+1;
-  var rowEnd = this._code.indexOf("\n", this.attempts.position);
-  rowEnd = rowEnd === -1?this._code.length:rowEnd;
-  var row = this._code.slice(rowStart, rowEnd);
-  var hat = "^".padStart(this.attempts.position+1-rowStart);
+  var rowHat = this.hatPosString(this.attempts.position);
   var regexesTail = this.attempts.regexes.map(function(regex) {
     return regex.toString().replace(/^\/\^/, "/");
   });
@@ -121,8 +127,7 @@ CodePointer.prototype
   }
   
   return "Expected\n" + 
-          row + "\n" +
-          hat + "\n" +
+          rowHat + "\n" +
           "to be parsed by " + disjunction;
 };
 
