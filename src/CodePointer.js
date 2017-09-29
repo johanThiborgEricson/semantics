@@ -30,15 +30,12 @@ CodePointer.prototype.parse = function(regularExpression) {
 
 CodePointer.prototype
 .reportMatch = function(regExp, unparsed, match) {
-  var remainingLine = /.*/.exec(unparsed)[0];
-  
+  if(this._debugging) {
+    var remainingLine = /.*/.exec(unparsed)[0];
+    console.log("%s.exec(\"%s\")", this.hatOff(regExp), remainingLine);
+  }
   if(!match) {
     this.reportParseError(regExp);
-    if(this._debugging) {
-      console.log("%s.exec(\"%s\")", regExp.toString(), remainingLine);
-    }
-  } else if(this._debugging) {
-    console.log("%s.exec(\"%s\")", regExp.toString(), remainingLine);
   }
 };
 
