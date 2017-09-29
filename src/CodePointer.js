@@ -149,8 +149,8 @@ CodePointer.prototype.getState = function(name) {
     deleteSelf: function() {
       if(codePointer._debugging) {
         
-        var cachedString = cachedHeads[name] && cachedHeads[name].cache?
-        codePointer.substring(position, cachedHeads[name].end): "failed";
+        var cachedString = this.cache?
+        codePointer.substring(position, this.end): "failed";
         console.log("Forgetting %s=%s", name, cachedString);
       }
       delete cachedHeads[name];
