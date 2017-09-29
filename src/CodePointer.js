@@ -57,8 +57,7 @@ CodePointer.prototype
 .logParseEnd = function(name, parseSuccess, backup) {
   if(this._debugging) {
     this.indentation--;
-    var result = parseSuccess ? 
-    this.substring(backup, this._pointer): "parse fail";
+    var result = parseSuccess ? this.substring(backup, this._pointer): "failed";
     var indentation = "".padEnd(2*this.indentation);
     console.log("%s%s %s", indentation, name, result);
   }

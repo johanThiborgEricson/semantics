@@ -59,9 +59,9 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "paragraph");
     expect(console.log).toHaveBeenCalledWith("%s%s", "    ", "text");
     expect(console.log).toHaveBeenCalledWith(
-      "%s%s %s", "    ", "text", "parse fail");
+      "%s%s %s", "    ", "text", "failed");
     expect(console.log).toHaveBeenCalledWith(
-      "%s%s %s", "  ", "paragraph", "parse fail");
+      "%s%s %s", "  ", "paragraph", "failed");
   });
   
   they("if a match is successful, reports success, the regExp, the rest of " + 
