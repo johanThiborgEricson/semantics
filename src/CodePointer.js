@@ -47,18 +47,20 @@ CodePointer.prototype
 CodePointer.prototype
 .logParseStart = function(name) {
   if(this._debugging) {
-    console.log("".padEnd(2*this.indentation)+"%s: parse start", name);
+    var indentation = "".padEnd(2*this.indentation);
+    console.log("%s%s: parse start",indentation , name);
     this.indentation++;
   }
 };
 
 CodePointer.prototype
 .logParseEnd = function(name, parseSuccess) {
-  var message 
-  = parseSuccess ? "%s: parse success" : "%s: parse fail";
   if(this._debugging) {
+    var message 
+    = parseSuccess ? "%s%s: parse success" : "%s%s: parse fail";
     this.indentation--;
-    console.log("".padEnd(2*this.indentation)+message, name);
+    var indentation = "".padEnd(2*this.indentation);
+    console.log(message, indentation, name);
   }
   
 };

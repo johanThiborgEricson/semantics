@@ -42,10 +42,10 @@ describe("Debugging messages", function() {
 
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s: parse start", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("  %s: parse start", "text");
-    expect(console.log).toHaveBeenCalledWith("  %s: parse success", "text");
-    expect(console.log).toHaveBeenCalledWith("%s: parse success", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "text");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse success", "  ", "text");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse success", "", "paragraph");
   });
   
   they("report parse start, end and failure when called internally and " + 
@@ -54,10 +54,10 @@ describe("Debugging messages", function() {
     interpreter.program = factory.or("paragraph", "somethingElse");
     interpreter.program("Something else\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("  %s: parse start", "paragraph");
-    expect(console.log).toHaveBeenCalledWith("    %s: parse start", "text");
-    expect(console.log).toHaveBeenCalledWith("    %s: parse fail", "text");
-    expect(console.log).toHaveBeenCalledWith("  %s: parse fail", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "paragraph");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "    ", "text");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse fail", "    ", "text");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse fail", "  ", "paragraph");
   });
   
   they("if a match is successful, reports success, the regExp, the rest of " + 
@@ -85,8 +85,8 @@ describe("Debugging messages", function() {
 
     interpreter.aa("aa", true);
     
-    expect(console.log).toHaveBeenCalledWith("  %s: parse start", "a1");
-    expect(console.log).toHaveBeenCalledWith("  %s: parse start", "a2");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "a1");
+    expect(console.log).toHaveBeenCalledWith("%s%s: parse start", "  ", "a2");
   });
   
 });
