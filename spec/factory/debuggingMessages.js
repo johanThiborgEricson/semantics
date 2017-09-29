@@ -45,9 +45,9 @@ describe("Debugging messages", function() {
     expect(console.log).toHaveBeenCalledWith("%s%s", "", "paragraph");
     expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "text");
     expect(console.log).toHaveBeenCalledWith(
-      "%s%s %s", "  ", "text", "parse success");
+      "%s%s %s", "  ", "text", "\"text\"");
     expect(console.log).toHaveBeenCalledWith(
-      "%s%s %s", "", "paragraph", "parse success");
+      "%s%s %s", "", "paragraph", "\"text\n\"");
   });
   
   they("report parse start, end and failure when called internally and " + 

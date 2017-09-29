@@ -54,14 +54,20 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
-.logParseEnd = function(name, parseSuccess) {
+.logParseEnd = function(name, parseSuccess, backup) {
   if(this._debugging) {
     this.indentation--;
-    var result = parseSuccess ? "parse success" : "parse fail";
+    var result = parseSuccess ? 
+    this.substring(backup, this._pointer): "parse fail";
     var indentation = "".padEnd(2*this.indentation);
     console.log("%s%s %s", indentation, name, result);
   }
   
+};
+
+CodePointer.prototype
+.substring = function(start, end) {
+  return '"' + this._code.slice(start, end) + '"';
 };
 
 CodePointer.prototype

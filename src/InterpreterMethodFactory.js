@@ -46,7 +46,7 @@ function(v, interpreter, maybeInstruction) {
     v.codePointer.restore(v.backup);
   }
   
-  v.codePointer.logParseEnd(v.methodName, !!maybeInstruction);
+  v.codePointer.logParseEnd(v.methodName, !!maybeInstruction, v.backup);
   if(!v.isInternalCall) {
     if(!maybeInstruction||v.codePointer.getUnparsed() !== "") {
       throw new Error(v.codePointer.getParseErrorDescription());
