@@ -35,12 +35,10 @@ CodePointer.prototype
   if(!match) {
     this.reportParseError(regExp);
     if(this._debugging) {
-      console.log("%s.exec(\"%s\") // %s", regExp.toString(), remainingLine, 
-      "null");
+      console.log("%s.exec(\"%s\")", regExp.toString(), remainingLine);
     }
   } else if(this._debugging) {
-    console.log("%s.exec(\"%s\") // \"%s\"", regExp.toString(), remainingLine, 
-    match[0]);
+    console.log("%s.exec(\"%s\")", regExp.toString(), remainingLine);
   }
 };
 
@@ -106,6 +104,11 @@ CodePointer.prototype
 };
 
 CodePointer.prototype
+.hatOff = function(regex) {
+  return regex.toString().replace(/^\/\^/, "/");
+};
+
+CodePointer.prototype
 .getParseErrorDescription = function() {
   if(this._pointer > this.attempts.position){
     return "Trailing code: \"" + this.getUnparsed() + "\"";
@@ -114,9 +117,7 @@ CodePointer.prototype
     return "Parse error";
   }
   var rowHat = this.hatPosString(this.attempts.position);
-  var regexesTail = this.attempts.regexes.map(function(regex) {
-    return regex.toString().replace(/^\/\^/, "/");
-  });
+  var regexesTail = this.attempts.regexes.map(this.hatOff);
   
   var regexesHead = regexesTail.pop();
   var disjunction;

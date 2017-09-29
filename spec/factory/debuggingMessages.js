@@ -68,8 +68,8 @@ describe("Debugging messages", function() {
   "the current line and the full match", function() {
     interpreter.paragraph("text\n", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // \"%s\"", 
-    "/^text/", "text", "text");
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", 
+    "/^text/", "text");
   });
   
   they("if a match fails, reports the failure, the regExp and the rest of " + 
@@ -77,8 +77,8 @@ describe("Debugging messages", function() {
     interpreter.program = factory.or("paragraph", "somethingElse");
     interpreter.program("Something else", true);
     
-    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\") // %s", 
-    "/^text/", "Something else", "null");
+    expect(console.log).toHaveBeenCalledWith("%s.exec(\"%s\")", 
+    "/^text/", "Something else");
   });
   
   they("can tell the name of the called method, even if there are other " + 
