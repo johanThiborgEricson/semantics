@@ -1,6 +1,6 @@
 describe("A star quantifier", function() {
   
-  var f = new InterpreterMethodFactory();
+  var f;
   var interpreter;
   var id = function(x) {
     return x;
@@ -9,6 +9,10 @@ describe("A star quantifier", function() {
   var add = function(a, b) {
     return a+b;
   };
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {
