@@ -1,10 +1,14 @@
 describe("A wrapper", function() {
   
-  var f = new InterpreterMethodFactory();
+  var f;
   var interpreter;
   var fail = function() {
     return "failure";
   };
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {
