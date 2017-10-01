@@ -2,7 +2,7 @@ function JavaScriptInterpreter() {
   
 }
 
-(function() {
+JavaScriptInterpreter.hack = function() {
   var interpreterMethodFactory = new InterpreterMethodFactory();
   var second = function(x, y) {
     return y;
@@ -660,4 +660,6 @@ function JavaScriptInterpreter() {
   JavaScriptInterpreter.prototype.deferredSourceElements = 
   interpreterMethodFactory.methodFactory("sourceElements");
   
-})();
+};
+
+JavaScriptInterpreter.hack();

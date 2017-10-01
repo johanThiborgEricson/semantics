@@ -18,6 +18,7 @@ describe("Fetching source code...", function() {
   
   it("compiling...", function() {
     interpreter.program(factorySourceCode, window);
+    JavaScriptInterpreter.hack();
     expect(InterpreterMethodFactory).not.toBe(FactoryBackup);
   });
   
