@@ -2,7 +2,11 @@ describe("Debugging messages", function() {
   var they = it;
   var xthey = xit;
   var interpreter;
-  var factory = new InterpreterMethodFactory();
+  var factory;
+  
+  beforeAll(function() {
+    factory = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {
@@ -94,7 +98,11 @@ describe("Debugging messages", function() {
   
   describe("in head recursion", function() {
     
-    var f = factory;
+    var f;
+    
+    beforeAll(function() {
+      f = new InterpreterMethodFactory();
+    });
 
     it("reports forgetting intermediate results", function() {
       interpreter.a = f.atom(/a/);
