@@ -1,7 +1,11 @@
 describe("The empty string atom", function() {
   var interpreter;
-  var f = new InterpreterMethodFactory();
+  var f;
   var noop = function() {};
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {};
