@@ -1,7 +1,11 @@
 describe("The question mark quantifier", function() {
   
-  var f = new InterpreterMethodFactory();
+  var f;
   var i;
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     i = {
