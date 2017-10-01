@@ -12,12 +12,10 @@ function JavaScriptInterpreter() {
   
   // Lexical Grammar
   
-  //j.spaces = interpreterMethodFactory.star("space", function() {
-  //  return Array.prototype.slice.call(arguments).join("");
-  //});
   JavaScriptInterpreter.prototype.spaces = 
-  interpreterMethodFactory.
-  atom(/(\s|\n|(\/\/.*)|(\/\*\/*(\**[^\*\/]+\/*)*\*+\/))*/);
+  interpreterMethodFactory.star("space", function() {
+    return Array.prototype.slice.call(arguments).join("");
+  });
 
   JavaScriptInterpreter.prototype.space = 
   interpreterMethodFactory.or("whiteSpace", "lineTerminator", 
