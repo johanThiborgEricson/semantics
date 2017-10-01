@@ -93,7 +93,7 @@ describe("Head recursion", function() {
     expect(interpreter.abcs("abc")).toBe("abc");
   });
   
-  xit("can be nested", function() {
+  it("can be nested", function() {
     interpreter = {
       e: f.empty(function(){
         return "";
