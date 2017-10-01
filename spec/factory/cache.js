@@ -1,23 +1,28 @@
 describe("Parse result caching", function() {
   
-  var f = new InterpreterMethodFactory();
-  f.parseCounter = function() {
-    var parseCount = 0;
-    var instructionMaker = function() {
-      parseCount++;
-      return (function(parseCount) {
-        return function instruction() {
-          return parseCount;
-        };
+  var f;
+  var interpreter;
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+    
+    f.parseCounter = function() {
+      var parseCount = 0;
+      var instructionMaker = function() {
+        parseCount++;
+        return (function(parseCount) {
+          return function instruction() {
+            return parseCount;
+          };
+          
+        })(parseCount);
         
-      })(parseCount);
+      };
       
+      return this.makeMethod(instructionMaker);
     };
     
-    return this.makeMethod(instructionMaker);
-  };
-  
-  var interpreter;
+  });
   
   beforeEach(function() {
     interpreter = {
