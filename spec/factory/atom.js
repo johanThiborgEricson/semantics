@@ -1,10 +1,14 @@
 describe("An atom", function() {
   
   var interpreter;
-  var f = new InterpreterMethodFactory();
+  var f;
   var add = function(a, b) {
     return a+b;
   };
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {};
