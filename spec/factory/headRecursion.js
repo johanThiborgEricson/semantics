@@ -1,10 +1,6 @@
 describe("Head recursion", function() {
   
-  var f = new InterpreterMethodFactory();
-  f.noRecursion = function(instructionMaker) {
-    return this.makeMethod(instructionMaker);
-  };
-  
+  var f;
   var instructionMaker;
   var interpreter;
   var add = function(a, b) {
@@ -14,6 +10,14 @@ describe("Head recursion", function() {
   var id = function(x) {
     return x;
   };
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+    f.noRecursion = function(instructionMaker) {
+      return this.makeMethod(instructionMaker);
+    };
+    
+  });
   
   beforeEach(function() {
     
