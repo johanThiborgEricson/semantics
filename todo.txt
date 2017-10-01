@@ -83,3 +83,4 @@ But not should report parse failure (including the but not array?) Just the
   rejecting element? regex and rejecting element inside parantheses?
 Use head recursive case when testing if debugging is silent when turned off.
   Should include forgeting.
+But not should be a nonterminal.

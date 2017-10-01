@@ -1,7 +1,11 @@
 describe("A but not specification of an atom", function() {
   
-  var f = new InterpreterMethodFactory();
+  var f;
   var interpreter;
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {
