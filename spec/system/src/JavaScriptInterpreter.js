@@ -13,8 +13,8 @@ JavaScriptInterpreter.hack = function() {
   // Lexical Grammar
   
   JavaScriptInterpreter.prototype.spaces = 
-  interpreterMethodFactory.star("space", function() {
-    return Array.prototype.slice.call(arguments).join("");
+  interpreterMethodFactory.star("space", function(spaces) {
+    return spaces.join("");
   });
 
   JavaScriptInterpreter.prototype.space = 
@@ -422,8 +422,8 @@ JavaScriptInterpreter.hack = function() {
   
   JavaScriptInterpreter.prototype.expression = 
   interpreterMethodFactory.plus("assignmentExpression", /,/, 
-  function() {
-    return arguments[arguments.length-1];
+  function(assignmentsExpressions) {
+    return assignmentsExpressions[assignmentsExpressions.length-1];
   });
   
   // Statements
@@ -438,9 +438,10 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\{/, "statementList", /\}/);
   
   JavaScriptInterpreter.prototype.statementList = 
-  interpreterMethodFactory.star("deferredStatement", function() {
-    for(var i = 0; i < arguments.length; i++) {
-      var returnValue = arguments[i].call(this);
+  interpreterMethodFactory.star("deferredStatement", 
+  function(deferredStatements) {
+    for(var i = 0; i < deferredStatements.length; i++) {
+      var returnValue = deferredStatements[i].call(this);
       if(returnValue[0] === "return") {
         return returnValue;
       }

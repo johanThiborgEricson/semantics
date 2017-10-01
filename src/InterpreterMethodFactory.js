@@ -637,7 +637,7 @@
       return function instruction() {
         var results = InterpreterMethodFactory
             .mapRunAsMethod(this, partInstructions);
-        return interpretation?interpretation.apply(this, results):results;
+        return interpretation?interpretation.call(this, results):results;
       };
       
     });
@@ -685,7 +685,7 @@
       return function instruction() {
         var results = InterpreterMethodFactory
             .mapRunAsMethod(this, partInstructions);
-        return interpretation?interpretation.apply(this, results):results;
+        return interpretation?interpretation.call(this, results):results;
       };
       
     });
