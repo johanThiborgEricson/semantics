@@ -3,8 +3,7 @@ function JavaScriptInterpreter() {
 }
 
 (function() {
-  var f = new InterpreterMethodFactory();
-  var j = JavaScriptInterpreter.prototype;
+  var interpreterMethodFactory = new InterpreterMethodFactory();
   var second = function(x, y) {
     return y;
   };
@@ -13,58 +12,58 @@ function JavaScriptInterpreter() {
   
   // Lexical Grammar
   
-  //j.spaces = f.star("space", function() {
+  //j.spaces = interpreterMethodFactory.star("space", function() {
   //  return Array.prototype.slice.call(arguments).join("");
   //});
-  j.spaces = f.atom(/(\s|\n|(\/\/.*)|(\/\*\/*(\**[^\*\/]+\/*)*\*+\/))*/);
+  JavaScriptInterpreter.prototype.spaces = interpreterMethodFactory.atom(/(\s|\n|(\/\/.*)|(\/\*\/*(\**[^\*\/]+\/*)*\*+\/))*/);
 
-  j.space = f.or("whiteSpace", "lineTerminator", "singleLineComment", 
+  JavaScriptInterpreter.prototype.space = interpreterMethodFactory.or("whiteSpace", "lineTerminator", "singleLineComment", 
   "multiLineComment");
   
-  j.whiteSpace = f.atom(/\s/);
+  JavaScriptInterpreter.prototype.whiteSpace = interpreterMethodFactory.atom(/\s/);
   
-  j.lineTerminator = f.atom(/\n/);
+  JavaScriptInterpreter.prototype.lineTerminator = interpreterMethodFactory.atom(/\n/);
   
-  j.singleLineComment = f.atom(/\/\/.*/);
+  JavaScriptInterpreter.prototype.singleLineComment = interpreterMethodFactory.atom(/\/\/.*/);
 
-  j.multiLineComment = f.atom(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
+  JavaScriptInterpreter.prototype.multiLineComment = interpreterMethodFactory.atom(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
   
-  j.identifierName = f.atom(identifierName);
+  JavaScriptInterpreter.prototype.identifierName = interpreterMethodFactory.atom(identifierName);
   
-  j.literal = f.or("undefinedLiteral", "nullLiteral", "booleanLiteral", 
+  JavaScriptInterpreter.prototype.literal = interpreterMethodFactory.or("undefinedLiteral", "nullLiteral", "booleanLiteral", 
   "numericLiteral", "stringLiteral", "regularExpressionLiteral");
   
-  j.undefinedLiteral = f.atom(/undefined/, function() {
+  JavaScriptInterpreter.prototype.undefinedLiteral = interpreterMethodFactory.atom(/undefined/, function() {
     return undefined;
   });
   
-  j.nullLiteral = f.atom(/null/, function() {
+  JavaScriptInterpreter.prototype.nullLiteral = interpreterMethodFactory.atom(/null/, function() {
     return null;
   });
   
-  j.booleanLiteral = f.or("trueLiteral", "falseLiteral");
+  JavaScriptInterpreter.prototype.booleanLiteral = interpreterMethodFactory.or("trueLiteral", "falseLiteral");
   
-  j.trueLiteral = f.atom(/true/, function() {
+  JavaScriptInterpreter.prototype.trueLiteral = interpreterMethodFactory.atom(/true/, function() {
     return true;
   });
   
-  j.falseLiteral = f.atom(/false/, function() {
+  JavaScriptInterpreter.prototype.falseLiteral = interpreterMethodFactory.atom(/false/, function() {
     return false;
   });
   
-  j.numericLiteral = f.atom(/\d+/, function(numericLiteral){
+  JavaScriptInterpreter.prototype.numericLiteral = interpreterMethodFactory.atom(/\d+/, function(numericLiteral){
     return Number(numericLiteral);
   });
   
-  j.stringLiteral = f.insignificant(null, "stringLiteralSignificantSpaces");
+  JavaScriptInterpreter.prototype.stringLiteral = interpreterMethodFactory.insignificant(null, "stringLiteralSignificantSpaces");
   
-  j.stringLiteralSignificantSpaces = f.or("stringLiteralSignificantSpaces1", 
+  JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces = interpreterMethodFactory.or("stringLiteralSignificantSpaces1", 
   "stringLiteralSignificantSpaces2");
   
-  j.stringLiteralSignificantSpaces1 = f.wrap(/"/, "doubleStringCharacters", 
+  JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces1 = interpreterMethodFactory.wrap(/"/, "doubleStringCharacters", 
   /"/);
   
-  j.stringLiteralSignificantSpaces2 = f.wrap(/'/, "singleStringCharacters", 
+  JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces2 = interpreterMethodFactory.wrap(/'/, "singleStringCharacters", 
   /'/);
   
   var unescape = function(s) {
@@ -75,9 +74,9 @@ function JavaScriptInterpreter() {
     return s;
   };
   
-  j.doubleStringCharacters = f.atom(/([^"\\]|(\\.))*/, unescape);
+  JavaScriptInterpreter.prototype.doubleStringCharacters = interpreterMethodFactory.atom(/([^"\\]|(\\.))*/, unescape);
   
-  j.singleStringCharacters = f.atom(/([^'\\]|(\\.))*/, unescape);
+  JavaScriptInterpreter.prototype.singleStringCharacters = interpreterMethodFactory.atom(/([^'\\]|(\\.))*/, unescape);
   
   var characterEscapeSequence = {
     "\\\'": "\'",
@@ -91,20 +90,19 @@ function JavaScriptInterpreter() {
     "\\v": "\v",
   };
   
-  j.regularExpressionLiteral = 
-      f.insignificant(null, "regularExpressionLiteralSignificantSpaces");
+  JavaScriptInterpreter.prototype.regularExpressionLiteral = interpreterMethodFactory.insignificant(null, "regularExpressionLiteralSignificantSpaces");
   
-  j.regularExpressionLiteralSignificantSpaces = f.wrap(/\//, 
+  JavaScriptInterpreter.prototype.regularExpressionLiteralSignificantSpaces = interpreterMethodFactory.wrap(/\//, 
   "regularExpressionBody", /\//);
   
-  j.regularExpressionBody = f.atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
+  JavaScriptInterpreter.prototype.regularExpressionBody = interpreterMethodFactory.atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
   function(regularExpressionBody) {
     return new RegExp(regularExpressionBody);
   });
   
   // Expressions
   
-  j.identifierReference = f.wrap("bindingIdentifier", 
+  JavaScriptInterpreter.prototype.identifierReference = interpreterMethodFactory.wrap("bindingIdentifier", 
   function(bindingIdentifier) {
     var base = this.executionContext;
     while(!base.variables.hasOwnProperty(bindingIdentifier)) {
@@ -118,7 +116,7 @@ function JavaScriptInterpreter() {
     
   });
   
-  j.identifierExpression = f.wrap("identifierReference", 
+  JavaScriptInterpreter.prototype.identifierExpression = interpreterMethodFactory.wrap("identifierReference", 
   function(identifierReference) {
     var ir = identifierReference;
     return ir.base[ir.name];
@@ -131,24 +129,24 @@ function JavaScriptInterpreter() {
   "public", "return", "static", "super", "switch", "this", "throw", "true", 
   "try", "typeof", "undefined", "var", "void", "while", "with", "yield"];
   
-  j.bindingIdentifier = f.atom(identifierName, reservedWord);
+  JavaScriptInterpreter.prototype.bindingIdentifier = interpreterMethodFactory.atom(identifierName, reservedWord);
   
-  j.primaryExpression = f.or("literal", "objectExpression");
+  JavaScriptInterpreter.prototype.primaryExpression = interpreterMethodFactory.or("literal", "objectExpression");
   
-  j.objectExpression = f.or("identifierExpression", "arrayLiteral", 
+  JavaScriptInterpreter.prototype.objectExpression = interpreterMethodFactory.or("identifierExpression", "arrayLiteral", 
   "objectLiteral", "functionExpression", "objectExpression1", "thisExpression");
   
-  j.objectExpression1 = f.wrap(/\(/, "expression", /\)/);
+  JavaScriptInterpreter.prototype.objectExpression1 = interpreterMethodFactory.wrap(/\(/, "expression", /\)/);
   
-  j.thisExpression = f.atom(/this/, function() {
+  JavaScriptInterpreter.prototype.thisExpression = interpreterMethodFactory.atom(/this/, function() {
     return this.executionContext.thisBinding;
   });
   
-  j.arrayLiteral = f.wrap(/\[/, "elementList", /\]/);
+  JavaScriptInterpreter.prototype.arrayLiteral = interpreterMethodFactory.wrap(/\[/, "elementList", /\]/);
   
-  j.elementList = f.star("assignmentExpression", /,/);
+  JavaScriptInterpreter.prototype.elementList = interpreterMethodFactory.star("assignmentExpression", /,/);
   
-  j.objectLiteral = f.group(/\{/, "propertyNameAndValueList", /,?/, /\}/, 
+  JavaScriptInterpreter.prototype.objectLiteral = interpreterMethodFactory.group(/\{/, "propertyNameAndValueList", /,?/, /\}/, 
   function(propertyAndValueList) {
     var result = {};
     propertyAndValueList.map(function(propertyAssignment) {
@@ -159,50 +157,50 @@ function JavaScriptInterpreter() {
     return result;
   });
   
-  j.propertyNameAndValueList = f.star("propertyAssignment", /,/);
+  JavaScriptInterpreter.prototype.propertyNameAndValueList = interpreterMethodFactory.star("propertyAssignment", /,/);
   
-  j.propertyAssignment = f.group("propertyName", /:/, "assignmentExpression");
+  JavaScriptInterpreter.prototype.propertyAssignment = interpreterMethodFactory.group("propertyName", /:/, "assignmentExpression");
   
-  j.propertyName = f.or("identifierName");
+  JavaScriptInterpreter.prototype.propertyName = interpreterMethodFactory.or("identifierName");
   
-  j.newExpression = f.or("newExpression1", "primaryExpression");
+  JavaScriptInterpreter.prototype.newExpression = interpreterMethodFactory.or("newExpression1", "primaryExpression");
   
-  j.newExpression1 = f.group(/new/, "newExpressionQualifier", "argumentsOpt", 
+  JavaScriptInterpreter.prototype.newExpression1 = interpreterMethodFactory.group(/new/, "newExpressionQualifier", "argumentsOpt", 
   function(newExpressionQualifier, argumentsOpt) {
     var object = Object.create(newExpressionQualifier.prototype);
     var result = newExpressionQualifier.apply(object, argumentsOpt);
     return result&&typeof result==="object"?result:object;
   });
   
-  j.newExpressionQualifier = f.longest("newExpression",
+  JavaScriptInterpreter.prototype.newExpressionQualifier = interpreterMethodFactory.longest("newExpression",
   "newExpressionQualifier1");
   
-  j.newExpressionQualifier1 = f.group("newExpressionQualifier", "qualifier",
+  JavaScriptInterpreter.prototype.newExpressionQualifier1 = interpreterMethodFactory.group("newExpressionQualifier", "qualifier",
   function(newExpressionQualifier, qualifier) {
     return newExpressionQualifier[qualifier];
   });
   
-  j.argumentsOpt = f.opt("args", function(){
+  JavaScriptInterpreter.prototype.argumentsOpt = interpreterMethodFactory.opt("args", function(){
     return [];
   });
   
-  j.callExpression = f.or("callExpression1", 
+  JavaScriptInterpreter.prototype.callExpression = interpreterMethodFactory.or("callExpression1", 
   "callExpression2", "newExpression");
   
-  j.callExpression1 = f.group("callExpression", "args", 
+  JavaScriptInterpreter.prototype.callExpression1 = interpreterMethodFactory.group("callExpression", "args", 
   function(fceQualifier, args) {
     return fceQualifier.apply(undefined, args);
   });
   
-  j.callExpression2 = f.group("callExpressionQualifier", "args", 
+  JavaScriptInterpreter.prototype.callExpression2 = interpreterMethodFactory.group("callExpressionQualifier", "args", 
   function(mceQualifier, args) {
     return mceQualifier.value.apply(mceQualifier.base, args);
   });
   
-  j.callExpressionQualifier = f.longest("callExpressionQualifier1", 
+  JavaScriptInterpreter.prototype.callExpressionQualifier = interpreterMethodFactory.longest("callExpressionQualifier1", 
   "callExpressionQualifier2");
   
-  j.callExpressionQualifier1 = f.group("callExpression", 
+  JavaScriptInterpreter.prototype.callExpressionQualifier1 = interpreterMethodFactory.group("callExpression", 
   "qualifier", function(fceQualifier, qualifier) {
     return {
       base: fceQualifier,
@@ -210,7 +208,7 @@ function JavaScriptInterpreter() {
     };
   });
   
-  j.callExpressionQualifier2 = f.group("callExpressionQualifier", 
+  JavaScriptInterpreter.prototype.callExpressionQualifier2 = interpreterMethodFactory.group("callExpressionQualifier", 
   "qualifier", function(mceQualifier, qualifier) {
     return {
       base: mceQualifier.value,
@@ -218,20 +216,20 @@ function JavaScriptInterpreter() {
     };
   });
   
-  j.qualifier = f.or("qualifier1", "qualifier2");
+  JavaScriptInterpreter.prototype.qualifier = interpreterMethodFactory.or("qualifier1", "qualifier2");
   
-  j.qualifier1 = f.wrap(/\[/, "expression", /\]/);
+  JavaScriptInterpreter.prototype.qualifier1 = interpreterMethodFactory.wrap(/\[/, "expression", /\]/);
   
-  j.qualifier2 = f.wrap(/\./, "identifierName");
+  JavaScriptInterpreter.prototype.qualifier2 = interpreterMethodFactory.wrap(/\./, "identifierName");
   
-  j.args = f.wrap(/\(/, "argumentList", /\)/);
+  JavaScriptInterpreter.prototype.args = interpreterMethodFactory.wrap(/\(/, "argumentList", /\)/);
   
-  j.argumentList = f.star("assignmentExpression", /,/);
+  JavaScriptInterpreter.prototype.argumentList = interpreterMethodFactory.star("assignmentExpression", /,/);
   
-  j.leftHandSideExpression = f.or("leftHandSideExpression1", 
+  JavaScriptInterpreter.prototype.leftHandSideExpression = interpreterMethodFactory.or("leftHandSideExpression1", 
   "leftHandSideExpression2", "identifierReference");
   
-  j.leftHandSideExpression1 = f.group("leftHandSideExpression", 
+  JavaScriptInterpreter.prototype.leftHandSideExpression1 = interpreterMethodFactory.group("leftHandSideExpression", 
   "qualifier", 
   function(leftHandSideExpression, qualifier) {
     var result = leftHandSideExpression;
@@ -242,7 +240,7 @@ function JavaScriptInterpreter() {
     return result;
   });
   
-  j.leftHandSideExpression2 = f.group("leftHandSideExpressionBase", 
+  JavaScriptInterpreter.prototype.leftHandSideExpression2 = interpreterMethodFactory.group("leftHandSideExpressionBase", 
   "qualifier", 
   function(leftHandSideExpressionBase, qualifier) {
     return {
@@ -251,81 +249,81 @@ function JavaScriptInterpreter() {
     };
   });
   
-  j.leftHandSideExpressionBase = f.or("callExpression");
+  JavaScriptInterpreter.prototype.leftHandSideExpressionBase = interpreterMethodFactory.or("callExpression");
   
-  j.updateExpression = f.longest("updateExpression1", "updateExpression2", 
+  JavaScriptInterpreter.prototype.updateExpression = interpreterMethodFactory.longest("updateExpression1", "updateExpression2", 
   "updateExpression3", "callExpression", "rightHandSideExpression");
-  j.updateExpression1 = f.wrap(/delete/, "leftHandSideExpression",  
+  JavaScriptInterpreter.prototype.updateExpression1 = interpreterMethodFactory.wrap(/delete/, "leftHandSideExpression",  
   function(lhse) {return delete lhse.base[lhse.name];});
-  j.updateExpression2 = f.wrap("leftHandSideExpression", /\+\+/, 
+  JavaScriptInterpreter.prototype.updateExpression2 = interpreterMethodFactory.wrap("leftHandSideExpression", /\+\+/, 
   function(lhse) {return lhse.base[lhse.name]++;});
-  j.updateExpression3 = f.wrap("leftHandSideExpression", /--/, 
+  JavaScriptInterpreter.prototype.updateExpression3 = interpreterMethodFactory.wrap("leftHandSideExpression", /--/, 
   function(lhse) {return lhse.base[lhse.name]--;});
   
-  j.rightHandSideExpression = f.wrap("leftHandSideExpression", 
+  JavaScriptInterpreter.prototype.rightHandSideExpression = interpreterMethodFactory.wrap("leftHandSideExpression", 
   function(leftHandSideExpression) {
     return leftHandSideExpression.base[leftHandSideExpression.name];
   });
   
-  j.typeChangeExpression = f.or("updateExpression", "typeChangeExpression2", 
+  JavaScriptInterpreter.prototype.typeChangeExpression = interpreterMethodFactory.or("updateExpression", "typeChangeExpression2", 
   "typeChangeExpression4", "typeChangeExpression6");
   
-  j.typeChangeExpression2 = f.group(/typeof/, "typeChangeExpression", 
+  JavaScriptInterpreter.prototype.typeChangeExpression2 = interpreterMethodFactory.group(/typeof/, "typeChangeExpression", 
   function(typeChangeExpression) {return typeof typeChangeExpression;});
-  j.typeChangeExpression4 = f.group(/-/, "typeChangeExpression", 
+  JavaScriptInterpreter.prototype.typeChangeExpression4 = interpreterMethodFactory.group(/-/, "typeChangeExpression", 
   function(typeChangeExpression) {return -typeChangeExpression;});
-  j.typeChangeExpression6 = f.group(/!/, "typeChangeExpression", 
+  JavaScriptInterpreter.prototype.typeChangeExpression6 = interpreterMethodFactory.group(/!/, "typeChangeExpression", 
   function(typeChangeExpression) {return !typeChangeExpression;});
   
-  j.multiplicativeExpression = f.or("multiplicativeExpression1", 
+  JavaScriptInterpreter.prototype.multiplicativeExpression = interpreterMethodFactory.or("multiplicativeExpression1", 
   "typeChangeExpression");
-  j.multiplicativeExpression1 = f.group("multiplicativeExpression", /\*/,
+  JavaScriptInterpreter.prototype.multiplicativeExpression1 = interpreterMethodFactory.group("multiplicativeExpression", /\*/,
   "typeChangeExpression", function(me, tce) {return me*tce;});
   
-  j.additiveExpression = f.or("additiveExpression1", "additiveExpression2", 
+  JavaScriptInterpreter.prototype.additiveExpression = interpreterMethodFactory.or("additiveExpression1", "additiveExpression2", 
   "multiplicativeExpression");
-  j.additiveExpression1 = f.group("additiveExpression", /\+/, 
+  JavaScriptInterpreter.prototype.additiveExpression1 = interpreterMethodFactory.group("additiveExpression", /\+/, 
   "multiplicativeExpression", function(ae, me) {return ae+me;});
-  j.additiveExpression2 = f.group("additiveExpression", /-/, 
+  JavaScriptInterpreter.prototype.additiveExpression2 = interpreterMethodFactory.group("additiveExpression", /-/, 
   "multiplicativeExpression", function(ae, me) {return ae-me;});
   
-  j.relationalExpression = f.or("relationalExpression1", 
+  JavaScriptInterpreter.prototype.relationalExpression = interpreterMethodFactory.or("relationalExpression1", 
   "relationalExpression2", "relationalExpression5", "additiveExpression");
-  j.relationalExpression1 = f.group("relationalExpression", /</, 
+  JavaScriptInterpreter.prototype.relationalExpression1 = interpreterMethodFactory.group("relationalExpression", /</, 
   "additiveExpression", function(re, ae) {return re<ae;});
-  j.relationalExpression2 = f.group("relationalExpression", />/, 
+  JavaScriptInterpreter.prototype.relationalExpression2 = interpreterMethodFactory.group("relationalExpression", />/, 
   "additiveExpression", function(re, ae) {return re>ae;});
-  j.relationalExpression5 = f.group("relationalExpression", /instanceof/, 
+  JavaScriptInterpreter.prototype.relationalExpression5 = interpreterMethodFactory.group("relationalExpression", /instanceof/, 
   "additiveExpression", function(re, ae) {return re instanceof ae;});
   
-  j.equalityExpression = f.or("equalityExpression3", "equalityExpression4", 
+  JavaScriptInterpreter.prototype.equalityExpression = interpreterMethodFactory.or("equalityExpression3", "equalityExpression4", 
   "relationalExpression");
-  j.equalityExpression3 = f.group("equalityExpression", /===/, 
+  JavaScriptInterpreter.prototype.equalityExpression3 = interpreterMethodFactory.group("equalityExpression", /===/, 
   "relationalExpression", function(ee, re) {return ee===re;});
-  j.equalityExpression4 = f.group("equalityExpression", /!==/, 
+  JavaScriptInterpreter.prototype.equalityExpression4 = interpreterMethodFactory.group("equalityExpression", /!==/, 
   "relationalExpression", function(ee, re) {return ee!==re;});
   
-  j.logicalAndExpression = f.or("logicalAndExpression1", "equalityExpression");
-  j.logicalAndExpression1 = f.group("logicalAndExpression", /&&/, 
+  JavaScriptInterpreter.prototype.logicalAndExpression = interpreterMethodFactory.or("logicalAndExpression1", "equalityExpression");
+  JavaScriptInterpreter.prototype.logicalAndExpression1 = interpreterMethodFactory.group("logicalAndExpression", /&&/, 
   "deferredEqualityExpression", 
   function(logicalAndExpression, deferredEqualityExpression) {
     return logicalAndExpression && deferredEqualityExpression.call(this);
   });
   
-  j.deferredEqualityExpression = f.methodFactory("equalityExpression");
+  JavaScriptInterpreter.prototype.deferredEqualityExpression = interpreterMethodFactory.methodFactory("equalityExpression");
   
-  j.logicalOrExpression = f.or("logicalOrExpression1", "logicalAndExpression");
-  j.logicalOrExpression1 = f.group("logicalOrExpression", /\|\|/, 
+  JavaScriptInterpreter.prototype.logicalOrExpression = interpreterMethodFactory.or("logicalOrExpression1", "logicalAndExpression");
+  JavaScriptInterpreter.prototype.logicalOrExpression1 = interpreterMethodFactory.group("logicalOrExpression", /\|\|/, 
   "deferredLogicalAndExpression", function(logicalOrExpression, 
   deferredLogicalAndExpression) {
     return logicalOrExpression||deferredLogicalAndExpression.call(this);
   });
   
-  j.deferredLogicalAndExpression = f.methodFactory("logicalAndExpression");
+  JavaScriptInterpreter.prototype.deferredLogicalAndExpression = interpreterMethodFactory.methodFactory("logicalAndExpression");
   
-  j.conditionalExpression = f.or("conditionalExpression1", 
+  JavaScriptInterpreter.prototype.conditionalExpression = interpreterMethodFactory.or("conditionalExpression1", 
   "logicalOrExpression");
-  j.conditionalExpression1 = f.group("logicalOrExpression", /\?/, 
+  JavaScriptInterpreter.prototype.conditionalExpression1 = interpreterMethodFactory.group("logicalOrExpression", /\?/, 
   "deferredAssignmentExpression", /:/, "deferredAssignmentExpression", 
   function(logicalOrExpression, deferredAssignmentExpression1, 
   deferredAssignmentExpression2) {
@@ -334,32 +332,32 @@ function JavaScriptInterpreter() {
       deferredAssignmentExpression2.call(this);
   });
   
-  j.deferredAssignmentExpression = f.methodFactory("assignmentExpression");
+  JavaScriptInterpreter.prototype.deferredAssignmentExpression = interpreterMethodFactory.methodFactory("assignmentExpression");
   
-  j.assignmentExpression = f.or("assignmentExpression1", 
+  JavaScriptInterpreter.prototype.assignmentExpression = interpreterMethodFactory.or("assignmentExpression1", 
   "assignmentExpression5", "conditionalExpression");
   
-  j.assignmentExpression1 = f.group("leftHandSideExpression", /=/, 
+  JavaScriptInterpreter.prototype.assignmentExpression1 = interpreterMethodFactory.group("leftHandSideExpression", /=/, 
   "assignmentExpression", function(lhse, assignmentExpression) {
     return (lhse.base[lhse.name] = assignmentExpression);});
-  j.assignmentExpression5 = f.group("leftHandSideExpression", /\+=/, 
+  JavaScriptInterpreter.prototype.assignmentExpression5 = interpreterMethodFactory.group("leftHandSideExpression", /\+=/, 
   "assignmentExpression", function(lhse, assignmentExpression) {
     return (lhse.base[lhse.name] += assignmentExpression);});
   
-  j.expression = f.plus("assignmentExpression", /,/, 
+  JavaScriptInterpreter.prototype.expression = interpreterMethodFactory.plus("assignmentExpression", /,/, 
   function() {
     return arguments[arguments.length-1];
   });
   
   // Statements
   
-  j.statementOrBlock = f.or("statement", "block");
+  JavaScriptInterpreter.prototype.statementOrBlock = interpreterMethodFactory.or("statement", "block");
   
-  j.deferredStatementOrBlock = f.methodFactory("statementOrBlock");
+  JavaScriptInterpreter.prototype.deferredStatementOrBlock = interpreterMethodFactory.methodFactory("statementOrBlock");
   
-  j.block = f.wrap(/\{/, "statementList", /\}/);
+  JavaScriptInterpreter.prototype.block = interpreterMethodFactory.wrap(/\{/, "statementList", /\}/);
   
-  j.statementList = f.star("deferredStatement", function() {
+  JavaScriptInterpreter.prototype.statementList = interpreterMethodFactory.star("deferredStatement", function() {
     for(var i = 0; i < arguments.length; i++) {
       var returnValue = arguments[i].call(this);
       if(returnValue[0] === "return") {
@@ -369,38 +367,38 @@ function JavaScriptInterpreter() {
     return ["normal", undefined];
   });
   
-  j.deferredStatementList = f.methodFactory("statementList");
+  JavaScriptInterpreter.prototype.deferredStatementList = interpreterMethodFactory.methodFactory("statementList");
 
-  j.statement = f.or("variableStatement", "ifStatement", "iterationStatement", 
+  JavaScriptInterpreter.prototype.statement = interpreterMethodFactory.or("variableStatement", "ifStatement", "iterationStatement", 
   "returnStatement", "throwStatement", "functionDeclaration", 
   "expressionStatement");
   
-  j.deferredStatement = f.methodFactory("statement");
+  JavaScriptInterpreter.prototype.deferredStatement = interpreterMethodFactory.methodFactory("statement");
   
-  j.variableStatement = f.group(/var/, "variableDeclarationList", /;/, 
+  JavaScriptInterpreter.prototype.variableStatement = interpreterMethodFactory.group(/var/, "variableDeclarationList", /;/, 
   function() {
     return ["normal", undefined];
   });
   
-  j.variableDeclarationList = f.plus("variableDeclaration", /,/);
+  JavaScriptInterpreter.prototype.variableDeclarationList = interpreterMethodFactory.plus("variableDeclaration", /,/);
   
-  j.variableDeclaration = f.group("bindingIdentifier", 
+  JavaScriptInterpreter.prototype.variableDeclaration = interpreterMethodFactory.group("bindingIdentifier", 
   "initialiserOpt", function(bindingIdentifier, initialiserOpt) {
     this.executionContext.variables[bindingIdentifier] = initialiserOpt;
     return bindingIdentifier;
   });
   
-  j.initialiser = f.wrap(/=/, "assignmentExpression");
+  JavaScriptInterpreter.prototype.initialiser = interpreterMethodFactory.wrap(/=/, "assignmentExpression");
   
-  j.initialiserOpt = f.opt("initialiser", function() {
+  JavaScriptInterpreter.prototype.initialiserOpt = interpreterMethodFactory.opt("initialiser", function() {
     return undefined;
   });
   
-  j.expressionStatement = f.group("expression", /;/, function() {
+  JavaScriptInterpreter.prototype.expressionStatement = interpreterMethodFactory.group("expression", /;/, function() {
     return ["normal", undefined];
   });
   
-  j.ifStatement = f.group(/if/, /\(/, "expression", /\)/, 
+  JavaScriptInterpreter.prototype.ifStatement = interpreterMethodFactory.group(/if/, /\(/, "expression", /\)/, 
   "deferredStatementOrBlock", "deferredElseStatementOpt", 
   function(expression, deferredStatementOrBlock, deferredElseStatementOpt) {
     if(expression) {
@@ -410,12 +408,12 @@ function JavaScriptInterpreter() {
     }
   });
   
-  j.deferredExpression = f.methodFactory("expression");
+  JavaScriptInterpreter.prototype.deferredExpression = interpreterMethodFactory.methodFactory("expression");
   
-  j.iterationStatement = f.or("iterationStatement2", "iterationStatement4", 
+  JavaScriptInterpreter.prototype.iterationStatement = interpreterMethodFactory.or("iterationStatement2", "iterationStatement4", 
   "iterationStatement6");
   
-  j.iterationStatement2 = f.group(/while/, /\(/, "deferredExpression", /\)/, 
+  JavaScriptInterpreter.prototype.iterationStatement2 = interpreterMethodFactory.group(/while/, /\(/, "deferredExpression", /\)/, 
   "deferredStatementOrBlock", 
   function(deferredExpression, deferredStatementOrBlock) {
     while(deferredExpression.call(this)) {
@@ -427,7 +425,7 @@ function JavaScriptInterpreter() {
     return ["normal", undefined];
   });
   
-  j.iterationStatement4 = f.group(/for/, /\(/, /var/, "variableDeclarationList", 
+  JavaScriptInterpreter.prototype.iterationStatement4 = interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclarationList", 
   /;/, "deferredExpression", /;/, "deferredExpression", /\)/, 
   "deferredStatementOrBlock", 
   function(variableDeclarationList, deferredExpression1, deferredExpression2, 
@@ -441,7 +439,7 @@ function JavaScriptInterpreter() {
     return ["normal", undefined];
   });
   
-  j.iterationStatement6 = f.group(/for/, /\(/, /var/, "variableDeclaration", 
+  JavaScriptInterpreter.prototype.iterationStatement6 = interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclaration", 
   /in/, "expression", /\)/, "deferredStatementOrBlock", 
   function(variableDeclaration, expression, deferredStatementOrBlock) {
     for(var propertyName in expression) {
@@ -454,34 +452,34 @@ function JavaScriptInterpreter() {
     return ["normal", undefined];
   });
   
-  j.deferredElseStatementOpt = f.methodFactory("elseStatementOpt");
+  JavaScriptInterpreter.prototype.deferredElseStatementOpt = interpreterMethodFactory.methodFactory("elseStatementOpt");
   
-  j.elseStatementOpt = f.opt("elseStatement", 
+  JavaScriptInterpreter.prototype.elseStatementOpt = interpreterMethodFactory.opt("elseStatement", 
   function() {
     return ["normal", undefined];
   });
   
-  j.elseStatement = f.wrap(/else/, "statementOrBlock");
+  JavaScriptInterpreter.prototype.elseStatement = interpreterMethodFactory.wrap(/else/, "statementOrBlock");
   
-  j.returnStatement = f.group(/return/, "expression", /;/, 
+  JavaScriptInterpreter.prototype.returnStatement = interpreterMethodFactory.group(/return/, "expression", /;/, 
   function(expression) {
     return ["return", expression];
   });
   
-  j.throwStatement = f.group(/throw/, "expression", /;/, function(expression) {
+  JavaScriptInterpreter.prototype.throwStatement = interpreterMethodFactory.group(/throw/, "expression", /;/, function(expression) {
     throw expression;
   });
   
   // Functions and programs
   
-  j.functionDeclaration = f.wrap("namedFunctionExpression", function() {
+  JavaScriptInterpreter.prototype.functionDeclaration = interpreterMethodFactory.wrap("namedFunctionExpression", function() {
     return ["normal", undefined];
   });
   
-  j.functionExpression = f.or("anonymousFunctionExpression",
+  JavaScriptInterpreter.prototype.functionExpression = interpreterMethodFactory.or("anonymousFunctionExpression",
   "namedFunctionExpression");
   
-  j.namedFunctionExpression = f.group(/function/, "bindingIdentifier",
+  JavaScriptInterpreter.prototype.namedFunctionExpression = interpreterMethodFactory.group(/function/, "bindingIdentifier",
   "functionExpressionContent", 
   function(bindingIdentifier, functionExpressionContent) {
     this.executionContext.variables[bindingIdentifier] = 
@@ -489,10 +487,10 @@ function JavaScriptInterpreter() {
     return functionExpressionContent;
   });
   
-  j.anonymousFunctionExpression = f.wrap(/function/, 
+  JavaScriptInterpreter.prototype.anonymousFunctionExpression = interpreterMethodFactory.wrap(/function/, 
   "functionExpressionContent");
   
-  j.functionExpressionContent = f.group(/\(/, "formalParameterList", /\)/, 
+  JavaScriptInterpreter.prototype.functionExpressionContent = interpreterMethodFactory.group(/\(/, "formalParameterList", /\)/, 
   /\{/, "functionBody", /\}/, function(formalParameterList, functionBody) {
     var that = this;
     var outerExecutionContext = this.executionContext;
@@ -515,15 +513,15 @@ function JavaScriptInterpreter() {
     };
   });
   
-  j.formalParameterList = f.star("bindingIdentifier", /,/);
+  JavaScriptInterpreter.prototype.formalParameterList = interpreterMethodFactory.star("bindingIdentifier", /,/);
   
-  j.functionBody = f.select(2, "useStrictDeclarationOpt", 
+  JavaScriptInterpreter.prototype.functionBody = interpreterMethodFactory.select(2, "useStrictDeclarationOpt", 
   "deferredSourceElements");
   
-  j.useStrictDeclarationOpt = f.opt("useStrictDeclaration");
-  j.useStrictDeclaration = f.group(/('use strict')|("use strict")/, /;/);
+  JavaScriptInterpreter.prototype.useStrictDeclarationOpt = interpreterMethodFactory.opt("useStrictDeclaration");
+  JavaScriptInterpreter.prototype.useStrictDeclaration = interpreterMethodFactory.group(/('use strict')|("use strict")/, /;/);
   
-  j.program = function(code, globalOrDebugging, debugging) {
+  JavaScriptInterpreter.prototype.program = function(code, globalOrDebugging, debugging) {
     var global;
     if(globalOrDebugging === true) {
       debugging = true;
@@ -542,10 +540,10 @@ function JavaScriptInterpreter() {
     return this.program1(code, debugging)[1];
   };
   
-  j.program1 = f.insignificant("spaces", "sourceElements");
+  JavaScriptInterpreter.prototype.program1 = interpreterMethodFactory.insignificant("spaces", "sourceElements");
   
-  j.sourceElements = f.or("statementList");
+  JavaScriptInterpreter.prototype.sourceElements = interpreterMethodFactory.or("statementList");
   
-  j.deferredSourceElements = f.methodFactory("sourceElements");
+  JavaScriptInterpreter.prototype.deferredSourceElements = interpreterMethodFactory.methodFactory("sourceElements");
   
 })();
