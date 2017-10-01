@@ -220,7 +220,6 @@
   
   var InterpreterMethodFactory = function() {
     "use strict";
-    this.CodePointer = CodePointer;
   };
   
   global.InterpreterMethodFactory = InterpreterMethodFactory;
@@ -251,7 +250,7 @@
       v.methodName = debuggingOrMethodName;
     } else {
       v.isInternalCall = false;
-      v.codePointer = new methodFactory.CodePointer(code, debuggingOrMethodName);
+      v.codePointer = new CodePointer(code, debuggingOrMethodName);
       v.methodName = methodFactory.nameOf(interpreter, method);
     }
     

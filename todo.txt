@@ -1,4 +1,3 @@
-Remove the CodePointer attribute. Or move CodePointer to the same file.
 Error messages for bad arguments.
 Move CodePointer method tests to specInterpreterCodePointer.js, except parse
 
