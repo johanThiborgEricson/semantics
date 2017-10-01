@@ -1,6 +1,6 @@
 describe("Fetching source code...", function() {
   
-  var FactoryBackup = window.InterpreterMethodFactory;
+  var FactoryBackup = InterpreterMethodFactory;
   var factorySourceCode;
   var interpreter = new JavaScriptInterpreter();
   
@@ -18,7 +18,7 @@ describe("Fetching source code...", function() {
   
   it("compiling...", function() {
     interpreter.program(factorySourceCode, window);
-    expect(window.InterpreterMethodFactory).not.toBe(FactoryBackup);
+    expect(InterpreterMethodFactory).not.toBe(FactoryBackup);
   });
   
 });
