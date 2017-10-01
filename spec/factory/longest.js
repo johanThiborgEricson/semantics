@@ -1,10 +1,14 @@
 describe("The longest nonterminal", function() {
   
-  var f = new InterpreterMethodFactory();
+  var f;
   var interpreter;
   var add = function(a, b) {
     return a+b;
   };
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {
