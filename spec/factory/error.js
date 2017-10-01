@@ -1,9 +1,10 @@
 describe("An error", function() {
   
   var interpreter;
-  var f = new InterpreterMethodFactory();
+  var f;
   
   beforeEach(function() {
+    f = new InterpreterMethodFactory();
     interpreter = {
       
     };
