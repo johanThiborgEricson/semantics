@@ -16,7 +16,7 @@ describe("Fetching source code...", function() {
     oReq.send();
   });
   
-  xit("compiling...", function() {
+  it("compiling...", function() {
     interpreter.program(factorySourceCode, window);
     expect(window.InterpreterMethodFactory).not.toBe(FactoryBackup);
   });
