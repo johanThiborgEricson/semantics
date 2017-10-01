@@ -1,9 +1,13 @@
 describe("An or", function() {
-  var f = new InterpreterMethodFactory();
+  var f;
   var i;
   var id = function(x) {
     return x;
   };
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     i = {
