@@ -537,17 +537,17 @@
     
     return this.makeMethod(function instructionMaker(codePointer, interpreter) {
       var maybeInstruction;
-      var parseSucess = factory.skipRegexes(codePointer, leadingRegexes, 
-      interpreter) && 
+      if(factory.skipRegexes(codePointer, leadingRegexes, interpreter) && 
       (maybeInstruction = InterpreterMethodFactory
-          .callInterpreterMethod(interpreter, partName, codePointer)) &&
-      factory.skipRegexes(codePointer, trailingRegexes, interpreter);
-      if(!parseSucess) {
+      .callInterpreterMethod(interpreter, partName, codePointer)) &&
+      factory.skipRegexes(codePointer, trailingRegexes, interpreter)) {
+        return !interpretation?maybeInstruction:function instruction() {
+          return interpretation.call(this, maybeInstruction.call(this));
+        };
+        
+      } else {
         return null;
       }
-      return !interpretation?maybeInstruction:function instruction() {
-        return interpretation.call(this, maybeInstruction.call(this));
-      };
       
     });
     
