@@ -83,3 +83,7 @@ But not should report parse failure (including the but not array?) Just the
 Use head recursive case when testing if debugging is silent when turned off.
   Should include forgeting.
 But not should be a nonterminal.
+Move character escape sequence closer to unescape.
+Remove object expression, it isn't used.
+Blocks should be statements.
+return ["normal", undefined] => return ["normal"]

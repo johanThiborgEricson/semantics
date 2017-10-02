@@ -134,8 +134,7 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.identifierExpression = 
   interpreterMethodFactory.wrap("identifierReference", 
   function(identifierReference) {
-    var ir = identifierReference;
-    return ir.base[ir.name];
+    return identifierReference.base[identifierReference.name];
   });
   
   var reservedWord = ["break", "case", "catch", "class", "continue", 
@@ -171,9 +170,9 @@ JavaScriptInterpreter.hack = function() {
   
   JavaScriptInterpreter.prototype.objectLiteral = 
   interpreterMethodFactory.group(/\{/, "propertyNameAndValueList", /,?/, /\}/, 
-  function(propertyAndValueList) {
+  function(propertyNameAndValueList) {
     var result = {};
-    propertyAndValueList.map(function(propertyAssignment) {
+    propertyNameAndValueList.map(function(propertyAssignment) {
       result[propertyAssignment.propertyName] = 
           propertyAssignment.assignmentExpression;
     });
@@ -221,14 +220,15 @@ JavaScriptInterpreter.hack = function() {
   
   JavaScriptInterpreter.prototype.callExpression1 = 
   interpreterMethodFactory.group("callExpression", "args", 
-  function(fceQualifier, args) {
-    return fceQualifier.apply(undefined, args);
+  function(callExpression, args) {
+    return callExpression.apply(undefined, args);
   });
   
   JavaScriptInterpreter.prototype.callExpression2 = 
   interpreterMethodFactory.group("callExpressionQualifier", "args", 
-  function(mceQualifier, args) {
-    return mceQualifier.value.apply(mceQualifier.base, args);
+  function(callExpressionQualifier, args) {
+    return callExpressionQualifier.value.
+    apply(callExpressionQualifier.base, args);
   });
   
   JavaScriptInterpreter.prototype.callExpressionQualifier = 
@@ -237,19 +237,19 @@ JavaScriptInterpreter.hack = function() {
   
   JavaScriptInterpreter.prototype.callExpressionQualifier1 = 
   interpreterMethodFactory.group("callExpression", "qualifier", 
-  function(fceQualifier, qualifier) {
+  function(callExpression, qualifier) {
     return {
-      base: fceQualifier,
-      value: fceQualifier[qualifier],
+      base: callExpression,
+      value: callExpression[qualifier],
     };
   });
   
   JavaScriptInterpreter.prototype.callExpressionQualifier2 = 
   interpreterMethodFactory.group("callExpressionQualifier", "qualifier", 
-  function(mceQualifier, qualifier) {
+  function(callExpressionQualifier, qualifier) {
     return {
-      base: mceQualifier.value,
-      value: mceQualifier.value[qualifier],
+      base: callExpressionQualifier.value,
+      value: callExpressionQualifier.value[qualifier],
     };
   });
   
@@ -275,12 +275,10 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.leftHandSideExpression1 = 
   interpreterMethodFactory.group("leftHandSideExpression", "qualifier", 
   function(leftHandSideExpression, qualifier) {
-    var result = leftHandSideExpression;
-    
-    result.base = result.base[result.name];
-    result.name = qualifier;
-
-    return result;
+    return {
+      base: leftHandSideExpression.base[leftHandSideExpression.name],
+      name: qualifier,
+    };
   });
   
   JavaScriptInterpreter.prototype.leftHandSideExpression2 = 
