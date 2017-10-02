@@ -1,4 +1,4 @@
-if(URL&&new URL(document.location).searchParams.get("inception") == "true"){
+if(URL&&new URL(document.location).searchParams.get("inception") != "false"){
   describe("Fetching source code...", function() {
     
     var FactoryBackup = InterpreterMethodFactory;
