@@ -17,9 +17,13 @@ describe("Fetching source code...", function() {
   });
   
   it("compiling...", function() {
-    interpreter.program(factorySourceCode, window);
-    JavaScriptInterpreter.hack();
-    expect(InterpreterMethodFactory).not.toBe(FactoryBackup);
+    if(URL&&new URL(document.location).searchParams.get("inception") == "true"){
+      interpreter.program(factorySourceCode, window);
+      JavaScriptInterpreter.hack();
+      expect(InterpreterMethodFactory).not.toBe(FactoryBackup);
+    } else {
+      expect(true).toBe(true);
+    }
   });
   
 });
