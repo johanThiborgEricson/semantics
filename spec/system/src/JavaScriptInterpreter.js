@@ -282,16 +282,13 @@ JavaScriptInterpreter.hack = function() {
   });
   
   JavaScriptInterpreter.prototype.leftHandSideExpression2 = 
-  interpreterMethodFactory.group("leftHandSideExpressionBase", "qualifier", 
+  interpreterMethodFactory.group("callExpression", "qualifier", 
   function(leftHandSideExpressionBase, qualifier) {
     return {
       base: leftHandSideExpressionBase,
       name: qualifier,
     };
   });
-  
-  JavaScriptInterpreter.prototype.leftHandSideExpressionBase = 
-  interpreterMethodFactory.or("callExpression");
   
   JavaScriptInterpreter.prototype.updateExpression = 
   interpreterMethodFactory.longest("updateExpression1", "updateExpression2", 
