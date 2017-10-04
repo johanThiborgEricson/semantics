@@ -218,7 +218,6 @@ CodePointer.prototype.getState = function(name) {
 function InterpreterMethodFactory() {
   "use strict";
   this.static = InterpreterMethodFactory;
-  this.CodePointer = CodePointer;
 }
 
 InterpreterMethodFactory.prototype.makeParsing = function(regex) {
@@ -241,13 +240,13 @@ InterpreterMethodFactory.preInstructionMaker =
 function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
   var v = {};
 
-  if(code instanceof methodFactory.CodePointer) {
+  if(code instanceof CodePointer) {
     v.isInternalCall = true;
     v.codePointer = code;
     v.methodName = debuggingOrMethodName;
   } else {
     v.isInternalCall = false;
-    v.codePointer = new methodFactory.CodePointer(code, debuggingOrMethodName);
+    v.codePointer = new CodePointer(code, debuggingOrMethodName);
     v.methodName = methodFactory.nameOf(interpreter, method);
   }
   
