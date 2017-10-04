@@ -11,6 +11,21 @@ if(URL&&new URL(document.location).searchParams.get("inception") != "false"){
         done();
       }
       
+      function fileListener() {
+        var fileReader = new FileReader();
+        fileReader.addEventListener("load", function() {
+          factorySourceCode = fileReader.result;
+          done();
+        });
+        
+        fileReader.readAsText(this.files[0]);
+      }
+      
+      var fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.addEventListener("change", fileListener);
+      document.body.appendChild(fileInput);
+      
       var oReq = new XMLHttpRequest();
       oReq.addEventListener("load", reqListener);
       oReq.open("GET", "src/InterpreterMethodFactory.js");
