@@ -18,7 +18,18 @@ if(URL&&new URL(document.location).searchParams.get("inception") != "false"){
     });
     
     it("compiling...", function() {
-      interpreter.program(factorySourceCode, window);
+      var sandboxWindow = {
+        Function: Function,
+        RegExp: RegExp,
+        Array: Array,
+        Object: Object,
+        Error: Error,
+        console: console,
+      };
+      
+      interpreter.program(factorySourceCode, sandboxWindow);
+      InterpreterMethodFactory = sandboxWindow.InterpreterMethodFactory;
+      CodePointer = sandboxWindow.CodePointer;
       JavaScriptInterpreter.hack();
       expect(InterpreterMethodFactory).not.toBe(FactoryBackup);
     });
