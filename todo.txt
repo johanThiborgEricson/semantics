@@ -88,3 +88,4 @@ Remove object expression, it isn't used.
 Blocks should be statements.
 return ["normal", undefined] => return ["normal"]
 qualifier => propertyAccessor
+map run as method that => interpreter.

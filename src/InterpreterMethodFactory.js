@@ -215,10 +215,7 @@ CodePointer.prototype.getState = function(name) {
   
 };
 
-function InterpreterMethodFactory() {
-  "use strict";
-  this.static = InterpreterMethodFactory;
-}
+function InterpreterMethodFactory() {}
 
 InterpreterMethodFactory.prototype.makeParsing = function(regex) {
   var regexCode = regex.toString().slice(1).replace(/\/[a-z]*$/, "");
@@ -228,7 +225,7 @@ InterpreterMethodFactory.prototype.makeParsing = function(regex) {
   return parsingRegex;
 };
 
-InterpreterMethodFactory
+InterpreterMethodFactory.prototype
 .callInterpreterMethod = function(interpreter, methodName, codePointer) {
   if(typeof interpreter[methodName] !== "function") {
     throw new Error(methodName + " is not a method of the interpreter");
@@ -236,7 +233,7 @@ InterpreterMethodFactory
   return interpreter[methodName](codePointer, methodName);
 };
 
-InterpreterMethodFactory.preInstructionMaker = 
+InterpreterMethodFactory.prototype.preInstructionMaker = 
 function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
   var v = {};
 
@@ -256,7 +253,7 @@ function(interpreter, methodFactory, method, code, debuggingOrMethodName) {
   return v;
 };
 
-InterpreterMethodFactory.postInstructionMaker = 
+InterpreterMethodFactory.prototype.postInstructionMaker = 
 function(v, interpreter, maybeInstruction) {
   
   if(!maybeInstruction){
@@ -273,7 +270,7 @@ function(v, interpreter, maybeInstruction) {
   
 };
 
-InterpreterMethodFactory.headRecurse = function(interpreter, state, 
+InterpreterMethodFactory.prototype.headRecurse = function(interpreter, state, 
 maybeInstruction, instructionMaker, codePointer) {
   var progress = true;
   while(progress && maybeInstruction) {
@@ -290,7 +287,7 @@ InterpreterMethodFactory.prototype
   "use strict";
   var methodFactory = this;
   return function method(code, debuggingOrMethodName) {
-    var v = methodFactory.static.preInstructionMaker(this, methodFactory, 
+    var v = methodFactory.preInstructionMaker(this, methodFactory, 
     method, code, debuggingOrMethodName);
     
     var maybeInstruction;
@@ -303,14 +300,14 @@ InterpreterMethodFactory.prototype
       state.forgetCachedHeadRecursiveResults();
       maybeInstruction = instructionMaker(v.codePointer, this);
       if(maybeInstruction && state.getHeadRecursionDetected()) {
-        maybeInstruction = methodFactory.static.headRecurse(this, state, 
+        maybeInstruction = methodFactory.headRecurse(this, state, 
         maybeInstruction, instructionMaker, v.codePointer);
       }
       state.cacheResult(maybeInstruction);
     }
     state.popFromStack();
 
-    methodFactory.static.postInstructionMaker(v, this, maybeInstruction);
+    methodFactory.postInstructionMaker(v, this, maybeInstruction);
     
     return v.isInternalCall?maybeInstruction:maybeInstruction.call(this);
   };
@@ -402,7 +399,7 @@ InterpreterMethodFactory.prototype
     }
     var partInstructions = [];
     for(var i = 0; i < parts.length; i++){
-      var maybeInstruction = factory.static
+      var maybeInstruction = factory
             .callInterpreterMethod(interpreter, parts[i].name, codePointer);
       if(!maybeInstruction
         ||!factory.skipRegexes(codePointer, parts[i].trailingRegexes, 
@@ -416,13 +413,13 @@ InterpreterMethodFactory.prototype
     
     if(interpretation) {
       return function instruction() {
-        return interpretation.apply(this, factory.static
+        return interpretation.apply(this, factory
             .mapRunAsMethod(this, partInstructions));
       };
     } else {
       return function instruction() {
         var that = this;
-        var mpo = new factory.static.MultiPropertyObject();
+        var mpo = new factory.MultiPropertyObject();
         var result = {};
         partInstructions.map(function(pi) {
           mpo.appendProperty.call(result, pi.partName, pi.call(that));
@@ -445,7 +442,8 @@ InterpreterMethodFactory.prototype
   return true;
 };
 
-InterpreterMethodFactory.mapRunAsMethod = function(that, partInstructions) {
+InterpreterMethodFactory.prototype.
+mapRunAsMethod = function(that, partInstructions) {
   return partInstructions.map(function(partInstruction) {
     return partInstruction.call(that);
   });
@@ -463,7 +461,7 @@ InterpreterMethodFactory.prototype
   return regexes;
 };
 
-InterpreterMethodFactory.MultiPropertyObject = function() {
+InterpreterMethodFactory.prototype.MultiPropertyObject = function() {
   var nameCount = Object.create(null);
   this.appendProperty = function(name, partResult) {
     var result = this;
@@ -493,7 +491,7 @@ InterpreterMethodFactory.prototype.select = function(index) {
       var partName = partNames[i];
       var maybeInstruction;
       if(typeof partName === "string") {
-        maybeInstruction = factory.static
+        maybeInstruction = factory
           .callInterpreterMethod(interpreter, partName, codePointer);
       } else if(partName instanceof RegExp) {
         var regex = factory.parseInsignificantAndToken(
@@ -533,7 +531,7 @@ InterpreterMethodFactory.prototype.wrap = function() {
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction;
     if(factory.skipRegexes(codePointer, leadingRegexes, interpreter) && 
-    (maybeInstruction = factory.static
+    (maybeInstruction = factory
     .callInterpreterMethod(interpreter, partName, codePointer)) &&
     factory.skipRegexes(codePointer, trailingRegexes, interpreter)) {
       return !interpretation?maybeInstruction:function instruction() {
@@ -563,7 +561,7 @@ InterpreterMethodFactory.prototype.or = function() {
     var maybeInstruction = null;
     var i = 0;
     while(!maybeInstruction && i < alternativesNames.length) {
-      maybeInstruction = factory.static
+      maybeInstruction = factory
       .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
     }
     
@@ -582,7 +580,7 @@ InterpreterMethodFactory.prototype.longest = function() {
     var maybeInstruction = nullObject;
     alternativesNames.map(function(name) {
       codePointer.restore(backup);
-      var partInstruction = factory.static
+      var partInstruction = factory
           .callInterpreterMethod(interpreter, name, codePointer);
       if(codePointer.backup() > maybeInstruction.end) {
         maybeInstruction = partInstruction;
@@ -616,7 +614,7 @@ InterpreterMethodFactory.prototype
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = [];
-    var maybeInstruction = factory.static
+    var maybeInstruction = factory
     .callInterpreterMethod(interpreter, partName, codePointer);
     if(delimiter){
       while(maybeInstruction){
@@ -627,14 +625,13 @@ InterpreterMethodFactory.prototype
     } else {
       while(maybeInstruction){
         partInstructions.push(maybeInstruction);
-        maybeInstruction = factory.static
+        maybeInstruction = factory
           .callInterpreterMethod(interpreter, partName, codePointer);
       }
     }
       
     return function instruction() {
-      var results = factory.static
-          .mapRunAsMethod(this, partInstructions);
+      var results = factory.mapRunAsMethod(this, partInstructions);
       return interpretation?interpretation.call(this, results):results;
     };
     
@@ -662,7 +659,7 @@ InterpreterMethodFactory.prototype
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = [];
-    var maybeInstruction = factory.static
+    var maybeInstruction = factory
     .callInterpreterMethod(interpreter, partName, codePointer);
     if(!maybeInstruction){
       return null;
@@ -676,14 +673,13 @@ InterpreterMethodFactory.prototype
     } else {
       while(maybeInstruction){
         partInstructions.push(maybeInstruction);
-        maybeInstruction = factory.static
+        maybeInstruction = factory
           .callInterpreterMethod(interpreter, partName, codePointer);
       }
     }
     
     return function instruction() {
-      var results = factory.static
-          .mapRunAsMethod(this, partInstructions);
+      var results = factory.mapRunAsMethod(this, partInstructions);
       return interpretation?interpretation.call(this, results):results;
     };
     
@@ -699,7 +695,7 @@ InterpreterMethodFactory.prototype
   };
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var maybeInstruction = factory.static
+    var maybeInstruction = factory
     .callInterpreterMethod(interpreter, name, codePointer);
     return maybeInstruction || interpretation || defaultInterpretation;
   });
@@ -709,7 +705,7 @@ InterpreterMethodFactory.prototype
 .methodFactory = function(name) {
   var factory = this;
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var instructionToDeferre = factory.static
+    var instructionToDeferre = factory
     .callInterpreterMethod(interpreter, name, codePointer);
     if(!instructionToDeferre) {
       return null;
@@ -752,7 +748,7 @@ InterpreterMethodFactory.prototype
 interpreter) {
   var outerInsignificant = codePointer.insignificant;
   codePointer.insignificant = insignificant;
-  var instruction = this.static
+  var instruction = this
   .callInterpreterMethod(interpreter, partName, codePointer);
   if(instruction&&!this.parseInsignificant(codePointer, interpreter)){
     instruction = null;
