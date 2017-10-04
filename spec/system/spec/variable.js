@@ -94,4 +94,11 @@ describe("A variable", function() {
     )).toEqual(o);
   });
   
+  it("throws an exception if it isn't found", function() {
+    expect(function() {
+      interpreter.program(
+        "return a;");
+    }).toThrowError(ReferenceError, "a is not defined");
+  });
+  
 });

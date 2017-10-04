@@ -87,3 +87,4 @@ Move character escape sequence closer to unescape.
 Remove object expression, it isn't used.
 Blocks should be statements.
 return ["normal", undefined] => return ["normal"]
+qualifier => propertyAccessor

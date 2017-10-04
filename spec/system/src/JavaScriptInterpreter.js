@@ -118,6 +118,9 @@ JavaScriptInterpreter.hack = function() {
     var base = this.executionContext;
     while(!base.variables.hasOwnProperty(bindingIdentifier)) {
       base = base.outer;
+      if(!base) {
+        throw new ReferenceError(bindingIdentifier + " is not defined");
+      }
     }
     
     return {
