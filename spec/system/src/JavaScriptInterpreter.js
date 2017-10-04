@@ -4,10 +4,6 @@ function JavaScriptInterpreter() {
 
 JavaScriptInterpreter.hack = function() {
   var interpreterMethodFactory = new InterpreterMethodFactory();
-  var second = function(x, y) {
-    return y;
-  };
-  
   var identifierName = /[a-zA-Z_\$][a-zA-Z0-9_\$]*/;
   
   // Lexical Grammar
