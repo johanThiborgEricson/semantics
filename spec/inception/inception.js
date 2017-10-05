@@ -1,37 +1,39 @@
-if(URL&&new URL(document.location).searchParams.get("inception") != "false"){
-  describe("Fetching source code...", function() {
+describe("Fetching source code...", function() {
+  
+  var FactoryBackup = InterpreterMethodFactory;
+  var factorySourceCode;
+  var interpreter = new JavaScriptInterpreter();
+  var fileInput;
+  
+  beforeAll(function(done) {
+    function reqListener() {
+      document.body.removeChild(fileInput);
+      factorySourceCode = this.responseText;
+      done();
+    }
     
-    var FactoryBackup = InterpreterMethodFactory;
-    var factorySourceCode;
-    var interpreter = new JavaScriptInterpreter();
-    
-    beforeAll(function(done) {
-      function reqListener() {
-        factorySourceCode = this.responseText;
+    function fileListener() {
+      var fileReader = new FileReader();
+      fileReader.addEventListener("load", function() {
+        factorySourceCode = fileReader.result;
         done();
-      }
+      });
       
-      function fileListener() {
-        var fileReader = new FileReader();
-        fileReader.addEventListener("load", function() {
-          factorySourceCode = fileReader.result;
-          done();
-        });
-        
-        fileReader.readAsText(this.files[0]);
-      }
-      
-      var fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.addEventListener("change", fileListener);
-      document.body.appendChild(fileInput);
-      
-      var oReq = new XMLHttpRequest();
-      oReq.addEventListener("load", reqListener);
-      oReq.open("GET", "src/InterpreterMethodFactory.js");
-      oReq.send();
-    });
+      fileReader.readAsText(this.files[0]);
+    }
     
+    fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.addEventListener("change", fileListener);
+    document.body.appendChild(fileInput);
+    
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", reqListener);
+    oReq.open("GET", "src/InterpreterMethodFactory.js");
+    oReq.send();
+  });
+  
+  if(URL&&new URL(document.location).searchParams.get("inception") != "false"){
     it("compiling...", function() {
       var sandboxWindow = {
         Function: Function,
@@ -49,5 +51,14 @@ if(URL&&new URL(document.location).searchParams.get("inception") != "false"){
       expect(InterpreterMethodFactory).not.toBe(FactoryBackup);
     });
     
-  });
-}
+  } else {
+    it("parsing...", function() {
+      expect(function() {
+        interpreter.program(factorySourceCode);
+      }).not.toThrow();
+      
+    });
+    
+  }
+  
+});
