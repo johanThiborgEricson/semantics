@@ -220,8 +220,8 @@ CodePointer.prototype.getState = function(name) {
  * @class
  * @classdesc This class is used to create various types of  
  * {@link external:InterpreterObject#interpreterMethod}s
- * meant to be methods of an
- * {@link external:InterpreterObject} or class.
+ * meant to be methods of an {@link external:InterpreterObject} or class 
+ * created by the user.
  */
 function InterpreterMethodFactory() {}
 
@@ -332,35 +332,42 @@ InterpreterMethodFactory.prototype
 };
 
 /**
+ * Normaly, this is the {@link external:InterpreterObject}
  * @todo Document this when method method factory is documented.
  * @external ThisBinding
  */
 
 /**
- * An interpreter object is an object with one or more
- * {@link external:InterpreterObject#interpreterMethod}s. 
+ * An interpreter object is a user created object that has one or more
+ * {@link external:InterpreterObject#interpreterMethod}s created with an 
+ * {@link InterpreterMethodFactory}. 
  * Normaly, it also serves as the {@link external:ThisBinding}.
  * @external InterpreterObject
  */
  
 /**
+ * This is a general description that applies to all interpreter methods. 
  * An interpreter method interprets text. When it is called from the outside
  * code, it interprets the text of its first argument. When it is called as 
- * a part of another interpreter method, it parses as much of the text as it 
- * can, starting from the point in the text where the last interpreter method 
- * finished parsing. It returns a type dependent container with the result of 
- * itself or of the interpreted methods it is constructed from. It might also 
- * be constructed with an interpretation (its parts), in which case it will 
- * call that interpretation with the result of its parts and return the result. 
+ * a {@link part} of another interpreter method, it parses as much of the text 
+ * as it can, starting from the point in the text where the last interpreter 
+ * method finished parsing. If it fails to parse, it will return the text 
+ * pointer so that the next method will start parsing at the same position as 
+ * the current one started before it failed. All interpreter methods are 
+ * constructed never to be "half parsed"; if they fail, then the text pointer 
+ * will be restored. An interpreter method, with no interpretation, will return 
+ * a type dependent container with the result of its {@link part}s. If 
+ * it has an interpretation, the result of the method will be the result of 
+ * calling its interpretation with the result of its parts. 
  * @todo Describe parse errors.
  * @method external:InterpreterObject#interpreterMethod
  * @abstract
  * @param {string} text - The text to be interpreted.
  * @param {boolean} [printDebuggingMessages] - If this is true, debugging 
  * messages are printed to console.log.
- * @returns {} A type dependent container with the result of the parts of the
- * method or the result of its interpretation, if an interpretation has been 
- * supplied. 
+ * @returns {InterpreterMethodResult} A type dependent container with the 
+ * result of the {@link part}s of the method or the result of its 
+ * interpretation, if an interpretation has been supplied. 
  */
 
 /**
@@ -387,12 +394,12 @@ InterpreterMethodFactory.prototype
    * {@link InterpreterMethodFactory#atom}. 
    * Inside the callback, this will refere to the
    * {@link external:ThisBinding}.
-   * It is called with the string parsed by its 
+   * The interpretation is called with the string parsed by its 
    * {@link external:InterpreterObject#atomTypeInterpreterMethod}, 
    * which will also return the result of this interpretation.
    * @method external:ThisBinding#atomInterpretation
    * @param {string} parsedText - The text parsed by the interpreter method.
-   * @returns {} User defined. The value returned by this interpretation will 
+   * @returns {*} User defined. The value returned by this interpretation will 
    * also be the return value of its interpreter method.
    */
   var interpretation;
@@ -407,15 +414,21 @@ InterpreterMethodFactory.prototype
   /**
    * An atom type interpreter method is an 
    * {@link external:InterpreterObject#interpreterMethod}
-   * that parses a regular expression. It returnes the parsed text or, if it 
+   * that parses a regular expression. Parsing is done by trying to match the 
+   * regular expression starting at the current position in the text. Matches 
+   * at other positions will not be concidered. The full match (corresponding 
+   * to match[0]) will be parsed. It returns the parsed text or, if it 
    * has a {@link external:ThisBinding#atomInterpretation}, the result of 
-   * calling that interpretation with the parsed string.
+   * calling that interpretation with the parsed string. If the regular 
+   * expression can't be matched at the current position in the text, the 
+   * method fails to parse.
    * @method external:InterpreterObject#atomTypeInterpreterMethod
    * @param {string} text - The text to be parsed.
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}.
-   * @returns {} The parsed string or the result of the interpretation if an
-   * interpretation is supplied.
+   * @returns {InterpreterMethodResult} The parsed string or the result of 
+   * calling the interpretation with the parsed string, if an interpretation is 
+   * supplied.
    */
   return this.makeMethod(function(codePointer, interpreter) {
     var match = that
@@ -450,11 +463,73 @@ InterpreterMethodFactory.prototype
   
 };
 
+/**
+ * A string that is the name of an 
+ * {@link external:InterpreterObject#interpreterMethod}
+ * on the {@link external:InterpreterObject}.
+ * @typedef {string} InterpreterMethodName
+ */
+
+/**
+ * (A reference to) something that can parse (parts of) a text
+ * @typedef {(InterpreterMethodName|RegExp)} Parsable
+ */
+ 
+/**
+ * The result of an 
+ * {@link external:InterpreterObject#interpreterMethod}.
+ * This will either be some kind of container for the results of the 
+ * parts of the interpreter method, or the result of an interpretation, which 
+ * can be anything.
+ * @typedef {*} InterpreterMethodResult
+ */
+
+/**
+ * Many {@link external:InterpreterObject#interpreterMethod}s are defined in 
+ * terms of other interpreter methods by constructing them with the 
+ * {@link InterpreterMethodName}s of those methods. Then the inner methods will 
+ * be referred to as parts of the outer method. Any regular expressions used 
+ * for constructing an interpreter method are not counted among the parts.
+ * @typedef {external:InterpreterObject#interpreterMethod} part
+ */
+
+/**
+ * The group interpreter method factory accepts any number of 
+ * {@link InterpreterMethodName}s and regular expressions in any order as 
+ * arguments. The returned 
+ * {@link external:InterpreterObject#groupTypeInterpreterMethod}  
+ * parses the regular expressions and the 
+ * {@link external:InterpreterObject#interpreterMethod}s named by 
+ * the interpreter method names, in the specified order.
+ * @param {...(InterpreterMethodName|RegExp)} parsable - A name of a metod on 
+ * the same object or a regular expression that should be parsed.
+ * @param {external:ThisBinding#groupInterpretation} [interpretation] 
+ * A callback function that will be called with the results of the 
+ * {@link part}s of the method. The result of the interpretation will also be 
+ * the result of the interpreter method.
+ * @returns {external:InterpreterObject#groupTypeInterpreterMethod} 
+ * An interpreter method that parses a group consisting of regular expressions 
+ * and other interpreter methods.
+ */
 InterpreterMethodFactory.prototype
 .group = function() {
   "use strict";
   var factory = this;
   var parts = [];
+  
+  /**
+   * A group interpretation is a callback function passed to 
+   * {@link InterpreterMethodFactory#group}. 
+   * Inside the callback, this will refere to the
+   * {@link external:ThisBinding}.
+   * The interpretation is called with the results of the {@link part}s of the 
+   * interpreter method.
+   * @method external:ThisBinding#groupInterpretation
+   * @param {...InterpreterMethodResult} partResults - The results of the parts 
+   * of the method.
+   * @returns {*} User defined. The value returned by this interpretation will 
+   * also be the return value of its interpreter method.
+   */
   var interpretation;
   var p = {
     i: 0,
@@ -473,6 +548,30 @@ InterpreterMethodFactory.prototype
     }
   }
   
+  /**
+   * A group type interpreter method is an 
+   * {@link external:InterpreterObject#interpreterMethod}
+   * that parses a group of other interpreter methods and regular expressions
+   * defined in its factory, {@link InterpreterMethodFactory#group}, one at the
+   * time. If one of the regular expressions or interpreter methods fails to 
+   * parse, then the whole method fails to parse and the text pointer is 
+   * restored, see {@link external:InterpreterObject#interpreterMethod}.
+   * If it was defined with an 
+   * {@link external:ThisBinding#groupInterpretation} it will call that with 
+   * the results of its {@link part}s as arguments, and return the result. 
+   * Otherwise it will return an 
+   * {@link InterpreterMethodFactory#MultiPropertyObject}-like object with 
+   * properties named as the {@link InterpreterMethodName}s with values as 
+   * the results of its {@link part}s.
+   * @method external:InterpreterObject#groupTypeInterpreterMethod
+   * @param {string} text - The text to be parsed.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}.
+   * @returns {InterpreterMethodResult} An 
+   * {@link InterpreterMethodFactory#MultiPropertyObject}-like object 
+   * or the result of calling the interpretation with the result of the
+   * {@link part}s.
+   */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     if(!factory.skipRegexes(codePointer, leadingRegexes, interpreter)){
       return null;
@@ -541,8 +640,27 @@ InterpreterMethodFactory.prototype
   return regexes;
 };
 
+/**
+ * Returns a newly constructed MultiPropertyObject.
+ * @class
+ * @classdesc A MultiPropertyObject is an object that can have more than one 
+ * property with the same name. This is achieved by replacing multiple 
+ * properties with the same name with an array containing those properties.
+ */
 InterpreterMethodFactory.prototype.MultiPropertyObject = function() {
   var nameCount = Object.create(null);
+  
+  /**
+   * If the object has no property with this name, add the value to the object. 
+   * If the object has one property with this name, replace the property with 
+   * an array with the old property and the new value.
+   * If the object has more than one property with this name, push the value 
+   * to the array.
+   * @param {InterpreterMethodName} name - The name of the property to be 
+   * appended.
+   * @param {InterpreterMethodResult} partResult - The result of a {@link part} 
+   * of the interpreter method. 
+   */
   this.appendProperty = function(name, partResult) {
     var result = this;
     if(nameCount[name] === undefined) {

@@ -32,8 +32,8 @@
         
             <div class="class-description">This class is used to create various types of  
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s
-meant to be methods of an
-<a href="external-InterpreterObject.html">external:InterpreterObject</a> or class.</div>
+meant to be methods of an <a href="external-InterpreterObject.html">external:InterpreterObject</a> or class 
+created by the user.</div>
         
     
 </header>
@@ -135,6 +135,13 @@ meant to be methods of an
 
     
 
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></dt>
+            <dd></dd>
+        </dl>
     
 
     
@@ -335,7 +342,7 @@ is in this list, the parsing fails.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line380">line 380</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line386">line 386</a>
     </li></ul></dd>
     
 
@@ -386,6 +393,221 @@ is in this list, the parsing fails.</td>
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="signature">(&hellip;parsable, interpretation<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    The group interpreter method factory accepts any number of 
+<a href="global.html#InterpreterMethodName">InterpreterMethodName</a>s and regular expressions in any order as 
+arguments. The returned 
+<a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a>  
+parses the regular expressions and the 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s named by 
+the interpreter method names, in the specified order.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parsable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#InterpreterMethodName">InterpreterMethodName</a></span>
+|
+
+<span class="param-type">RegExp</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A name of a metod on 
+the same object or a regular expression that should be parsed.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interpretation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external-ThisBinding.html#groupInterpretation">external:ThisBinding#groupInterpretation</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A callback function that will be called with the results of the 
+<a href="global.html#part">part</a>s of the method. The result of the interpretation will also be 
+the result of the interpreter method.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line514">line 514</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An interpreter method that parses a group consisting of regular expressions 
+and other interpreter methods.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -401,13 +623,13 @@ is in this list, the parsing fails.</td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 13:59:28 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 19:55:36 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -37,10 +37,10 @@
     <div class="container-overview">
     
         
-            <div class="description">An interpreter object is an object with one or more
-<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s.
-Normaly, it also serves as the 
-<a href="external-ThisBinding.html">external:ThisBinding</a> .</div>
+            <div class="description">An interpreter object is a user created object that has one or more
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s created with an 
+<a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a>. 
+Normaly, it also serves as the <a href="external-ThisBinding.html">external:ThisBinding</a>.</div>
         
 
         
@@ -75,7 +75,7 @@ Normaly, it also serves as the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line339">line 339</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line340">line 340</a>
     </li></ul></dd>
     
 
@@ -114,7 +114,7 @@ Normaly, it also serves as the
     
 
     
-    <h4 class="name" id="atomTypeInterpreterMethod"><span class="type-signature"></span>atomTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="atomTypeInterpreterMethod"><span class="type-signature"></span>atomTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a>}</span></h4>
     
 
     
@@ -124,9 +124,14 @@ Normaly, it also serves as the
 <div class="description">
     An atom type interpreter method is an 
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
-that parses a regular expression. It returnes the parsed text or, if it 
+that parses a regular expression. Parsing is done by trying to match the 
+regular expression starting at the current position in the text. Matches 
+at other positions will not be concidered. The full match (corresponding 
+to match[0]) will be parsed. It returns the parsed text or, if it 
 has a <a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a>, the result of 
-calling that interpretation with the parsed string.
+calling that interpretation with the parsed string. If the regular 
+expression can't be matched at the current position in the text, the 
+method fails to parse.
 </div>
 
 
@@ -263,7 +268,7 @@ calling that interpretation with the parsed string.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line408">line 408</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -290,11 +295,24 @@ calling that interpretation with the parsed string.
 
         
 <div class="param-desc">
-    The parsed string or the result of the interpretation if an
-interpretation is supplied.
+    The parsed string or the result of 
+calling the interpretation with the parsed string, if an interpretation is 
+supplied.
 </div>
 
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a></span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -308,7 +326,7 @@ interpretation is supplied.
     
 
     
-    <h4 class="name" id="interpreterMethod"><span class="type-signature">(abstract) </span>interpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="groupTypeInterpreterMethod"><span class="type-signature"></span>groupTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a>}</span></h4>
     
 
     
@@ -316,14 +334,236 @@ interpretation is supplied.
 
 
 <div class="description">
-    An interpreter method interprets text. When it is called from the outside
+    A group type interpreter method is an 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
+that parses a group of other interpreter methods and regular expressions
+defined in its factory, <a href="InterpreterMethodFactory.html#group">InterpreterMethodFactory#group</a>, one at the
+time. If one of the regular expressions or interpreter methods fails to 
+parse, then the whole method fails to parse and the text pointer is 
+restored, see <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>.
+If it was defined with an 
+<a href="external-ThisBinding.html#groupInterpretation">external:ThisBinding#groupInterpretation</a> it will call that with 
+the results of its <a href="global.html#part">part</a>s as arguments, and return the result. 
+Otherwise it will return an 
+<a href="InterpreterMethodFactory_MultiPropertyObject.html">InterpreterMethodFactory#MultiPropertyObject</a>-like object with 
+properties named as the <a href="global.html#InterpreterMethodName">InterpreterMethodName</a>s with values as 
+the results of its <a href="global.html#part">part</a>s.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The text to be parsed.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>printDebuggingMessages</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">See 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line551">line 551</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An 
+<a href="InterpreterMethodFactory_MultiPropertyObject.html">InterpreterMethodFactory#MultiPropertyObject</a>-like object 
+or the result of calling the interpretation with the result of the
+<a href="global.html#part">part</a>s.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="interpreterMethod"><span class="type-signature">(abstract) </span>interpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    This is a general description that applies to all interpreter methods. 
+An interpreter method interprets text. When it is called from the outside
 code, it interprets the text of its first argument. When it is called as 
-a part of another interpreter method, it parses as much of the text as it 
-can, starting from the point in the text where the last interpreter method 
-finished parsing. It returns a type dependent container with the result of 
-itself or of the interpreted methods it is constructed from. It might also 
-be constructed with an interpretation (its parts), in which case it will 
-call that interpretation with the result of its parts and return the result.
+a <a href="global.html#part">part</a> of another interpreter method, it parses as much of the text 
+as it can, starting from the point in the text where the last interpreter 
+method finished parsing. If it fails to parse, it will return the text 
+pointer so that the next method will start parsing at the same position as 
+the current one started before it failed. All interpreter methods are 
+constructed never to be "half parsed"; if they fail, then the text pointer 
+will be restored. An interpreter method, with no interpretation, will return 
+a type dependent container with the result of its <a href="global.html#part">part</a>s. If 
+it has an interpretation, the result of the method will be the result of 
+calling its interpretation with the result of its parts.
 </div>
 
 
@@ -460,7 +700,7 @@ messages are printed to console.log.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line347">line 347</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line348">line 348</a>
     </li></ul></dd>
     
 
@@ -494,12 +734,24 @@ messages are printed to console.log.</td>
 
         
 <div class="param-desc">
-    A type dependent container with the result of the parts of the
-method or the result of its interpretation, if an interpretation has been 
-supplied.
+    A type dependent container with the 
+result of the <a href="global.html#part">part</a>s of the method or the result of its 
+interpretation, if an interpretation has been supplied.
 </div>
 
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a></span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -523,13 +775,13 @@ supplied.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 13:59:28 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 19:55:36 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
