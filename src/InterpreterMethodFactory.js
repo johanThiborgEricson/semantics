@@ -453,6 +453,19 @@ InterpreterMethodFactory.prototype
   
 };
 
+/**
+ * The empty method factory takes an interpretation callback function and 
+ * returns an {@link external:InterpreterObject#emptyTypeInterpreterMethod}
+ * that doesn't parse anything but just runs the interpretation as i it was a 
+ * method of the {link external:ThisBinding}. It is mainly useful as a setup 
+ * function when placed as the first part of an 
+ * {@link InterpreterMethodFactory#group}.
+ * @param {function} interpretation - A callback function that will be run as 
+ * a method of the this binding. The result of this function will also be the 
+ * result of the interpreter method.
+ * @returns {external:InterpreterObject#emptyTypeInterpreterMethod} A 
+ * nonparsing interpreter method.
+ */
 InterpreterMethodFactory.prototype
 .empty = function(interpretation) {
   "use strict";
@@ -460,6 +473,19 @@ InterpreterMethodFactory.prototype
     throw new Error("The empty string atom should be called with a function");
   }
   
+  /**
+   * An empty type interpreter method doesn't parse anything, it just run the 
+   * callback function interpretation passed to its factory function, 
+   * {@link InterpreterMethodFactory#empty} and returns the result.
+   * @method external:InterpreterObject#emptyTypeInterpreterMethod
+   * @param {string} text - The text that won't be interpreted.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}.
+   * @returns {InterpreterMethodResult} The result of calling the 
+   * interpretation callback function passed to 
+   * {@link InterpreterMethodFactory#empty} when constructing this 
+   * interpreter method.
+   */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     return interpretation;
   });
