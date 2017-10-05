@@ -1,9 +1,37 @@
-function CodePointer(code, debugging) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: InterpreterMethodFactory.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: InterpreterMethodFactory.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>function CodePointer(code, debugging) {
   this._code = code;
   this._debugging = debugging;
   this._pointer = 0;
   this.positions = [];
-  for(var i = 0; i < code.length+1; i++) {
+  for(var i = 0; i &lt; code.length+1; i++) {
     this.positions.push({
       allHeads: Object.create(null),
       cachedHeads: Object.create(null),
@@ -281,7 +309,7 @@ function(v, interpreter, maybeInstruction) {
 InterpreterMethodFactory.prototype.headRecurse = function(interpreter, state, 
 maybeInstruction, instructionMaker, codePointer) {
   var progress = true;
-  while(progress && maybeInstruction) {
+  while(progress &amp;&amp; maybeInstruction) {
     state.cacheResult(maybeInstruction);
     state.forgetCachedHeadRecursiveResults();
     maybeInstruction = instructionMaker(codePointer, interpreter);
@@ -307,7 +335,7 @@ InterpreterMethodFactory.prototype
     } else {
       state.forgetCachedHeadRecursiveResults();
       maybeInstruction = instructionMaker(v.codePointer, this);
-      if(maybeInstruction && state.getHeadRecursionDetected()) {
+      if(maybeInstruction &amp;&amp; state.getHeadRecursionDetected()) {
         maybeInstruction = methodFactory.headRecurse(this, state, 
         maybeInstruction, instructionMaker, v.codePointer);
       }
@@ -338,8 +366,9 @@ InterpreterMethodFactory.prototype
 
 /**
  * An interpreter object is an object with one or more
- * {@link external:InterpreterObject#interpreterMethod}s. 
- * Normaly, it also serves as the {@link external:ThisBinding}.
+ * {@link external:InterpreterObject#interpreterMethod}s.
+ * Normaly, it also serves as the 
+ * {@link external:ThisBinding} .
  * @external InterpreterObject
  */
  
@@ -425,7 +454,7 @@ InterpreterMethodFactory.prototype
     }
     
     var result = match[0];
-    if(butNot && butNot.indexOf(result) > -1) {
+    if(butNot &amp;&amp; butNot.indexOf(result) > -1) {
       return null;
     }
     
@@ -461,7 +490,7 @@ InterpreterMethodFactory.prototype
   };
   var argument;
   var leadingRegexes = this.readRegexesFromArguments(arguments, p);
-  while(p.i < arguments.length) {
+  while(p.i &lt; arguments.length) {
     argument = arguments[p.i++];
     if(typeof argument === "string") {
       parts.push({
@@ -478,7 +507,7 @@ InterpreterMethodFactory.prototype
       return null;
     }
     var partInstructions = [];
-    for(var i = 0; i < parts.length; i++){
+    for(var i = 0; i &lt; parts.length; i++){
       var maybeInstruction = factory
             .callInterpreterMethod(interpreter, parts[i].name, codePointer);
       if(!maybeInstruction
@@ -514,7 +543,7 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.prototype
 .skipRegexes = function(codePointer, regexes, interpreter) {
-  for(var i = 0; i < regexes.length; i++) {
+  for(var i = 0; i &lt; regexes.length; i++) {
     if(!this.parseInsignificantAndToken(codePointer, regexes[i], interpreter)){
       return null;
     }
@@ -567,7 +596,7 @@ InterpreterMethodFactory.prototype.select = function(index) {
   var partNames = Array.prototype.slice.call(arguments, 1);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = [];
-    for(var i = 0; i < partNames.length; i++) {
+    for(var i = 0; i &lt; partNames.length; i++) {
       var partName = partNames[i];
       var maybeInstruction;
       if(typeof partName === "string") {
@@ -610,9 +639,9 @@ InterpreterMethodFactory.prototype.wrap = function() {
   
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction;
-    if(factory.skipRegexes(codePointer, leadingRegexes, interpreter) && 
+    if(factory.skipRegexes(codePointer, leadingRegexes, interpreter) &amp;&amp; 
     (maybeInstruction = factory
-    .callInterpreterMethod(interpreter, partName, codePointer)) &&
+    .callInterpreterMethod(interpreter, partName, codePointer)) &amp;&amp;
     factory.skipRegexes(codePointer, trailingRegexes, interpreter)) {
       return !interpretation?maybeInstruction:function instruction() {
         return interpretation.call(this, maybeInstruction.call(this));
@@ -640,7 +669,7 @@ InterpreterMethodFactory.prototype.or = function() {
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction = null;
     var i = 0;
-    while(!maybeInstruction && i < alternativesNames.length) {
+    while(!maybeInstruction &amp;&amp; i &lt; alternativesNames.length) {
       maybeInstruction = factory
       .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
     }
@@ -830,7 +859,7 @@ interpreter) {
   codePointer.insignificant = insignificant;
   var instruction = this
   .callInterpreterMethod(interpreter, partName, codePointer);
-  if(instruction&&!this.parseInsignificant(codePointer, interpreter)){
+  if(instruction&amp;&amp;!this.parseInsignificant(codePointer, interpreter)){
     instruction = null;
   }
   
@@ -863,4 +892,26 @@ InterpreterMethodFactory.prototype
     }
     return instruction;
   });
-};
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 13:59:28 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
