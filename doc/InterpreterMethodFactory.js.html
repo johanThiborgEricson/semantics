@@ -360,8 +360,9 @@ InterpreterMethodFactory.prototype
 };
 
 /**
- * Normaly, this is the {@link external:InterpreterObject}
- * @todo Document this when method method factory is documented.
+ * Normaly, this is the same thing as {@link external:InterpreterObject}. It 
+ * can be another object by using 
+ * {@link InterpreterMethodFactory#methodFactory}.
  * @external ThisBinding
  */
 
@@ -399,15 +400,17 @@ InterpreterMethodFactory.prototype
  */
 
 /**
- * The atom interpreter method factory makes an 
- * {@link external:InterpreterObject#interpreterMethod} 
- * that parses text with a regular expression.
+ * The atom interpreter method factory takes a regular expression and makes an 
+ * {@link external:InterpreterObject#atomTypeInterpreterMethod} 
+ * that parses text with that regular expression.
  * @param {RegExp} regex - The regular expression that the interpreter method
  * should use to parse text.
  * @param {string[]} [butNot] - A list of forbidden words. If the parsed string 
  * is in this list, the parsing fails.
  * @param {external:ThisBinding#atomInterpretation} [interpretation] - 
- * An description of how the parsed string should be interpreted. 
+ * A callback function describing how the parsed string should be interpreted. 
+ * If pressent, the result of this function will also be the result of the 
+ * method. Otherwise the parsed string will be returned.
  * @returns {external:InterpreterObject#atomTypeInterpreterMethod}
  * An interpreter method that parses a regular expression.
  */
@@ -427,7 +430,7 @@ InterpreterMethodFactory.prototype
    * which will also return the result of this interpretation.
    * @method external:ThisBinding#atomInterpretation
    * @param {string} parsedText - The text parsed by the interpreter method.
-   * @returns {*} User defined. The value returned by this interpretation will 
+   * @returns {*} User defined. The value returned by the interpretation will 
    * also be the return value of its interpreter method.
    */
   var interpretation;
@@ -451,7 +454,7 @@ InterpreterMethodFactory.prototype
    * expression can't be matched at the current position in the text, the 
    * method fails to parse.
    * @method external:InterpreterObject#atomTypeInterpreterMethod
-   * @param {string} text - The text to be parsed.
+   * @param {string} text - The text to be interpreted.
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}.
    * @returns {InterpreterMethodResult} The parsed string or the result of 
@@ -495,46 +498,42 @@ InterpreterMethodFactory.prototype
  * A string that is the name of an 
  * {@link external:InterpreterObject#interpreterMethod}
  * on the {@link external:InterpreterObject}.
- * @typedef {string} InterpreterMethodName
+ * @typedef {string} interpreterMethodName
  */
 
-/**
- * (A reference to) something that can parse (parts of) a text
- * @typedef {(InterpreterMethodName|RegExp)} Parsable
- */
- 
 /**
  * The result of an 
  * {@link external:InterpreterObject#interpreterMethod}.
  * This will either be some kind of container for the results of the 
- * parts of the interpreter method, or the result of an interpretation, which 
- * can be anything.
+ * {@link part}s of the interpreter method, or a user defined result of an 
+ * interpretation, which may have any type.
  * @typedef {*} InterpreterMethodResult
  */
 
 /**
  * Many {@link external:InterpreterObject#interpreterMethod}s are defined in 
  * terms of other interpreter methods by constructing them with the 
- * {@link InterpreterMethodName}s of those methods. Then the inner methods will 
- * be referred to as parts of the outer method. Any regular expressions used 
- * for constructing an interpreter method are not counted among the parts.
+ * {@link interpreterMethodName}s of those methods. Then the inner methods will 
+ * be referred to as parts of the outer method. Any regular expressions in the  
+ * definition of an interpreter method are not counted among its parts.
  * @typedef {external:InterpreterObject#interpreterMethod} part
  */
 
 /**
  * The group interpreter method factory accepts any number of 
- * {@link InterpreterMethodName}s and regular expressions in any order as 
+ * {@link interpreterMethodName}s and regular expressions in any order as 
  * arguments. The returned 
  * {@link external:InterpreterObject#groupTypeInterpreterMethod}  
  * parses the regular expressions and the 
  * {@link external:InterpreterObject#interpreterMethod}s named by 
  * the interpreter method names, in the specified order.
- * @param {...(InterpreterMethodName|RegExp)} parsable - A name of a metod on 
+ * @param {...(interpreterMethodName|RegExp)} parsable - A name of a metod on 
  * the same object or a regular expression that should be parsed.
  * @param {external:ThisBinding#groupInterpretation} [interpretation] 
  * A callback function that will be called with the results of the 
- * {@link part}s of the method. The result of the interpretation will also be 
- * the result of the interpreter method.
+ * {@link part}s of the method. If pressent, the result of the interpretation 
+ * will also be the result of the interpreter method. Otherwise it will return 
+ * an object with the result of its {@link part}s.
  * @returns {external:InterpreterObject#groupTypeInterpreterMethod} 
  * An interpreter method that parses a group consisting of regular expressions 
  * and other interpreter methods.
@@ -555,7 +554,7 @@ InterpreterMethodFactory.prototype
    * @method external:ThisBinding#groupInterpretation
    * @param {...InterpreterMethodResult} partResults - The results of the parts 
    * of the method.
-   * @returns {*} User defined. The value returned by this interpretation will 
+   * @returns {*} User defined. The value returned by the interpretation will 
    * also be the return value of its interpreter method.
    */
   var interpretation;
@@ -589,15 +588,15 @@ InterpreterMethodFactory.prototype
    * the results of its {@link part}s as arguments, and return the result. 
    * Otherwise it will return an 
    * {@link InterpreterMethodFactory#MultiPropertyObject}-like object with 
-   * properties named as the {@link InterpreterMethodName}s with values as 
-   * the results of its {@link part}s.
+   * properties named as the {@link interpreterMethodName}s containing
+   * the results of the {@link part}s of the method.
    * @method external:InterpreterObject#groupTypeInterpreterMethod
-   * @param {string} text - The text to be parsed.
+   * @param {string} text - The text to be interpreted.
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}.
    * @returns {InterpreterMethodResult} An 
    * {@link InterpreterMethodFactory#MultiPropertyObject}-like object 
-   * or the result of calling the interpretation with the result of the
+   * or the result of calling the interpretation with the result of its
    * {@link part}s.
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
@@ -684,7 +683,7 @@ InterpreterMethodFactory.prototype.MultiPropertyObject = function() {
    * an array with the old property and the new value.
    * If the object has more than one property with this name, push the value 
    * to the array.
-   * @param {InterpreterMethodName} name - The name of the property to be 
+   * @param {interpreterMethodName} name - The name of the property to be 
    * appended.
    * @param {InterpreterMethodResult} partResult - The result of a {@link part} 
    * of the interpreter method. 
@@ -927,9 +926,46 @@ InterpreterMethodFactory.prototype
   });
 };
 
+/**
+ * This method takes an {@link interpreterMethodName} and returns an 
+ * {@link external:InterpreterObject#methodFactoryTypeInterpreterMethod}
+ * that returns a function that does exactely the same thing as the named 
+ * {@link part} would have done, but possibly with another object as the value 
+ * of this. It is useful for implementing e. g. functions or loops, for setting 
+ * another object then the interpreter as the this binding and for running 
+ * the parsed instruction many times without having to parse it each time.
+ * @param {interpreterMethodName} partName - The name of the part to make an 
+ * instruction of.
+ * @returns {external:InterpreterObject#methodFactoryTypeInterpreterMethod} 
+ * An interpreter method that returns an instruction doing the same thing 
+ * the {@link part} would have done, but possibly with another object as the 
+ * value of this in its descendant interpretations.
+ */
 InterpreterMethodFactory.prototype
 .methodFactory = function(name) {
   var factory = this;
+  
+  /**
+   * This {@link external:InterpreterObject#interpreterMethod} returns a 
+   * function doing the same thing as the {@link part} named in its factory, 
+   * {@link InterpreterMethodFactory#methodFactory}, would have done, but with 
+   * the possibility to use another value for this in the interpretations of 
+   * its descendant {@link part}s. The new value of this is supplied by running 
+   * the instruction as a method of the {@link external:ThisBinding} object, by 
+   * using call or apply, or by assigning it as a (temporary) property of the 
+   * this binding before calling it. If the value of this should not be changed 
+   * then the interpreter object has to be supplied in one of the 
+   * beforementioned ways. If the returned function is called directly, 
+   * interpretations of any descendant parts will get undefined (or worse, 
+   * window) as the value for this. The returned function takes no arguments 
+   * (at the moment, this might change). 
+   * @method external:InterpreterObject#methodFactoryTypeInterpreterMethod
+   * @param {string} text - The text to be interpreted by the {@link part}.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}.
+   * @returns {function} A method that does the same thing as the {@link part}, 
+   * would have, but with the possibility to do it with another value of this.
+   */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var instructionToDeferre = factory
     .callInterpreterMethod(interpreter, name, codePointer);
@@ -1025,7 +1061,7 @@ InterpreterMethodFactory.prototype
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 19:55:36 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 22:21:27 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

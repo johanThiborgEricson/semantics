@@ -75,7 +75,7 @@ Normaly, it also serves as the <a href="external-ThisBinding.html">external:This
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line340">line 340</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line341">line 341</a>
     </li></ul></dd>
     
 
@@ -193,7 +193,7 @@ method fails to parse.
 
             
 
-            <td class="description last">The text to be parsed.</td>
+            <td class="description last">The text to be interpreted.</td>
         </tr>
 
     
@@ -268,7 +268,7 @@ method fails to parse.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line414">line 414</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line417">line 417</a>
     </li></ul></dd>
     
 
@@ -346,8 +346,8 @@ If it was defined with an
 the results of its <a href="global.html#part">part</a>s as arguments, and return the result. 
 Otherwise it will return an 
 <a href="InterpreterMethodFactory_MultiPropertyObject.html">InterpreterMethodFactory#MultiPropertyObject</a>-like object with 
-properties named as the <a href="global.html#InterpreterMethodName">InterpreterMethodName</a>s with values as 
-the results of its <a href="global.html#part">part</a>s.
+properties named as the <a href="global.html#interpreterMethodName">interpreterMethodName</a>s containing
+the results of the <a href="global.html#part">part</a>s of the method.
 </div>
 
 
@@ -409,7 +409,7 @@ the results of its <a href="global.html#part">part</a>s.
 
             
 
-            <td class="description last">The text to be parsed.</td>
+            <td class="description last">The text to be interpreted.</td>
         </tr>
 
     
@@ -484,7 +484,7 @@ the results of its <a href="global.html#part">part</a>s.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line551">line 551</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line550">line 550</a>
     </li></ul></dd>
     
 
@@ -513,7 +513,7 @@ the results of its <a href="global.html#part">part</a>s.
 <div class="param-desc">
     An 
 <a href="InterpreterMethodFactory_MultiPropertyObject.html">InterpreterMethodFactory#MultiPropertyObject</a>-like object 
-or the result of calling the interpretation with the result of the
+or the result of calling the interpretation with the result of its
 <a href="global.html#part">part</a>s.
 </div>
 
@@ -700,7 +700,7 @@ messages are printed to console.log.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line348">line 348</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line349">line 349</a>
     </li></ul></dd>
     
 
@@ -760,6 +760,220 @@ interpretation, if an interpretation has been supplied.
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="methodFactoryTypeInterpreterMethod"><span class="type-signature"></span>methodFactoryTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {function}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    This <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> returns a 
+function doing the same thing as the <a href="global.html#part">part</a> named in its factory, 
+<a href="InterpreterMethodFactory.html#methodFactory">InterpreterMethodFactory#methodFactory</a>, would have done, but with 
+the possibility to use another value for this in the interpretations of 
+its descendant <a href="global.html#part">part</a>s. The new value of this is supplied by running 
+the instruction as a method of the <a href="external-ThisBinding.html">external:ThisBinding</a> object, by 
+using call or apply, or by assigning it as a (temporary) property of the 
+this binding before calling it. If the value of this should not be changed 
+then the interpreter object has to be supplied in one of the 
+beforementioned ways. If the returned function is called directly, 
+interpretations of any descendant parts will get undefined (or worse, 
+window) as the value for this. The returned function takes no arguments 
+(at the moment, this might change).
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The text to be interpreted by the <a href="global.html#part">part</a>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>printDebuggingMessages</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">See 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line920">line 920</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A method that does the same thing as the <a href="global.html#part">part</a>, 
+would have, but with the possibility to do it with another value of this.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -781,7 +995,7 @@ interpretation, if an interpretation has been supplied.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 19:55:36 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 05 2017 22:21:27 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
