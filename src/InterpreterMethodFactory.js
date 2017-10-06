@@ -332,17 +332,38 @@ InterpreterMethodFactory.prototype
 };
 
 /**
- * Normaly, this is the same thing as {@link external:InterpreterObject}. It 
- * can be another object by using 
- * {@link InterpreterMethodFactory#methodFactory}.
+ * The interpretation callback functions passed to the methods of an 
+ * {@link InterpreterMethodFactory} when constructing 
+ * {@link external:InterpreterObject#interpreterMethod}s for a user 
+ * created {@link external:InterpreterObject} should be thought of as if they 
+ * were methods of that interpreter object. In practice, that means that 
+ * <tt>this</tt> will be bound to the interpreter object inside the body of 
+ * those  interpretations. This class is not a real class whith real methods, 
+ * but rather a place to collect the documentations of all callback functions 
+ * that will run as methods of the interpreter object. "So, if they will be run 
+ * as methods of the {@link external:InterpreterObject}, why aren't they 
+ * documented as methods of that object?" you might ask. This is because an 
+ * {@link external:InterpreterObject#methodFactoryTypeInterpreterMethod} 
+ * may be used to set the <tt>this</tt> binding to another object. 
+ * Therefore, although the callback functions described here will 
+ * normaly be run as methods of the interpreter object, they are described as 
+ * if they would be run as methods of some other object refered to as 
+ * <tt>this</tt> binding.
  * @external ThisBinding
  */
 
 /**
- * An interpreter object is a user created object that has one or more
- * {@link external:InterpreterObject#interpreterMethod}s created with an 
+ * An interpreter object is a user created object that has one or more 
+ * {@link external:InterpreterObject#interpreterMethod}s created using an 
  * {@link InterpreterMethodFactory}. 
- * Normaly, it also serves as the {@link external:ThisBinding}.
+ * This is not a description of a real class, neither is it an interface that 
+ * can be implemented. 
+ * Rather, the methods of this class are descriptions of the type of 
+ * interpreter methods that an interpreter method factory can create for an 
+ * interpreter object.
+ * If no {@link external:InterpreterObject#methodFactoryTypeInterpreterMethod} 
+ * is used, the interpreter object will also be the 
+ * {@link external:ThisBinding}.
  * @external InterpreterObject
  */
  
