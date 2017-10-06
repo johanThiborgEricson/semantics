@@ -37,16 +37,21 @@
     <div class="container-overview">
     
         
-            <div class="description">An interpreter object is a user created object that has one or more 
-<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s created using an 
+            <div class="description">An interpreter object is a user created object that has one or 
+more <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s created using an 
 <a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a>. 
 This is not a description of a real class, neither is it an interface that 
 can be implemented. 
 Rather, the methods of this class are descriptions of the type of 
 interpreter methods that an interpreter method factory can create for an 
 interpreter object. 
-If no <a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a> 
-is used, the interpreter object will also be the 
+Normaly, all interpretation callback functions supplied when creating 
+interpreter methods will run as methods of their interpreter object, i. e. 
+<tt>this</tt> will be bound to the interpreter object inside the 
+interpretation body.
+However, 
+<a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a> may be 
+used to set the <tt>this</tt> binding to another object, see also 
 <a href="external-ThisBinding.html">external:ThisBinding</a>.</div>
         
 
@@ -129,16 +134,21 @@ is used, the interpreter object will also be the
 
 
 <div class="description">
-    An atom type interpreter method is an 
-<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
-that parses a regular expression. 
+    An atom type interpreter method is a method of an 
+<a href="external-InterpreterObject.html">external:InterpreterObject</a> that has been made with
+InterpreterMehtodFactory#atom.
+It is a type of <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
+that parses and interprets its input text using a regular expression. 
 Parsing is done by trying to match the regular expression starting at the 
 current position in the text. 
-Matches at other positions will not be concidered. 
-The full match (corresponding to match[0]) will be parsed. 
+Matches starting at other positions will not be concidered. 
+The full match (corresponding to match[0]) will be parsed, so capturing 
+groups will not have any effect. 
 It returns the parsed text or, if it has a 
 <a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a>, the result of calling 
 that interpretation with the parsed string. 
+Inside the body of the interpretation, <tt>this</tt> will be bound the 
+<a href="external-InterpreterObject.html">external:InterpreterObject</a>, as if it was a method.
 If the regular expression can't be matched at the current position in the 
 text, the method fails to parse.
 </div>
@@ -277,7 +287,7 @@ text, the method fails to parse.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line446">line 446</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line452">line 452</a>
     </li></ul></dd>
     
 
@@ -343,9 +353,10 @@ supplied.
 
 
 <div class="description">
-    An empty type interpreter method doesn't parse anything, it just run the 
-callback function interpretation passed to its factory function, 
-<a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory#empty</a> and returns the result.
+    An empty type interpreter method doesn't parse anything. 
+It just runs the callback function interpretation passed to its factory 
+function, <a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory#empty</a>, as a method of the 
+{external InterpreterObject} and returns the result.
 </div>
 
 
@@ -482,7 +493,7 @@ callback function interpretation passed to its factory function,
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line508">line 508</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line519">line 519</a>
     </li></ul></dd>
     
 
@@ -700,7 +711,7 @@ the results of the <a href="global.html#part">part</a>s of the method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line611">line 611</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line623">line 623</a>
     </li></ul></dd>
     
 
@@ -767,7 +778,8 @@ or the result of calling the interpretation with the result of its
 
 
 <div class="description">
-    This is a general description that applies to all interpreter methods. 
+    This is a general description that applies to all interpreter 
+methods. 
 An interpreter method interprets text. 
 When it is called from the outside code, it interprets the text of its first 
 argument. 
@@ -919,7 +931,7 @@ messages are printed to console.log.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line373">line 373</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line378">line 378</a>
     </li></ul></dd>
     
 
@@ -992,11 +1004,11 @@ interpretation, if an interpretation has been supplied.
 
 
 <div class="description">
-    This <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> returns a 
-function doing the same thing as the <a href="global.html#part">part</a> named in its factory, 
-<a href="InterpreterMethodFactory.html#methodFactory">InterpreterMethodFactory#methodFactory</a>, would have done, but with 
-the possibility to use another value for this in the interpretations of 
-its descendant <a href="global.html#part">part</a>s. 
+    This <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> 
+returns a function doing the same thing as the <a href="global.html#part">part</a> named in its 
+factory, <a href="InterpreterMethodFactory.html#methodFactory">InterpreterMethodFactory#methodFactory</a>, would have done, 
+but with the possibility to use another value for this in the 
+interpretations of its descendant <a href="global.html#part">part</a>s. 
 The new value of this is supplied by running the instruction as a method 
 of the <a href="external-ThisBinding.html">external:ThisBinding</a> object, by using call or apply, or by 
 assigning it as a (temporary) property of the this binding before calling 
@@ -1144,7 +1156,7 @@ change).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line984">line 984</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line996">line 996</a>
     </li></ul></dd>
     
 
@@ -1217,7 +1229,7 @@ would have, but with the possibility to do it with another value of this.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 11:38:52 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 14:33:39 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
