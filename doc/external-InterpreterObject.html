@@ -51,7 +51,7 @@ interpreter methods will run as methods of their interpreter object, i. e.
 interpretation body.
 However, 
 <a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a> may be 
-used to set the <tt>this</tt> binding to another object, see also 
+used to set the <tt>this</tt> binding to another object. See also 
 <a href="external-ThisBinding.html">external:ThisBinding</a>.</div>
         
 
@@ -87,7 +87,7 @@ used to set the <tt>this</tt> binding to another object, see also
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line419">line 419</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line427">line 427</a>
     </li></ul></dd>
     
 
@@ -290,7 +290,7 @@ text, the method fails to parse and the interpretation isn't run.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line536">line 536</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line578">line 578</a>
     </li></ul></dd>
     
 
@@ -498,7 +498,7 @@ should be equivalent to <tt>interpretation.call(interpreterObject)</tt>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line613">line 613</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line655">line 655</a>
     </li></ul></dd>
     
 
@@ -573,7 +573,10 @@ time.
 If one of the regular expressions or interpreter methods fails to parse, 
 then the whole method fails to parse and the text pointer is restored, see 
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>. 
-If it was defined with an 
+It is also important to note that none of the interpretations of the 
+<a href="global.html#part">part</a>s is run before all parts has been successfully parsed, so it 
+is never necessary to "clean up" after a half parsed group.
+If the group was defined with an 
 <a href="external-ThisBinding.html#groupInterpretation">external:ThisBinding#groupInterpretation</a> it will call that with 
 the results of its <a href="global.html#part">part</a>s as arguments, and return the result. 
 Otherwise it will return an 
@@ -716,7 +719,7 @@ the results of the <a href="global.html#part">part</a>s of the method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line731">line 731</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line773">line 773</a>
     </li></ul></dd>
     
 
@@ -783,23 +786,57 @@ or the result of calling the interpretation with the result of its
 
 
 <div class="description">
-    This is a general description that applies to all interpreter 
-methods. 
+    <p>
+This is a general description that applies to all interpreter methods. 
 An interpreter method interprets text. 
 When it is called from the outside code, it interprets the text of its first 
 argument. 
 When it is called as a <a href="global.html#part">part</a> of another interpreter method, it parses 
 as much of the text as it can, starting from the point in the text where the 
 last interpreter method finished parsing. 
-If it fails to parse, it will return the text pointer so that the next 
-method will start parsing at the same position as the current one started 
-before it failed. 
-All interpreter methods are constructed never to be "half parsed"; if they 
-fail, then the text pointer will be restored. 
-An interpreter method, with no interpretation, will return a type dependent 
-container with the result of its <a href="global.html#part">part</a>s. 
-If it has an interpretation, the result of the method will be the result of 
-calling its interpretation with the result of its parts.
+</p><p>
+If an interpreter method fails to parse, it will return the text pointer so 
+that the next method will start parsing at the same position as the current 
+one started before it failed. 
+All interpreter methods are constructed never to be "half parsed"; if one of 
+its parts fail, then the text pointer will be restored to where the 
+interpreter method started parsing, even if some of the parts before the 
+failing part were successfully parsed. 
+Also, no interpretations of the descendants of an interpreter method will be 
+run until all parts have been successfully parsed.
+Acctually, parsing of all the interpreter methods and running the 
+interpretations of the successfull parsings is done in two completely 
+separate steps. 
+That way it is ensured that nothing that shouldn't be run is run.
+</p><p>
+Most interpreter methods comes in two different types. 
+The first type is constructed without supplying a description of how the 
+interpreter method should interpret the result of its <a href="global.html#part">part</a>s. 
+Then the method will return the results of its parts in some kind of 
+container, like an array (for quantifiers), an object with properties with 
+the same names as the interpreter methods (for groups), a string (for atoms) 
+or just the result of the part (for opt, wrap and select). 
+Interpreter methods of this type will create a parse tree with arrays and 
+objects and strings (from the atoms) as its leafs.
+</p><p>
+The other type of interpreter method is when it is constructed with an 
+interpretation.
+Then the interpreter method acts like a proxy for its interpretation. 
+Instead of returning the results of its parts, the interpreter method will 
+call its interpretation with those results, and then return the result of 
+that call. 
+An interpretation is meant to be thought of as a regular method of the same 
+object as its interpreter method, but with enhanced abilities. 
+Instead of just beeing called with arguments, they can create their own 
+arguments by calling the methods named when they were constructed, or, 
+in the case of atoms, getting their arguments by parsing text with an 
+associated regular expression. 
+Most importantly, interpretations will be run with <tt>this</tt> bound to 
+the same object as their interpreter method. 
+This way, interpretations function exactly like normal methods, but with the 
+extra ability to, before they are called, compute their own arguments that 
+they should be called with, by calling their parts.
+</p>
 </div>
 
 
@@ -936,7 +973,7 @@ messages are printed to console.log.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line439">line 439</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line447">line 447</a>
     </li></ul></dd>
     
 
@@ -970,7 +1007,7 @@ messages are printed to console.log.</td>
 
         
 <div class="param-desc">
-    A type dependent container with the 
+    A type dependant container with the 
 result of the <a href="global.html#part">part</a>s of the method or the result of its 
 interpretation, if an interpretation has been supplied.
 </div>
@@ -1161,7 +1198,7 @@ change).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1107">line 1107</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1152">line 1152</a>
     </li></ul></dd>
     
 
@@ -1188,8 +1225,9 @@ change).
 
         
 <div class="param-desc">
-    A method that does the same thing as the <a href="global.html#part">part</a>, 
-would have, but with the possibility to do it with another value of this.
+    A method that does the same thing as the <a href="global.html#part">part</a> 
+would have, but with the possibility to do it with another <tt>this</tt> 
+binding.
 </div>
 
 
@@ -1234,7 +1272,7 @@ would have, but with the possibility to do it with another value of this.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 20:58:21 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 23:04:04 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -64,7 +64,8 @@
  * children. 
  * An interpretation variant interpreter method returns the result of its 
  * interpretation.
- * It is perfectly fine to use both variants in an interpreter, as convenient. 
+ * It is perfectly fine to use both variants of interpreter methods in the same 
+ * interpreter, as convenient. 
  * &lt;/p>&lt;p>
  * Interpretations are meant to be thought of as a kind of methods of the 
  * interpreter object, but with added ability to parse text and be built in 
@@ -77,10 +78,17 @@
  * There is one exception to this rule, see 
  * {@link InterpreterMethodFactory#methodFactory}.
  * &lt;/p>&lt;p>
- * This documentation is divided into three parts, one for the factory, 
+ * This documentation is divided into three sections, one for the factory, 
  * one for interpretations and one for the produced methods. 
- * In the {@link InterpreterMethodFactory} part, the methods that are used to 
- * construct interpreter methods.
+ * {@link InterpreterMethodFactory} contains the factory that produces 
+ * interpeter methods meant to be placed on an object created by the user. 
+ * {@link external:ThisBinding} describes the optional callback functions that 
+ * will act like an exotic kind of methods of the object of their interpreter 
+ * method. 
+ * {@link external:InterpreterObject} describes the different types of 
+ * interpreter methods.
+ * Most of the information is redundant between the three sections, so it 
+ * should suffice just to read in one place.
  * &lt;/p>
  * @author Johan Thiborg-Ericson 
  */
@@ -460,35 +468,69 @@ InterpreterMethodFactory.prototype
  * interpretation body.
  * However, 
  * {@link external:InterpreterObject#methodFactoryTypeInterpreterMethod} may be 
- * used to set the &lt;tt>this&lt;/tt> binding to another object, see also 
+ * used to set the &lt;tt>this&lt;/tt> binding to another object. See also 
  * {@link external:ThisBinding}. 
  */
  
 /**
  * @method external:InterpreterObject#interpreterMethod
- * @description This is a general description that applies to all interpreter 
- * methods. 
+ * @description &lt;p>
+ * This is a general description that applies to all interpreter methods. 
  * An interpreter method interprets text. 
  * When it is called from the outside code, it interprets the text of its first 
  * argument. 
  * When it is called as a {@link part} of another interpreter method, it parses 
  * as much of the text as it can, starting from the point in the text where the 
  * last interpreter method finished parsing. 
- * If it fails to parse, it will return the text pointer so that the next 
- * method will start parsing at the same position as the current one started 
- * before it failed. 
- * All interpreter methods are constructed never to be "half parsed"; if they 
- * fail, then the text pointer will be restored. 
- * An interpreter method, with no interpretation, will return a type dependent 
- * container with the result of its {@link part}s. 
- * If it has an interpretation, the result of the method will be the result of 
- * calling its interpretation with the result of its parts. 
+ * &lt;/p>&lt;p>
+ * If an interpreter method fails to parse, it will return the text pointer so 
+ * that the next method will start parsing at the same position as the current 
+ * one started before it failed. 
+ * All interpreter methods are constructed never to be "half parsed"; if one of 
+ * its parts fail, then the text pointer will be restored to where the 
+ * interpreter method started parsing, even if some of the parts before the 
+ * failing part were successfully parsed. 
+ * Also, no interpretations of the descendants of an interpreter method will be 
+ * run until all parts have been successfully parsed.
+ * Acctually, parsing of all the interpreter methods and running the 
+ * interpretations of the successfull parsings is done in two completely 
+ * separate steps. 
+ * That way it is ensured that nothing that shouldn't be run is run.
+ * &lt;/p>&lt;p>
+ * Most interpreter methods comes in two different types. 
+ * The first type is constructed without supplying a description of how the 
+ * interpreter method should interpret the result of its {@link part}s. 
+ * Then the method will return the results of its parts in some kind of 
+ * container, like an array (for quantifiers), an object with properties with 
+ * the same names as the interpreter methods (for groups), a string (for atoms) 
+ * or just the result of the part (for opt, wrap and select). 
+ * Interpreter methods of this type will create a parse tree with arrays and 
+ * objects and strings (from the atoms) as its leafs.
+ * &lt;/p>&lt;p>
+ * The other type of interpreter method is when it is constructed with an 
+ * interpretation.
+ * Then the interpreter method acts like a proxy for its interpretation. 
+ * Instead of returning the results of its parts, the interpreter method will 
+ * call its interpretation with those results, and then return the result of 
+ * that call. 
+ * An interpretation is meant to be thought of as a regular method of the same 
+ * object as its interpreter method, but with enhanced abilities. 
+ * Instead of just beeing called with arguments, they can create their own 
+ * arguments by calling the methods named when they were constructed, or, 
+ * in the case of atoms, getting their arguments by parsing text with an 
+ * associated regular expression. 
+ * Most importantly, interpretations will be run with &lt;tt>this&lt;/tt> bound to 
+ * the same object as their interpreter method. 
+ * This way, interpretations function exactly like normal methods, but with the 
+ * extra ability to, before they are called, compute their own arguments that 
+ * they should be called with, by calling their parts.
+ * &lt;/p> 
  * @todo Describe parse errors. 
  * @abstract
  * @param {string} text - The text to be interpreted. 
  * @param {boolean} [printDebuggingMessages] - If this is true, debugging 
  * messages are printed to console.log. 
- * @returns {InterpreterMethodResult} A type dependent container with the 
+ * @returns {InterpreterMethodResult} A type dependant container with the 
  * result of the {@link part}s of the method or the result of its 
  * interpretation, if an interpretation has been supplied. 
  */
@@ -766,7 +808,10 @@ InterpreterMethodFactory.prototype
    * If one of the regular expressions or interpreter methods fails to parse, 
    * then the whole method fails to parse and the text pointer is restored, see 
    * {@link external:InterpreterObject#interpreterMethod}. 
-   * If it was defined with an 
+   * It is also important to note that none of the interpretations of the 
+   * {@link part}s is run before all parts has been successfully parsed, so it 
+   * is never necessary to "clean up" after a half parsed group.
+   * If the group was defined with an 
    * {@link external:ThisBinding#groupInterpretation} it will call that with 
    * the results of its {@link part}s as arguments, and return the result. 
    * Otherwise it will return an 
@@ -1153,8 +1198,9 @@ InterpreterMethodFactory.prototype
    * @param {string} text - The text to be interpreted by the {@link part}. 
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}. 
-   * @returns {function} A method that does the same thing as the {@link part}, 
-   * would have, but with the possibility to do it with another value of this. 
+   * @returns {function} A method that does the same thing as the {@link part} 
+   * would have, but with the possibility to do it with another &lt;tt>this&lt;/tt> 
+   * binding. 
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var instructionToDeferre = factory
@@ -1251,7 +1297,7 @@ InterpreterMethodFactory.prototype
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 20:58:21 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 23:04:04 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
