@@ -37,8 +37,9 @@
     <div class="container-overview">
     
         
-            <div class="description">The interpretation callback functions passed to the methods of 
-an <a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a> when constructing 
+            <div class="description"><p>
+The interpretation callback functions passed to the methods of an 
+<a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a> when constructing 
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s for a user 
 created <a href="external-InterpreterObject.html">external:InterpreterObject</a> should be thought of as if they 
 were methods of that interpreter object. 
@@ -47,6 +48,7 @@ object inside the body of those  interpretations.
 This class is not a real class whith real methods, but rather a place to 
 collect the documentations of all callback functions that will run as 
 methods of the interpreter object. 
+</p><p>
 "So, if they will be run as methods of the 
 <a href="external-InterpreterObject.html">external:InterpreterObject</a>, why aren't they documented as methods of 
 that object?" you might ask. 
@@ -56,7 +58,8 @@ may be used to set the <tt>this</tt> binding to another object.
 Therefore, although the callback functions described here will 
 normaly be run as methods of the interpreter object, they are described as 
 if they would be run as methods of some other object refered to as 
-<tt>this</tt> binding.</div>
+<tt>this</tt> binding. 
+</p></div>
         
 
         
@@ -91,7 +94,7 @@ if they would be run as methods of some other object refered to as
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line334">line 334</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -138,13 +141,30 @@ if they would be run as methods of some other object refered to as
 
 
 <div class="description">
-    An atom interpretation is a callback function passed to 
-<a href="InterpreterMethodFactory.html#atom">InterpreterMethodFactory#atom</a>. 
-Inside the callback, this will refere to the
-<a href="external-ThisBinding.html">external:ThisBinding</a>. 
-The interpretation is called with the string parsed by its 
-<a href="external-InterpreterObject.html#atomTypeInterpreterMethod">external:InterpreterObject#atomTypeInterpreterMethod</a>, 
-which will also return the result of this interpretation.
+    <p>
+An atom interpretation is a callback function passed to 
+<a href="InterpreterMethodFactory.html#atom">InterpreterMethodFactory#atom</a> along with a regular expression to 
+make an <a href="external-InterpreterObject.html#atomTypeInterpreterMethod">external:InterpreterObject#atomTypeInterpreterMethod</a> of an 
+<a href="external-InterpreterObject.html">external:InterpreterObject</a> made by the user.
+It should be thought of as a method of the interpreter object which has 
+been given the ability to parse text, using the regular expression of its 
+interpreter method.
+</p><p>
+When its interpreter method is called, it will parse a string from the 
+input text and call the interpretation with that text. 
+Then the method will return the result of the interpretation. 
+Most importantly, the method will run the interpretation as if it was a 
+method of the same object as the interpreter method. 
+This means that inside the body of the interpretation, <tt>this</tt> will 
+be bound to the interpreter object.
+In all, the only difference between the call to the interpreter method and 
+the call to its interpretation is that the interpreter method is called 
+with the full input text, while the interpretation is only called with 
+the part of the text that has been parsed by the regular expression.
+Another difference between interpreter methods and ordinary methods is 
+that interpreter methods can be chained, so that the second interpeter 
+method starts parsing where the first interpreter method finished parsing. 
+</p>
 </div>
 
 
@@ -196,7 +216,7 @@ which will also return the result of this interpretation.
 
             
 
-            <td class="description last">The text parsed by the interpreter method.</td>
+            <td class="description last">The text parsed by the regular expression.</td>
         </tr>
 
     
@@ -237,7 +257,7 @@ which will also return the result of this interpretation.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line435">line 435</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line496">line 496</a>
     </li></ul></dd>
     
 
@@ -265,8 +285,8 @@ which will also return the result of this interpretation.
         
 <div class="param-desc">
     User defined. 
-The value returned by the interpretation will 
-also be the return value of its interpreter method.
+The value returned by the interpretation will also be the return value of 
+its interpreter method.
 </div>
 
 
@@ -414,7 +434,7 @@ of the method.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line616">line 616</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line699">line 699</a>
     </li></ul></dd>
     
 
@@ -488,7 +508,7 @@ also be the return value of its interpreter method.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 15:59:11 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 20:58:21 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

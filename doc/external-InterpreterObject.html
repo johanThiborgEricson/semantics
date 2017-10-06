@@ -87,7 +87,7 @@ used to set the <tt>this</tt> binding to another object, see also
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line358">line 358</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line419">line 419</a>
     </li></ul></dd>
     
 
@@ -135,22 +135,25 @@ used to set the <tt>this</tt> binding to another object, see also
 
 <div class="description">
     An atom type interpreter method is a method of an 
-<a href="external-InterpreterObject.html">external:InterpreterObject</a> that has been made with
-InterpreterMehtodFactory#atom.
+<a href="external-InterpreterObject.html">external:InterpreterObject</a> that has been made by passing a regular 
+expression and possibly an <a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a> 
+to <a href="InterpreterMethodFactory.html#atom">InterpreterMethodFactory#atom</a>.
 It is a type of <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
-that parses and interprets its input text using a regular expression. 
-Parsing is done by trying to match the regular expression starting at the 
-current position in the text. 
+that parses and interprets its input text with its regular expression and 
+its interpretation. 
+Parsing is done by trying to match the regular expression at the position 
+in the text where the last interpreter method finished to parse.
 Matches starting at other positions will not be concidered. 
 The full match (corresponding to match[0]) will be parsed, so capturing 
 groups will not have any effect. 
-It returns the parsed text or, if it has a 
-<a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a>, the result of calling 
-that interpretation with the parsed string. 
+It returns the parsed text or, if it has an interpretation, the result of 
+calling that interpretation as a method of the interpreter object with the 
+parsed string. 
 Inside the body of the interpretation, <tt>this</tt> will be bound the 
-<a href="external-InterpreterObject.html">external:InterpreterObject</a>, as if it was a method.
+the object of its interpreter method, as if it was called as a method of 
+the same object.
 If the regular expression can't be matched at the current position in the 
-text, the method fails to parse.
+text, the method fails to parse and the interpretation isn't run.
 </div>
 
 
@@ -287,7 +290,7 @@ text, the method fails to parse.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line458">line 458</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line536">line 536</a>
     </li></ul></dd>
     
 
@@ -314,9 +317,9 @@ text, the method fails to parse.
 
         
 <div class="param-desc">
-    The parsed string or the result of 
-calling the interpretation with the parsed string, if an interpretation is 
-supplied.
+    The parsed string or, if it is defined 
+with an interpretation, the result of calling the interpretation as if it 
+was a method of the same object with the parsed string.
 </div>
 
 
@@ -355,8 +358,10 @@ supplied.
 <div class="description">
     An empty type interpreter method doesn't parse anything. 
 It just runs the callback function interpretation passed to its factory 
-function, <a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory#empty</a>, as a method of the 
-{external InterpreterObject} and returns the result.
+function, <a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory#empty</a>, as if it was a method of 
+the same object, and returns the result. 
+In general, <tt>interpreterObject.emptyTypeInterpreterMethod("")</tt> 
+should be equivalent to <tt>interpretation.call(interpreterObject)</tt>.
 </div>
 
 
@@ -493,7 +498,7 @@ function, <a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line532">line 532</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line613">line 613</a>
     </li></ul></dd>
     
 
@@ -523,7 +528,7 @@ function, <a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory
     The result of calling the 
 interpretation callback function passed to 
 <a href="InterpreterMethodFactory.html#empty">InterpreterMethodFactory#empty</a> when constructing this 
-interpreter method.
+interpreter method as if it was a method of the same object.
 </div>
 
 
@@ -711,7 +716,7 @@ the results of the <a href="global.html#part">part</a>s of the method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line648">line 648</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line731">line 731</a>
     </li></ul></dd>
     
 
@@ -931,7 +936,7 @@ messages are printed to console.log.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line378">line 378</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line439">line 439</a>
     </li></ul></dd>
     
 
@@ -1156,7 +1161,7 @@ change).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1024">line 1024</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1107">line 1107</a>
     </li></ul></dd>
     
 
@@ -1229,7 +1234,7 @@ would have, but with the possibility to do it with another value of this.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 15:59:11 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 20:58:21 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

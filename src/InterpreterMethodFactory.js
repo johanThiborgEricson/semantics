@@ -1,3 +1,61 @@
+/**
+ * @file <p>
+ * The {@link InterpreterMethodFactory} is the only public class of the 
+ * Semantics! library. 
+ * As the name suggests, it produces 
+ * {@link external:InterpreterObject#interpreterMethod}s meant to be put on 
+ * an object or class created by the user. 
+ * That object is referenced in this documentation as an 
+ * {@link external:InterpreterObject}.
+ * </p><p>
+ * Interpreter methods of an interpreter object are built in terms of each 
+ * other.
+ * This is accomplished by defining an interpreter method by giving the  
+ * {@link interpreterMethodName}s of the other interpreter methods it consists 
+ * of.
+ * It can be thought of as a tree where the root interpreter method is made out 
+ * of child interpreter methods, which are in turn made out of other 
+ * interpreter methods, and so on, all the way down to the leafs, which are 
+ * interpreter methods that parses text using a regular expression, 
+ * {@link external:InterpreterObject#atomTypeInterpreterMethod}s.
+ * This is true, except it isn't a tree, it is a graph, because it allows for 
+ * circular dependencies.
+ * Together, the interpreter metods form a language, that can interpret texts 
+ * on that language. 
+ * </p><p>
+ * Most interpreter methods have two variants. 
+ * The first variant is the data structure variant.
+ * It returns the results of its children in an array, or as properties on an 
+ * object.
+ * If all interpreter methods on the interpreter object are the data structure 
+ * type, then the interpreter will return the parse tree as a data structure, 
+ * with strings at its leafs.
+ * The second variant is the interpretation variant.
+ * An interpretation variant is constructed with a callback method, its 
+ * interpretation, that will be called with the results of the methods 
+ * children. 
+ * An interpretation variant interpreter method returns the result of its 
+ * interpretation.
+ * It is perfectly fine to use both variants in an interpreter, as convenient. 
+ * </p><p>
+ * Interpretations are meant to be thought of as a kind of methods of the 
+ * interpreter object, but with added ability to parse text and be built in 
+ * terms of each other.
+ * More specifically, they are run with <tt>this</tt> bound to the interpreter 
+ * object. 
+ * This means that inside the body of an interpretation callback function, 
+ * <tt>this</tt> always referes to the object that the 
+ * interpreter method is put on.
+ * There is one exception to this rule, see 
+ * {@link InterpreterMethodFactory#methodFactory}.
+ * </p><p>
+ * This documentation is divided into three parts, one for the factory, 
+ * one for interpretations and one for the produced methods. 
+ * In the {@link InterpreterMethodFactory} part, the methods that are used to 
+ * construct interpreter methods.
+ * </p>
+ * @author Johan Thiborg-Ericson 
+ */
 function CodePointer(code, debugging) {
   this._code = code;
   this._debugging = debugging;
@@ -333,8 +391,9 @@ InterpreterMethodFactory.prototype
 
 /**
  * @external ThisBinding
- * @description The interpretation callback functions passed to the methods of 
- * an {@link InterpreterMethodFactory} when constructing 
+ * @description <p>
+ * The interpretation callback functions passed to the methods of an 
+ * {@link InterpreterMethodFactory} when constructing 
  * {@link external:InterpreterObject#interpreterMethod}s for a user 
  * created {@link external:InterpreterObject} should be thought of as if they 
  * were methods of that interpreter object. 
@@ -343,6 +402,7 @@ InterpreterMethodFactory.prototype
  * This class is not a real class whith real methods, but rather a place to 
  * collect the documentations of all callback functions that will run as 
  * methods of the interpreter object. 
+ * </p><p>
  * "So, if they will be run as methods of the 
  * {@link external:InterpreterObject}, why aren't they documented as methods of 
  * that object?" you might ask. 
@@ -353,6 +413,7 @@ InterpreterMethodFactory.prototype
  * normaly be run as methods of the interpreter object, they are described as 
  * if they would be run as methods of some other object refered to as 
  * <tt>this</tt> binding. 
+ * </p>
  */
 
 /**
@@ -406,7 +467,7 @@ InterpreterMethodFactory.prototype
 
 /**
  * The atom interpreter method factory takes a regular expression and makes an 
- * {@link external:InterpreterObject#atomTypeInterpreterMethod} meant to be a 
+ * {@link external:InterpreterObject#atomTypeInterpreterMethod} meant to be an 
  * interpreter method of a user created {@link external:InterpreterObject}.
  * The returned method parses text with the supplied regular expression. 
  * Optionally, an {external:ThisBinding#atomInterpretation} callback function 
@@ -434,17 +495,34 @@ InterpreterMethodFactory.prototype
   
   /**
    * @method external:ThisBinding#atomInterpretation
-   * @description An atom interpretation is a callback function passed to 
-   * {@link InterpreterMethodFactory#atom}. 
-   * Inside the callback, this will refere to the
-   * {@link external:ThisBinding}. 
-   * The interpretation is called with the string parsed by its 
-   * {@link external:InterpreterObject#atomTypeInterpreterMethod}, 
-   * which will also return the result of this interpretation. 
-   * @param {string} parsedText - The text parsed by the interpreter method. 
+   * @description <p>
+   * An atom interpretation is a callback function passed to 
+   * {@link InterpreterMethodFactory#atom} along with a regular expression to 
+   * make an {@link external:InterpreterObject#atomTypeInterpreterMethod} of an 
+   * {@link external:InterpreterObject} made by the user.
+   * It should be thought of as a method of the interpreter object which has 
+   * been given the ability to parse text, using the regular expression of its 
+   * interpreter method.
+   * </p><p>
+   * When its interpreter method is called, it will parse a string from the 
+   * input text and call the interpretation with that text. 
+   * Then the method will return the result of the interpretation. 
+   * Most importantly, the method will run the interpretation as if it was a 
+   * method of the same object as the interpreter method. 
+   * This means that inside the body of the interpretation, <tt>this</tt> will 
+   * be bound to the interpreter object.
+   * In all, the only difference between the call to the interpreter method and 
+   * the call to its interpretation is that the interpreter method is called 
+   * with the full input text, while the interpretation is only called with 
+   * the part of the text that has been parsed by the regular expression.
+   * Another difference between interpreter methods and ordinary methods is 
+   * that interpreter methods can be chained, so that the second interpeter 
+   * method starts parsing where the first interpreter method finished parsing. 
+   * </p>
+   * @param {string} parsedText - The text parsed by the regular expression. 
    * @returns {*} User defined. 
-   * The value returned by the interpretation will 
-   * also be the return value of its interpreter method. 
+   * The value returned by the interpretation will also be the return value of 
+   * its interpreter method. 
    */
   var interpretation;
   var butNot;
@@ -458,28 +536,31 @@ InterpreterMethodFactory.prototype
   /**
    * @method external:InterpreterObject#atomTypeInterpreterMethod
    * @description An atom type interpreter method is a method of an 
-   * {@link external:InterpreterObject} that has been made with
-   * {@link InterpreterMehtodFactory#atom}.
+   * {@link external:InterpreterObject} that has been made by passing a regular 
+   * expression and possibly an {@link external:ThisBinding#atomInterpretation} 
+   * to {@link InterpreterMethodFactory#atom}.
    * It is a type of {@link external:InterpreterObject#interpreterMethod}
-   * that parses and interprets its input text using a regular expression. 
-   * Parsing is done by trying to match the regular expression starting at the 
-   * current position in the text. 
+   * that parses and interprets its input text with its regular expression and 
+   * its interpretation. 
+   * Parsing is done by trying to match the regular expression at the position 
+   * in the text where the last interpreter method finished to parse.
    * Matches starting at other positions will not be concidered. 
    * The full match (corresponding to match[0]) will be parsed, so capturing 
    * groups will not have any effect. 
-   * It returns the parsed text or, if it has a 
-   * {@link external:ThisBinding#atomInterpretation}, the result of calling 
-   * that interpretation with the parsed string. 
+   * It returns the parsed text or, if it has an interpretation, the result of 
+   * calling that interpretation as a method of the interpreter object with the 
+   * parsed string. 
    * Inside the body of the interpretation, <tt>this</tt> will be bound the 
-   * {@link external:InterpreterObject}, as if it was a method.
+   * the object of its interpreter method, as if it was called as a method of 
+   * the same object.
    * If the regular expression can't be matched at the current position in the 
-   * text, the method fails to parse. 
+   * text, the method fails to parse and the interpretation isn't run.
    * @param {string} text - The text to be interpreted. 
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}. 
-   * @returns {InterpreterMethodResult} The parsed string or the result of 
-   * calling the interpretation with the parsed string, if an interpretation is 
-   * supplied. 
+   * @returns {InterpreterMethodResult} The parsed string or, if it is defined 
+   * with an interpretation, the result of calling the interpretation as if it 
+   * was a method of the same object with the parsed string. 
    */
   return this.makeMethod(function(codePointer, interpreter) {
     var match = that
@@ -533,15 +614,17 @@ InterpreterMethodFactory.prototype
    * @method external:InterpreterObject#emptyTypeInterpreterMethod
    * @description An empty type interpreter method doesn't parse anything. 
    * It just runs the callback function interpretation passed to its factory 
-   * function, {@link InterpreterMethodFactory#empty}, as a method of the 
-   * {external InterpreterObject} and returns the result. 
+   * function, {@link InterpreterMethodFactory#empty}, as if it was a method of 
+   * the same object, and returns the result. 
+   * In general, <tt>interpreterObject.emptyTypeInterpreterMethod("")</tt> 
+   * should be equivalent to <tt>interpretation.call(interpreterObject)</tt>. 
    * @param {string} text - The text that won't be interpreted. 
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}. 
    * @returns {InterpreterMethodResult} The result of calling the 
    * interpretation callback function passed to 
    * {@link InterpreterMethodFactory#empty} when constructing this 
-   * interpreter method. 
+   * interpreter method as if it was a method of the same object. 
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     return interpretation;
