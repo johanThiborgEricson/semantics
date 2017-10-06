@@ -44,7 +44,7 @@ This is not a description of a real class, neither is it an interface that
 can be implemented. 
 Rather, the methods of this class are descriptions of the type of 
 interpreter methods that an interpreter method factory can create for an 
-interpreter object.
+interpreter object. 
 If no <a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a> 
 is used, the interpreter object will also be the 
 <a href="external-ThisBinding.html">external:ThisBinding</a>.</div>
@@ -82,7 +82,7 @@ is used, the interpreter object will also be the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line355">line 355</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line358">line 358</a>
     </li></ul></dd>
     
 
@@ -131,14 +131,16 @@ is used, the interpreter object will also be the
 <div class="description">
     An atom type interpreter method is an 
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
-that parses a regular expression. Parsing is done by trying to match the 
-regular expression starting at the current position in the text. Matches 
-at other positions will not be concidered. The full match (corresponding 
-to match[0]) will be parsed. It returns the parsed text or, if it 
-has a <a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a>, the result of 
-calling that interpretation with the parsed string. If the regular 
-expression can't be matched at the current position in the text, the 
-method fails to parse.
+that parses a regular expression. 
+Parsing is done by trying to match the regular expression starting at the 
+current position in the text. 
+Matches at other positions will not be concidered. 
+The full match (corresponding to match[0]) will be parsed. 
+It returns the parsed text or, if it has a 
+<a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a>, the result of calling 
+that interpretation with the parsed string. 
+If the regular expression can't be matched at the current position in the 
+text, the method fails to parse.
 </div>
 
 
@@ -275,7 +277,7 @@ method fails to parse.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line438">line 438</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line446">line 446</a>
     </li></ul></dd>
     
 
@@ -480,7 +482,7 @@ callback function interpretation passed to its factory function,
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line497">line 497</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line508">line 508</a>
     </li></ul></dd>
     
 
@@ -548,18 +550,19 @@ interpreter method.
 
 <div class="description">
     A group type interpreter method is an 
-<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>
-that parses a group of other interpreter methods and regular expressions
-defined in its factory, <a href="InterpreterMethodFactory.html#group">InterpreterMethodFactory#group</a>, one at the
-time. If one of the regular expressions or interpreter methods fails to 
-parse, then the whole method fails to parse and the text pointer is 
-restored, see <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>.
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> 
+that parses a group of other interpreter methods and regular expressions 
+defined in its factory, <a href="InterpreterMethodFactory.html#group">InterpreterMethodFactory#group</a>, one at the 
+time. 
+If one of the regular expressions or interpreter methods fails to parse, 
+then the whole method fails to parse and the text pointer is restored, see 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>. 
 If it was defined with an 
 <a href="external-ThisBinding.html#groupInterpretation">external:ThisBinding#groupInterpretation</a> it will call that with 
 the results of its <a href="global.html#part">part</a>s as arguments, and return the result. 
 Otherwise it will return an 
 <a href="InterpreterMethodFactory_MultiPropertyObject.html">InterpreterMethodFactory#MultiPropertyObject</a>-like object with 
-properties named as the <a href="global.html#interpreterMethodName">interpreterMethodName</a>s containing
+properties named as the <a href="global.html#interpreterMethodName">interpreterMethodName</a>s containing 
 the results of the <a href="global.html#part">part</a>s of the method.
 </div>
 
@@ -697,7 +700,7 @@ the results of the <a href="global.html#part">part</a>s of the method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line597">line 597</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line611">line 611</a>
     </li></ul></dd>
     
 
@@ -765,17 +768,20 @@ or the result of calling the interpretation with the result of its
 
 <div class="description">
     This is a general description that applies to all interpreter methods. 
-An interpreter method interprets text. When it is called from the outside
-code, it interprets the text of its first argument. When it is called as 
-a <a href="global.html#part">part</a> of another interpreter method, it parses as much of the text 
-as it can, starting from the point in the text where the last interpreter 
-method finished parsing. If it fails to parse, it will return the text 
-pointer so that the next method will start parsing at the same position as 
-the current one started before it failed. All interpreter methods are 
-constructed never to be "half parsed"; if they fail, then the text pointer 
-will be restored. An interpreter method, with no interpretation, will return 
-a type dependent container with the result of its <a href="global.html#part">part</a>s. If 
-it has an interpretation, the result of the method will be the result of 
+An interpreter method interprets text. 
+When it is called from the outside code, it interprets the text of its first 
+argument. 
+When it is called as a <a href="global.html#part">part</a> of another interpreter method, it parses 
+as much of the text as it can, starting from the point in the text where the 
+last interpreter method finished parsing. 
+If it fails to parse, it will return the text pointer so that the next 
+method will start parsing at the same position as the current one started 
+before it failed. 
+All interpreter methods are constructed never to be "half parsed"; if they 
+fail, then the text pointer will be restored. 
+An interpreter method, with no interpretation, will return a type dependent 
+container with the result of its <a href="global.html#part">part</a>s. 
+If it has an interpretation, the result of the method will be the result of 
 calling its interpretation with the result of its parts.
 </div>
 
@@ -913,7 +919,7 @@ messages are printed to console.log.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line370">line 370</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line373">line 373</a>
     </li></ul></dd>
     
 
@@ -990,15 +996,18 @@ interpretation, if an interpretation has been supplied.
 function doing the same thing as the <a href="global.html#part">part</a> named in its factory, 
 <a href="InterpreterMethodFactory.html#methodFactory">InterpreterMethodFactory#methodFactory</a>, would have done, but with 
 the possibility to use another value for this in the interpretations of 
-its descendant <a href="global.html#part">part</a>s. The new value of this is supplied by running 
-the instruction as a method of the <a href="external-ThisBinding.html">external:ThisBinding</a> object, by 
-using call or apply, or by assigning it as a (temporary) property of the 
-this binding before calling it. If the value of this should not be changed 
-then the interpreter object has to be supplied in one of the 
-beforementioned ways. If the returned function is called directly, 
-interpretations of any descendant parts will get undefined (or worse, 
-window) as the value for this. The returned function takes no arguments 
-(at the moment, this might change).
+its descendant <a href="global.html#part">part</a>s. 
+The new value of this is supplied by running the instruction as a method 
+of the <a href="external-ThisBinding.html">external:ThisBinding</a> object, by using call or apply, or by 
+assigning it as a (temporary) property of the this binding before calling 
+it. 
+If the value of this should not be changed then the interpreter object has 
+to be supplied in one of the beforementioned ways. 
+If the returned function is called directly, interpretations of any 
+descendant parts will get undefined (or worse, window) as the value for 
+this. 
+The returned function takes no arguments (at the moment, this might 
+change).
 </div>
 
 
@@ -1135,7 +1144,7 @@ window) as the value for this. The returned function takes no arguments
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line967">line 967</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line984">line 984</a>
     </li></ul></dd>
     
 
@@ -1208,7 +1217,7 @@ would have, but with the possibility to do it with another value of this.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 11:15:29 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 11:38:52 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

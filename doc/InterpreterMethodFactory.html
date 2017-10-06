@@ -267,8 +267,8 @@ should use to parse text.</td>
 
             
 
-            <td class="description last">A list of forbidden words. If the parsed string 
-is in this list, the parsing fails.</td>
+            <td class="description last">A list of forbidden words. 
+If the parsed string is in this list, the parsing fails.</td>
         </tr>
 
     
@@ -303,7 +303,8 @@ is in this list, the parsing fails.</td>
 
             <td class="description last">A callback function describing how the parsed string should be interpreted. 
 If pressent, the result of this function will also be the result of the 
-method. Otherwise the parsed string will be returned.</td>
+method. 
+Otherwise the parsed string will be returned.</td>
         </tr>
 
     
@@ -344,7 +345,7 @@ method. Otherwise the parsed string will be returned.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line410">line 410</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line417">line 417</a>
     </li></ul></dd>
     
 
@@ -411,8 +412,8 @@ method. Otherwise the parsed string will be returned.</td>
     The empty method factory takes an interpretation callback function and 
 returns an <a href="external-InterpreterObject.html#emptyTypeInterpreterMethod">external:InterpreterObject#emptyTypeInterpreterMethod</a>
 that doesn't parse anything but just runs the interpretation as i it was a 
-method of the {link external:ThisBinding}. It is mainly useful as a setup 
-function when placed as the first part of an 
+method of the {link external:ThisBinding}. 
+It is mainly useful as a setup function when placed as the first part of an 
 <a href="InterpreterMethodFactory.html#group">InterpreterMethodFactory#group</a>.
 </div>
 
@@ -466,8 +467,9 @@ function when placed as the first part of an
             
 
             <td class="description last">A callback function that will be run as 
-a method of the this binding. The result of this function will also be the 
-result of the interpreter method.</td>
+a method of the this binding. 
+The result of this function will also be the result of the interpreter 
+method.</td>
         </tr>
 
     
@@ -508,7 +510,7 @@ result of the interpreter method.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line490">line 490</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line501">line 501</a>
     </li></ul></dd>
     
 
@@ -575,8 +577,8 @@ nonparsing interpreter method.
 <div class="description">
     The group interpreter method factory accepts any number of 
 <a href="global.html#interpreterMethodName">interpreterMethodName</a>s and regular expressions in any order as 
-arguments. The returned 
-<a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a>  
+arguments. 
+The returned <a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a>  
 parses the regular expressions and the 
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s named by 
 the interpreter method names, in the specified order.
@@ -681,9 +683,10 @@ the same object or a regular expression that should be parsed.</td>
             
 
             <td class="description last">A callback function that will be called with the results of the 
-<a href="global.html#part">part</a>s of the method. If pressent, the result of the interpretation 
-will also be the result of the interpreter method. Otherwise it will return 
-an object with the result of its <a href="global.html#part">part</a>s.</td>
+<a href="global.html#part">part</a>s of the method. 
+If pressent, the result of the interpretation will also be the result of the 
+interpreter method. 
+Otherwise it will return an object with the result of its <a href="global.html#part">part</a>s.</td>
         </tr>
 
     
@@ -724,7 +727,7 @@ an object with the result of its <a href="global.html#part">part</a>s.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line560">line 560</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line573">line 573</a>
     </li></ul></dd>
     
 
@@ -793,9 +796,10 @@ and other interpreter methods.
 <a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a>
 that returns a function that does exactely the same thing as the named 
 <a href="global.html#part">part</a> would have done, but possibly with another object as the value 
-of this. It is useful for implementing e. g. functions or loops, for setting 
-another object then the interpreter as the this binding and for running 
-the parsed instruction many times without having to parse it each time.
+of this. 
+It is useful for implementing e. g. functions or loops, for setting another 
+object then the interpreter as the this binding and for running the parsed 
+instruction many times without having to parse it each time.
 </div>
 
 
@@ -889,7 +893,7 @@ instruction of.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line963">line 963</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line980">line 980</a>
     </li></ul></dd>
     
 
@@ -963,7 +967,7 @@ value of this in its descendant interpretations.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 11:15:29 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 06 2017 11:38:52 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
