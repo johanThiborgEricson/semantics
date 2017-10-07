@@ -1,18 +1,46 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: spec/system/src/JavaScriptInterpreter.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: spec/system/src/JavaScriptInterpreter.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Returns a newly constructed JavaScript interpreter. 
  * @class
- * @classdesc <p>
+ * @classdesc &lt;p>
  * This class is a real world example of how an 
  * {@link InterpreterMethodFactory} can be used to make a fully functional 
  * interpreter. 
  * It is an interpreter for a subset of the JavaScript language, just large 
  * enough to interpret the source code of {@link InterpreterMethodFactory.js}. 
- * </p><p>
+ * &lt;/p>&lt;p>
  * It is a fully functional interpreter. 
  * It is possible to run all unit tests of Semantics! on this interpretation, 
  * and all the tests for this {@link UsageExampleJavaScriptInterpreter} 
  * can be run on this class being constructed with that interpretation. 
- * </p>
+ * &lt;/p>
  * @alias UsageExampleJavaScriptInterpreter
  */
 function JavaScriptInterpreter() {
@@ -319,7 +347,7 @@ JavaScriptInterpreter.hack = function() {
   "argumentsOpt", function(newExpressionQualifier, argumentsOpt) {
     var object = Object.create(newExpressionQualifier.prototype);
     var result = newExpressionQualifier.apply(object, argumentsOpt);
-    return result&&typeof result==="object"?result:object;
+    return result&amp;&amp;typeof result==="object"?result:object;
   });
   
   /**
@@ -567,11 +595,11 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.or("relationalExpression1", "relationalExpression2", 
   "relationalExpression5", "additiveExpression");
   /**
-   * group("relationalExpression", /</, "additiveExpression")
+   * group("relationalExpression", /&lt;/, "additiveExpression")
    */
   JavaScriptInterpreter.prototype.relationalExpression1 = 
-  interpreterMethodFactory.group("relationalExpression", /</, 
-  "additiveExpression", function(re, ae) {return re<ae;});
+  interpreterMethodFactory.group("relationalExpression", /&lt;/, 
+  "additiveExpression", function(re, ae) {return re&lt;ae;});
   /**
    * group("relationalExpression", />/, "additiveExpression")
    */
@@ -610,13 +638,13 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.logicalAndExpression = 
   interpreterMethodFactory.or("logicalAndExpression1", "equalityExpression");
   /**
-   * group("logicalAndExpression", /&&/, "deferredEqualityExpression")
+   * group("logicalAndExpression", /&amp;&amp;/, "deferredEqualityExpression")
    */
   JavaScriptInterpreter.prototype.logicalAndExpression1 = 
-  interpreterMethodFactory.group("logicalAndExpression", /&&/, 
+  interpreterMethodFactory.group("logicalAndExpression", /&amp;&amp;/, 
   "deferredEqualityExpression", 
   function(logicalAndExpression, deferredEqualityExpression) {
-    return logicalAndExpression && deferredEqualityExpression.call(this);
+    return logicalAndExpression &amp;&amp; deferredEqualityExpression.call(this);
   });
   
   /**
@@ -729,7 +757,7 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.statementList = 
   interpreterMethodFactory.star("deferredStatement", 
   function(deferredStatements) {
-    for(var i = 0; i < deferredStatements.length; i++) {
+    for(var i = 0; i &lt; deferredStatements.length; i++) {
       var returnValue = deferredStatements[i].call(this);
       if(returnValue[0] === "return") {
         return returnValue;
@@ -975,7 +1003,7 @@ JavaScriptInterpreter.hack = function() {
     return function() {
       var stack = that.executionContext;
       args = {};
-      for(var i = 0; i < formalParameterList.length; i++) {
+      for(var i = 0; i &lt; formalParameterList.length; i++) {
         args[formalParameterList[i]] = arguments[i];
       }
       args["arguments"] = arguments;
@@ -1059,3 +1087,26 @@ JavaScriptInterpreter.hack = function() {
 };
 
 JavaScriptInterpreter.hack();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 07 2017 21:20:35 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
