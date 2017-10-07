@@ -46,7 +46,7 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.atom(/\n/);
   
   /**
-   * <tt></tt>
+   * <tt>atom(/\/\/.*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.singleLineComment = 
   interpreterMethodFactory.atom(/\/\/.*/);
@@ -143,13 +143,13 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * <tt></tt>
+   * <tt>atom(/([^"\\]|(\\.))*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.doubleStringCharacters = 
   interpreterMethodFactory.atom(/([^"\\]|(\\.))*/, unescape);
   
   /**
-   * <tt></tt>
+   * <tt>atom(/([^'\\]|(\\.))*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.singleStringCharacters = 
   interpreterMethodFactory.atom(/([^'\\]|(\\.))*/, unescape);
@@ -180,7 +180,7 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\//, "regularExpressionBody", /\//);
   
   /**
-   * <tt></tt>
+   * <tt>atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/)</tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionBody = 
   interpreterMethodFactory.atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
@@ -534,7 +534,7 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.or("multiplicativeExpression1", 
   "typeChangeExpression");
   /**
-   * <tt></tt>
+   * <tt>group("multiplicativeExpression", /\*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.multiplicativeExpression1 = 
   interpreterMethodFactory.group("multiplicativeExpression", /\*/, 
@@ -1023,7 +1023,7 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.group(/('use strict')|("use strict")/, /;/);
   
   /**
-   * <tt>Setting up and calling program1.</tt>
+   * Setting up the environment and calling program1.
    */
   JavaScriptInterpreter.prototype.program = 
   function(code, globalOrDebugging, debugging) {
