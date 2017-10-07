@@ -62,19 +62,19 @@ JavaScriptInterpreter.hack = function() {
   "singleLineComment", "multiLineComment");
   
   /**
-   * &lt;tt>atom(/\s/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/\s/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.whiteSpace = 
   interpreterMethodFactory.atom(/\s/);
   
   /**
-   * &lt;tt>atom(/\n/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/\n/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.lineTerminator = 
   interpreterMethodFactory.atom(/\n/);
   
   /**
-   * &lt;tt>atom(/\/\/.*&lt;/tt>&lt;tt>/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/\/\/.*&lt;/tt>&lt;tt>/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.singleLineComment = 
   interpreterMethodFactory.atom(/\/\/.*/);
@@ -83,14 +83,15 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.atom(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
   
   /**
-   * &lt;tt>atom(identifierName)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(identifierName)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.identifierName = 
   interpreterMethodFactory.atom(identifierName);
   
   /**
-   * &lt;tt>or("undefinedLiteral", "nullLiteral", "booleanLiteral", 
-   * "numericLiteral", "stringLiteral", "regularExpressionLiteral")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("undefinedLiteral", 
+   * "nullLiteral", "booleanLiteral", "numericLiteral", "stringLiteral", 
+   * "regularExpressionLiteral")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.literal = 
   interpreterMethodFactory.or("undefinedLiteral", "nullLiteral", 
@@ -98,37 +99,38 @@ JavaScriptInterpreter.hack = function() {
   "regularExpressionLiteral");
   
   /**
-   * &lt;tt>atom(/undefined/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/undefined/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.undefinedLiteral = 
   interpreterMethodFactory.atom(/undefined/, function() {return undefined;});
   
   /**
-   * &lt;tt>atom(/null/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/null/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.nullLiteral = 
   interpreterMethodFactory.atom(/null/, function() {return null;});
   
   /**
-   * &lt;tt>or("trueLiteral", "falseLiteral")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("trueLiteral", 
+   * "falseLiteral")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.booleanLiteral = 
   interpreterMethodFactory.or("trueLiteral", "falseLiteral");
   
   /**
-   * &lt;tt>atom(/true/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/true/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.trueLiteral = 
   interpreterMethodFactory.atom(/true/, function() {return true;});
   
   /**
-   * &lt;tt>atom(/false/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/false/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.falseLiteral = 
   interpreterMethodFactory.atom(/false/, function() {return false;});
   
   /**
-   * &lt;tt>atom(/\d+/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/\d+/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.numericLiteral = 
   interpreterMethodFactory.atom(/\d+/, function(numericLiteral){
@@ -143,7 +145,8 @@ JavaScriptInterpreter.hack = function() {
   insignificant(null, "stringLiteralSignificantSpaces");
   
   /**
-   * &lt;tt>or("stringLiteralSignificantSpaces1", 
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}
+   * ("stringLiteralSignificantSpaces1", 
    * "stringLiteralSignificantSpaces2")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces = 
@@ -151,13 +154,15 @@ JavaScriptInterpreter.hack = function() {
   "stringLiteralSignificantSpaces2");
   
   /**
-   * &lt;tt>wrap(/"/, "doubleStringCharacters", /"/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/"/, 
+   * "doubleStringCharacters", /"/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces1 = 
   interpreterMethodFactory.wrap(/"/, "doubleStringCharacters", /"/);
   
   /**
-   * &lt;tt>wrap(/'/, "singleStringCharacters", /'/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/'/, 
+   * "singleStringCharacters", /'/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces2 = 
   interpreterMethodFactory.wrap(/'/, "singleStringCharacters", /'/);
@@ -171,13 +176,15 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * &lt;tt>atom(/([^"\\]|(\\.))*&lt;/tt>&lt;tt>/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}
+   * (/([^"\\]|(\\.))*&lt;/tt>&lt;tt>/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.doubleStringCharacters = 
   interpreterMethodFactory.atom(/([^"\\]|(\\.))*/, unescape);
   
   /**
-   * &lt;tt>atom(/([^'\\]|(\\.))*&lt;/tt>&lt;tt>/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}
+   * (/([^'\\]|(\\.))*&lt;/tt>&lt;tt>/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.singleStringCharacters = 
   interpreterMethodFactory.atom(/([^'\\]|(\\.))*/, unescape);
@@ -202,13 +209,15 @@ JavaScriptInterpreter.hack = function() {
   insignificant(null, "regularExpressionLiteralSignificantSpaces");
   
   /**
-   * &lt;tt>wrap(/\//, "regularExpressionBody", /\//)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\//, 
+   * "regularExpressionBody", /\//)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionLiteralSignificantSpaces = 
   interpreterMethodFactory.wrap(/\//, "regularExpressionBody", /\//);
   
   /**
-   * &lt;tt>atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}
+   * (/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionBody = 
   interpreterMethodFactory.atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
@@ -219,7 +228,7 @@ JavaScriptInterpreter.hack = function() {
   // Expressions
   
   /**
-   * &lt;tt>wrap("bindingIdentifier")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}("bindingIdentifier")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.identifierReference = 
   interpreterMethodFactory.wrap("bindingIdentifier", 
@@ -240,7 +249,7 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>wrap("identifierReference")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}("identifierReference")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.identifierExpression = 
   interpreterMethodFactory.wrap("identifierReference", 
@@ -256,19 +265,22 @@ JavaScriptInterpreter.hack = function() {
   "try", "typeof", "undefined", "var", "void", "while", "with", "yield"];
   
   /**
-   * &lt;tt>atom(identifierName, reservedWord)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(identifierName, 
+   * reservedWord)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.bindingIdentifier = 
   interpreterMethodFactory.atom(identifierName, reservedWord);
   
   /**
-   * &lt;tt>or("literal", "objectExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("literal", 
+   * "objectExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.primaryExpression = 
   interpreterMethodFactory.or("literal", "objectExpression");
   
   /**
-   * &lt;tt>or("identifierExpression", "arrayLiteral", "objectLiteral", 
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("identifierExpression", 
+   * "arrayLiteral", "objectLiteral", 
    * "functionExpression", "objectExpression1", "thisExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.objectExpression = 
@@ -276,13 +288,14 @@ JavaScriptInterpreter.hack = function() {
   "objectLiteral", "functionExpression", "objectExpression1", "thisExpression");
   
   /**
-   * &lt;tt>wrap(/\(/, "expression", /\)/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\(/, "expression", 
+   * /\)/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.objectExpression1 = 
   interpreterMethodFactory.wrap(/\(/, "expression", /\)/);
   
   /**
-   * &lt;tt>atom(/this/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#atom|atom}(/this/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.thisExpression = 
   interpreterMethodFactory.atom(/this/, function() {
@@ -290,7 +303,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>wrap(/\[/, "elementList", /\]/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\[/, "elementList", 
+   * /\]/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.arrayLiteral = 
   interpreterMethodFactory.wrap(/\[/, "elementList", /\]/);
@@ -302,7 +316,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.star("assignmentExpression", /,/);
   
   /**
-   * &lt;tt>group(/\{/, "propertyNameAndValueList", /,?/, /\}/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/\{/, 
+   * "propertyNameAndValueList", /,?/, /\}/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.objectLiteral = 
   interpreterMethodFactory.group(/\{/, "propertyNameAndValueList", /,?/, /\}/, 
@@ -323,25 +338,28 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.star("propertyAssignment", /,/);
   
   /**
-   * &lt;tt>group("propertyName", /:/, "assignmentExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("propertyName", /:/, 
+   * "assignmentExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.propertyAssignment = 
   interpreterMethodFactory.group("propertyName", /:/, "assignmentExpression");
   
   /**
-   * &lt;tt>or("identifierName")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("identifierName")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.propertyName = 
   interpreterMethodFactory.or("identifierName");
   
   /**
-   * &lt;tt>or("newExpression1", "primaryExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("newExpression1", 
+   * "primaryExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.newExpression = 
   interpreterMethodFactory.or("newExpression1", "primaryExpression");
   
   /**
-   * &lt;tt>group(/new/, "newExpressionQualifier", "argumentsOpt")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/new/, 
+   * "newExpressionQualifier", "argumentsOpt")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.newExpression1 = 
   interpreterMethodFactory.group(/new/, "newExpressionQualifier", 
@@ -358,7 +376,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.longest("newExpression", "newExpressionQualifier1");
   
   /**
-   * &lt;tt>group("newExpressionQualifier", "qualifier")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("newExpressionQualifier", 
+   * "qualifier")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.newExpressionQualifier1 = 
   interpreterMethodFactory.group("newExpressionQualifier", "qualifier",
@@ -375,14 +394,16 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>or("callExpression1", "callExpression2", "newExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("callExpression1", 
+   * "callExpression2", "newExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.callExpression = 
   interpreterMethodFactory.or("callExpression1", "callExpression2", 
   "newExpression");
   
   /**
-   * &lt;tt>group("callExpression", "args")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("callExpression", 
+   * "args")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.callExpression1 = 
   interpreterMethodFactory.group("callExpression", "args", 
@@ -391,7 +412,9 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group("callExpressionQualifier", "args")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("callExpressionQualifier", 
+   * 
+   * "args")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.callExpression2 = 
   interpreterMethodFactory.group("callExpressionQualifier", "args", 
@@ -408,7 +431,8 @@ JavaScriptInterpreter.hack = function() {
   "callExpressionQualifier2");
   
   /**
-   * &lt;tt>group("callExpression", "qualifier")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("callExpression", 
+   * "qualifier")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.callExpressionQualifier1 = 
   interpreterMethodFactory.group("callExpression", "qualifier", 
@@ -420,7 +444,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group("callExpressionQualifier", "qualifier")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("callExpressionQualifier", 
+   * "qualifier")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.callExpressionQualifier2 = 
   interpreterMethodFactory.group("callExpressionQualifier", "qualifier", 
@@ -432,25 +457,29 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>or("qualifier1", "qualifier2")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("qualifier1", 
+   * "qualifier2")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.qualifier = 
   interpreterMethodFactory.or("qualifier1", "qualifier2");
   
   /**
-   * &lt;tt>wrap(/\[/, "expression", /\]/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\[/, "expression", 
+   * /\]/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.qualifier1 = 
   interpreterMethodFactory.wrap(/\[/, "expression", /\]/);
   
   /**
-   * &lt;tt>wrap(/\./, "identifierName")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\./, "identifierName")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.qualifier2 = 
   interpreterMethodFactory.wrap(/\./, "identifierName");
   
   /**
-   * &lt;tt>wrap(/\(/, "argumentList", /\)/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\(/, "argumentList", 
+   * 
+   * /\)/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.args = 
   interpreterMethodFactory.wrap(/\(/, "argumentList", /\)/);
@@ -462,7 +491,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.star("assignmentExpression", /,/);
   
   /**
-   * &lt;tt>or("leftHandSideExpression1", "leftHandSideExpression2", 
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("leftHandSideExpression1", 
+   * "leftHandSideExpression2", 
    * "identifierReference")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.leftHandSideExpression = 
@@ -470,7 +500,8 @@ JavaScriptInterpreter.hack = function() {
   "leftHandSideExpression2", "identifierReference");
   
   /**
-   * &lt;tt>group("leftHandSideExpression", "qualifier")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("leftHandSideExpression", 
+   * "qualifier")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.leftHandSideExpression1 = 
   interpreterMethodFactory.group("leftHandSideExpression", "qualifier", 
@@ -482,7 +513,9 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group("callExpression", "qualifier")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("callExpression", 
+   * 
+   * "qualifier")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.leftHandSideExpression2 = 
   interpreterMethodFactory.group("callExpression", "qualifier", 
@@ -501,26 +534,30 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.longest("updateExpression1", "updateExpression2", 
   "updateExpression3", "callExpression", "rightHandSideExpression");
   /**
-   * &lt;tt>wrap(/delete/, "leftHandSideExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/delete/, 
+   * "leftHandSideExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.updateExpression1 = 
   interpreterMethodFactory.wrap(/delete/, "leftHandSideExpression",  
   function(lhse) {return delete lhse.base[lhse.name];});
   /**
-   * &lt;tt>wrap("leftHandSideExpression", /\+\+/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}("leftHandSideExpression", 
+   * /\+\+/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.updateExpression2 = 
   interpreterMethodFactory.wrap("leftHandSideExpression", /\+\+/, 
   function(lhse) {return lhse.base[lhse.name]++;});
   /**
-   * &lt;tt>wrap("leftHandSideExpression", /--/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}("leftHandSideExpression", 
+   * /--/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.updateExpression3 = 
   interpreterMethodFactory.wrap("leftHandSideExpression", /--/, 
   function(lhse) {return lhse.base[lhse.name]--;});
   
   /**
-   * &lt;tt>wrap("leftHandSideExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}
+   * ("leftHandSideExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.rightHandSideExpression = 
   interpreterMethodFactory.wrap("leftHandSideExpression", 
@@ -529,118 +566,134 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>or("updateExpression", "typeChangeExpression2", 
-   * "typeChangeExpression4", "typeChangeExpression6")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("updateExpression", 
+   * "typeChangeExpression2", "typeChangeExpression4", 
+   * "typeChangeExpression6")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.typeChangeExpression = 
   interpreterMethodFactory.or("updateExpression", "typeChangeExpression2", 
   "typeChangeExpression4", "typeChangeExpression6");
   
   /**
-   * &lt;tt>group(/typeof/, "typeChangeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/typeof/, 
+   * "typeChangeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.typeChangeExpression2 = 
   interpreterMethodFactory.group(/typeof/, "typeChangeExpression", 
   function(typeChangeExpression) {return typeof typeChangeExpression;});
   /**
-   * &lt;tt>group(/-/, "typeChangeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/-/, 
+   * "typeChangeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.typeChangeExpression4 = 
   interpreterMethodFactory.group(/-/, "typeChangeExpression", 
   function(typeChangeExpression) {return -typeChangeExpression;});
   /**
-   * &lt;tt>group(/!/, "typeChangeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/!/, 
+   * "typeChangeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.typeChangeExpression6 = 
   interpreterMethodFactory.group(/!/, "typeChangeExpression", 
   function(typeChangeExpression) {return !typeChangeExpression;});
   
   /**
-   * &lt;tt>or("multiplicativeExpression1", "typeChangeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("multiplicativeExpression1", 
+   * "typeChangeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.multiplicativeExpression = 
   interpreterMethodFactory.or("multiplicativeExpression1", 
   "typeChangeExpression");
   /**
-   * &lt;tt>group("multiplicativeExpression", /\*&lt;/tt>&lt;tt>/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}
+   * ("multiplicativeExpression", /\*&lt;/tt>&lt;tt>/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.multiplicativeExpression1 = 
   interpreterMethodFactory.group("multiplicativeExpression", /\*/, 
   "typeChangeExpression", function(me, tce) {return me*tce;});
   
   /**
-   * &lt;tt>or("additiveExpression1", "additiveExpression2", 
-   * "multiplicativeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("additiveExpression1", 
+   * "additiveExpression2", "multiplicativeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.additiveExpression = 
   interpreterMethodFactory.or("additiveExpression1", "additiveExpression2", 
   "multiplicativeExpression");
   /**
-   * &lt;tt>("additiveExpression", /\+/, "multiplicativeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("additiveExpression", 
+   * /\+/, "multiplicativeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.additiveExpression1 = 
   interpreterMethodFactory.group("additiveExpression", /\+/, 
   "multiplicativeExpression", function(ae, me) {return ae+me;});
   /**
-   * &lt;tt>group("additiveExpression", /-/, "multiplicativeExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("additiveExpression", 
+   * /-/, "multiplicativeExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.additiveExpression2 = 
   interpreterMethodFactory.group("additiveExpression", /-/, 
   "multiplicativeExpression", function(ae, me) {return ae-me;});
   
   /**
-   * &lt;tt>or("relationalExpression1", "relationalExpression2", 
-   * "relationalExpression5", "additiveExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("relationalExpression1", 
+   * "relationalExpression2", "relationalExpression5", 
+   * "additiveExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.relationalExpression = 
   interpreterMethodFactory.or("relationalExpression1", "relationalExpression2", 
   "relationalExpression5", "additiveExpression");
   /**
-   * &lt;tt>group("relationalExpression", /&lt;/, "additiveExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("relationalExpression", 
+   * /&lt;/, "additiveExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.relationalExpression1 = 
   interpreterMethodFactory.group("relationalExpression", /&lt;/, 
   "additiveExpression", function(re, ae) {return re&lt;ae;});
   /**
-   * &lt;tt>group("relationalExpression", />/, "additiveExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("relationalExpression", 
+   * />/, "additiveExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.relationalExpression2 = 
   interpreterMethodFactory.group("relationalExpression", />/, 
   "additiveExpression", function(re, ae) {return re>ae;});
   /**
-   * &lt;tt>group("relationalExpression", /instanceof/, "additiveExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("relationalExpression", 
+   * /instanceof/, "additiveExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.relationalExpression5 = 
   interpreterMethodFactory.group("relationalExpression", /instanceof/, 
   "additiveExpression", function(re, ae) {return re instanceof ae;});
   
   /**
-   * &lt;tt>or("equalityExpression3", "equalityExpression4", 
-   * "relationalExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("equalityExpression3", 
+   * "equalityExpression4", "relationalExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.equalityExpression = 
   interpreterMethodFactory.or("equalityExpression3", "equalityExpression4", 
   "relationalExpression");
   /**
-   * &lt;tt>group("equalityExpression", /===/, "relationalExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("equalityExpression", 
+   * /===/, "relationalExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.equalityExpression3 = 
   interpreterMethodFactory.group("equalityExpression", /===/, 
   "relationalExpression", function(ee, re) {return ee===re;});
   /**
-   * &lt;tt>group("equalityExpression", /!==/, "relationalExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("equalityExpression", 
+   * /!==/, "relationalExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.equalityExpression4 = 
   interpreterMethodFactory.group("equalityExpression", /!==/, 
   "relationalExpression", function(ee, re) {return ee!==re;});
   
   /**
-   * &lt;tt>or("logicalAndExpression1", "equalityExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("logicalAndExpression1", 
+   * "equalityExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.logicalAndExpression = 
   interpreterMethodFactory.or("logicalAndExpression1", "equalityExpression");
   /**
-   * &lt;tt>group("logicalAndExpression", /&amp;&amp;/, "deferredEqualityExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("logicalAndExpression", 
+   * /&amp;&amp;/, "deferredEqualityExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.logicalAndExpression1 = 
   interpreterMethodFactory.group("logicalAndExpression", /&amp;&amp;/, 
@@ -650,19 +703,21 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>methodFactory("equalityExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("equalityExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredEqualityExpression = 
   interpreterMethodFactory.methodFactory("equalityExpression");
   
   /**
-   * &lt;tt>or("logicalOrExpression1", "logicalAndExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("logicalOrExpression1", 
+   * "logicalAndExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.logicalOrExpression = 
   interpreterMethodFactory.or("logicalOrExpression1", "logicalAndExpression");
   /**
-   * &lt;tt>group("logicalOrExpression", /\|\|/, 
-   * "deferredLogicalAndExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("logicalOrExpression", 
+   * /\|\|/, "deferredLogicalAndExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.logicalOrExpression1 = 
   interpreterMethodFactory.group("logicalOrExpression", /\|\|/, 
@@ -672,18 +727,21 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>methodFactory("logicalAndExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("logicalAndExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredLogicalAndExpression = 
   interpreterMethodFactory.methodFactory("logicalAndExpression");
   
   /**
-   * &lt;tt>or("conditionalExpression1", "logicalOrExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("conditionalExpression1", 
+   * "logicalOrExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.conditionalExpression = 
   interpreterMethodFactory.or("conditionalExpression1", "logicalOrExpression");
   /**
-   * &lt;tt>group("logicalOrExpression", /\?/, "deferredAssignmentExpression", 
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("logicalOrExpression", 
+   * /\?/, "deferredAssignmentExpression", 
    * /:/, "deferredAssignmentExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.conditionalExpression1 = 
@@ -697,28 +755,31 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>methodFactory("assignmentExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("assignmentExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredAssignmentExpression = 
   interpreterMethodFactory.methodFactory("assignmentExpression");
   
   /**
-   * &lt;tt>or("assignmentExpression1", "assignmentExpression5", 
-   * "conditionalExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("assignmentExpression1", 
+   * "assignmentExpression5", "conditionalExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.assignmentExpression = 
   interpreterMethodFactory.or("assignmentExpression1", "assignmentExpression5", 
   "conditionalExpression");
   
   /**
-   * &lt;tt>group("leftHandSideExpression", /=/, "assignmentExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("leftHandSideExpression", 
+   * /=/, "assignmentExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.assignmentExpression1 = 
   interpreterMethodFactory.group("leftHandSideExpression", /=/, 
   "assignmentExpression", function(lhse, assignmentExpression) {
     return (lhse.base[lhse.name] = assignmentExpression);});
   /**
-   * &lt;tt>group("leftHandSideExpression", /\+=/, "assignmentExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("leftHandSideExpression", 
+   * /\+=/, "assignmentExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.assignmentExpression5 = 
   interpreterMethodFactory.group("leftHandSideExpression", /\+=/, 
@@ -737,19 +798,21 @@ JavaScriptInterpreter.hack = function() {
   // Statements
   
   /**
-   * &lt;tt>or("statement", "block")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("statement", "block")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.statementOrBlock = 
   interpreterMethodFactory.or("statement", "block");
   
   /**
-   * &lt;tt>methodFactory("statementOrBlock")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("statementOrBlock")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredStatementOrBlock = 
   interpreterMethodFactory.methodFactory("statementOrBlock");
   
   /**
-   * &lt;tt>wrap(/\{/, "statementList", /\}/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/\{/, "statementList", 
+   * /\}/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.block = 
   interpreterMethodFactory.wrap(/\{/, "statementList", /\}/);
@@ -770,15 +833,16 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>methodFactory("statementList")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("statementList")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredStatementList = 
   interpreterMethodFactory.methodFactory("statementList");
 
   /**
-   * &lt;tt>or("variableStatement", "ifStatement", "iterationStatement", 
-   * "returnStatement", "throwStatement", "functionDeclaration", 
-   * "expressionStatement")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("variableStatement", 
+   * "ifStatement", "iterationStatement", "returnStatement", "throwStatement", 
+   * "functionDeclaration", "expressionStatement")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.statement = 
   interpreterMethodFactory.or("variableStatement", "ifStatement", 
@@ -786,13 +850,15 @@ JavaScriptInterpreter.hack = function() {
   "functionDeclaration", "expressionStatement");
   
   /**
-   * &lt;tt>methodFactory("statement")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("statement")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredStatement = 
   interpreterMethodFactory.methodFactory("statement");
   
   /**
-   * &lt;tt>group(/var/, "variableDeclarationList", /;/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/var/, 
+   * "variableDeclarationList", /;/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.variableStatement = 
   interpreterMethodFactory.group(/var/, "variableDeclarationList", /;/, 
@@ -807,7 +873,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.plus("variableDeclaration", /,/);
   
   /**
-   * &lt;tt>group("bindingIdentifier", "initialiserOpt")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("bindingIdentifier", 
+   * "initialiserOpt")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.variableDeclaration = 
   interpreterMethodFactory.group("bindingIdentifier", 
@@ -817,7 +884,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>wrap(/=/, "assignmentExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/=/, 
+   * "assignmentExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.initialiser = 
   interpreterMethodFactory.wrap(/=/, "assignmentExpression");
@@ -831,7 +899,7 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group("expression", /;/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}("expression", /;/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.expressionStatement = 
   interpreterMethodFactory.group("expression", /;/, function() {
@@ -839,7 +907,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group(/if/, /\(/, "expression", /\)/, "deferredStatementOrBlock", 
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/if/, /\(/, "expression", 
+   * /\)/, "deferredStatementOrBlock", 
    * "deferredElseStatementOpt")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.ifStatement = 
@@ -854,22 +923,23 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>methodFactory("expression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("expression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredExpression = 
   interpreterMethodFactory.methodFactory("expression");
   
   /**
-   * &lt;tt>or("iterationStatement2", "iterationStatement4", 
-   * "iterationStatement6")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("iterationStatement2", 
+   * "iterationStatement4", "iterationStatement6")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement = 
   interpreterMethodFactory.or("iterationStatement2", "iterationStatement4", 
   "iterationStatement6");
   
   /**
-   * &lt;tt>group(/while/, /\(/, "deferredExpression", /\)/, 
-   * "deferredStatementOrBlock")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/while/, /\(/, 
+   * "deferredExpression", /\)/, "deferredStatementOrBlock")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement2 = 
   interpreterMethodFactory.group(/while/, /\(/, "deferredExpression", /\)/, 
@@ -885,9 +955,9 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group(/for/, /\(/, /var/, "variableDeclarationList", /;/, 
-   * "deferredExpression", /;/, "deferredExpression", /\)/, 
-   * "deferredStatementOrBlock")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/for/, /\(/, /var/, 
+   * "variableDeclarationList", /;/, "deferredExpression", /;/, 
+   * "deferredExpression", /\)/, "deferredStatementOrBlock")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement4 = 
   interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclarationList", 
@@ -905,7 +975,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group(/for/, /\(/, /var/, "variableDeclaration", /in/, "expression", 
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/for/, /\(/, /var/, 
+   * "variableDeclaration", /in/, "expression", 
    * /\)/, "deferredStatementOrBlock")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement6 = 
@@ -923,7 +994,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>methodFactory("elseStatementOpt")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("elseStatementOpt")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredElseStatementOpt = 
   interpreterMethodFactory.methodFactory("elseStatementOpt");
@@ -938,13 +1010,15 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>wrap(/else/, "statementOrBlock")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/else/, 
+   * "statementOrBlock")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.elseStatement = 
   interpreterMethodFactory.wrap(/else/, "statementOrBlock");
   
   /**
-   * &lt;tt>group(/return/, "expression", /;/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/return/, 
+   * "expression", /;/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.returnStatement = 
   interpreterMethodFactory.group(/return/, "expression", /;/, 
@@ -953,7 +1027,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>group(/throw/, "expression", /;/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/throw/, 
+   * "expression", /;/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.throwStatement = 
   interpreterMethodFactory.group(/throw/, "expression", /;/, 
@@ -964,7 +1039,8 @@ JavaScriptInterpreter.hack = function() {
   // Functions and programs
   
   /**
-   * &lt;tt>wrap("namedFunctionExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}
+   * ("namedFunctionExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.functionDeclaration = 
   interpreterMethodFactory.wrap("namedFunctionExpression", function() {
@@ -972,14 +1048,16 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>or("anonymousFunctionExpression", "namedFunctionExpression")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("anonymousFunctionExpression", 
+   * "namedFunctionExpression")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.functionExpression = 
   interpreterMethodFactory.or("anonymousFunctionExpression",
   "namedFunctionExpression");
   
   /**
-   * &lt;tt>group(/function/, "bindingIdentifier", 
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/function/, 
+   * "bindingIdentifier", 
    * "functionExpressionContent")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.namedFunctionExpression = 
@@ -992,13 +1070,15 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>wrap(/function/, "functionExpressionContent")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap}(/function/, 
+   * "functionExpressionContent")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.anonymousFunctionExpression = 
   interpreterMethodFactory.wrap(/function/, "functionExpressionContent");
   
   /**
-   * &lt;tt>group(/\(/, "formalParameterList", /\)/, /\{/, 
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}(/\(/, 
+   * "formalParameterList", /\)/, /\{/, 
    *   "functionBody", 
    * /\}/)&lt;/tt>
    */
@@ -1045,7 +1125,8 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.useStrictDeclarationOpt = 
   interpreterMethodFactory.opt("useStrictDeclaration");
   /**
-   * &lt;tt>group(/('use strict')|("use strict")/, /;/)&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#group|group}
+   * (/('use strict')|("use strict")/, /;/)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.useStrictDeclaration = 
   interpreterMethodFactory.group(/('use strict')|("use strict")/, /;/);
@@ -1080,13 +1161,14 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.insignificant("spaces", "sourceElements");
   
   /**
-   * &lt;tt>or("statementList")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#or|or}("statementList")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.sourceElements = 
   interpreterMethodFactory.or("statementList");
   
   /**
-   * &lt;tt>methodFactory("sourceElements")&lt;/tt>
+   * &lt;tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
+   * ("sourceElements")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.deferredSourceElements = 
   interpreterMethodFactory.methodFactory("sourceElements");
@@ -1110,7 +1192,7 @@ JavaScriptInterpreter.hack();
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 07 2017 23:18:37 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 08 2017 01:15:25 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
