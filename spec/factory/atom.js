@@ -1,3 +1,6 @@
+/**
+ * @name atomUnitTests
+ */
 describe("An atom", function() {
   
   var interpreter;

@@ -1,3 +1,6 @@
+/**
+ * @name longestUnitTests
+ */
 describe("The longest nonterminal", function() {
   
   var f;

@@ -530,6 +530,8 @@ InterpreterMethodFactory.prototype
  * Otherwise the parsed string will be returned. 
  * @returns {external:InterpreterObject#atomTypeInterpreterMethod}
  * An interpreter method that parses a regular expression. 
+ * @see {@link atomUnitTests}
+ * @see {@link butNotUnitTests}
  */
 InterpreterMethodFactory.prototype
 .atom = function(regex, interpretationOrButNot) {
@@ -567,6 +569,8 @@ InterpreterMethodFactory.prototype
    * @returns {*} User defined. 
    * The value returned by the interpretation will also be the return value of 
    * its interpreter method. 
+   * @see {@link atomUnitTests}
+   * @see {@link butNotUnitTests}
    */
   var interpretation;
   var butNot;
@@ -605,6 +609,8 @@ InterpreterMethodFactory.prototype
    * @returns {InterpreterMethodResult} The parsed string or, if it is defined 
    * with an interpretation, the result of calling the interpretation as if it 
    * was a method of the same object with the parsed string. 
+   * @see {@link atomUnitTests}
+   * @see {@link butNotUnitTests}
    */
   return this.makeMethod(function(codePointer, interpreter) {
     var match = that
@@ -646,6 +652,7 @@ InterpreterMethodFactory.prototype
  * interpreter method.
  * @returns {external:InterpreterObject#emptyTypeInterpreterMethod} A 
  * nonparsing interpreter method. 
+ * @see {@link emptyUnitTests}
  */
 InterpreterMethodFactory.prototype
 .empty = function(interpretation) {
@@ -668,7 +675,8 @@ InterpreterMethodFactory.prototype
    * @returns {InterpreterMethodResult} The result of calling the 
    * interpretation callback function passed to 
    * {@link InterpreterMethodFactory#empty} when constructing this 
-   * interpreter method as if it was a method of the same object. 
+   * interpreter method as if it was a method of the same object.
+   * @see {@link emptyUnitTests} 
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     return interpretation;
@@ -740,6 +748,7 @@ InterpreterMethodFactory.prototype
  * @returns {external:InterpreterObject#groupTypeInterpreterMethod} 
  * An interpreter method that parses and interprets a group consisting of 
  * regular expressions and other interpreter methods. 
+ * @see {@link groupUnitTests}
  */
 InterpreterMethodFactory.prototype
 .group = function() {
@@ -760,6 +769,7 @@ InterpreterMethodFactory.prototype
    * @returns {*} User defined. 
    * The value returned by the interpretation will also be the return value of 
    * its interpreter method. 
+   * @see {@link groupUnitTests}
    */
   var interpretation;
   var p = {
@@ -807,6 +817,7 @@ InterpreterMethodFactory.prototype
    * {@link InterpreterMethodFactory#MultiPropertyObject}-like object 
    * or the result of calling the interpretation with the result of its
    * {@link part}s. 
+   * @see {@link groupUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     if(!factory.skipRegexes(codePointer, leadingRegexes, interpreter)){
@@ -1006,7 +1017,8 @@ InterpreterMethodFactory.prototype.select = function(index) {
  * Otherwise the result of the part will be returned, untouched. 
  * @returns {external:InterpreterObject#wrapTypeInterpreterMethod}
  * An interpreter method that can wrap its {@link part} in regular expressions 
- * and/or interpret the result of its part further.
+ * and/or interpret the result of its part further. 
+ * @see {@link wrapUnitTests}
  */
 InterpreterMethodFactory.prototype.wrap = function() {
   "use strict";
@@ -1039,6 +1051,7 @@ InterpreterMethodFactory.prototype.wrap = function() {
    * @returns {*} User defined. 
    * The value returned by the interpretation will also be the return value of 
    * its interpreter method. 
+   * @see {@link wrapUnitTests}
    */
   var interpretation = arguments[p.i++];
   
@@ -1072,6 +1085,7 @@ InterpreterMethodFactory.prototype.wrap = function() {
    * {@link InterpreterMethodFactory#MultiPropertyObject}-like object 
    * or the result of calling the interpretation with the result of its
    * {@link part}s. 
+   * @see {@link wrapUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction;
@@ -1121,6 +1135,7 @@ InterpreterMethodFactory.prototype.functionReturning = function(value) {
  * {@link part}s of the returned interpreter method.
  * @returns {external:InterpreterObject#orTypeInterpreterMethod} An interpreter 
  * method that can choose between alternaitves. 
+ * @see {@link orUnitTests}
  */
 InterpreterMethodFactory.prototype.or = function() {
   var factory = this;
@@ -1146,6 +1161,7 @@ InterpreterMethodFactory.prototype.or = function() {
    * {@link external:InterpreterObject#interpreterMethod}. 
    * @returns {InterpreterMethodResult} The result of the {@link part} that 
    * parsed successfully.
+   * @see {@link orUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction = null;
@@ -1316,7 +1332,8 @@ InterpreterMethodFactory.prototype
  * @returns {external:InterpreterObject#methodFactoryTypeInterpreterMethod} 
  * An interpreter method that returns a function that does the same thing as 
  * the named {@link part} would have done, but with the posibility to run its 
- * descendant interpretations with another <tt>this</tt> binding.
+ * descendant interpretations with another <tt>this</tt> binding. 
+ * @see {@link methodFactoryUnitTests}
  */
 InterpreterMethodFactory.prototype
 .methodFactory = function(name) {
@@ -1346,6 +1363,7 @@ InterpreterMethodFactory.prototype
    * @returns {function} A method that does the same thing as the {@link part} 
    * would have, but with the possibility to do it with another <tt>this</tt> 
    * binding. 
+   * @see {@link methodFactoryUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var instructionToDeferre = factory

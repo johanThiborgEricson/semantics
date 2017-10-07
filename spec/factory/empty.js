@@ -1,3 +1,6 @@
+/**
+ * @name emptyUnitTests
+ */
 describe("The empty string atom", function() {
   var interpreter;
   var f;

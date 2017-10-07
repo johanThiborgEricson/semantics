@@ -1,3 +1,6 @@
+/**
+ * @name methodFactoryUnitTests
+ */
 describe("A method factory", function() {
   var f;
   var interpreter;

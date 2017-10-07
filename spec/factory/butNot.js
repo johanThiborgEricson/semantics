@@ -1,3 +1,6 @@
+/**
+ * @name butNotUnitTests
+ */
 describe("A but not specification of an atom", function() {
   
   var f;

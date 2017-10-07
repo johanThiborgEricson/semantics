@@ -1,3 +1,6 @@
+/**
+ * @name orUnitTests
+ */
 describe("An or", function() {
   var f;
   var i;
