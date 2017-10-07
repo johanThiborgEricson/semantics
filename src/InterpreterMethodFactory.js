@@ -11,8 +11,8 @@
  * Interpreter methods of an interpreter object are built in terms of each 
  * other.
  * This is accomplished by defining an interpreter method by giving the  
- * {@link interpreterMethodName}s of the other interpreter methods it consists 
- * of.
+ * {@link interpreterMethodName}s of the other interpreter methods it should 
+ * consist of, its {@part}s. 
  * It can be thought of as a tree where the root interpreter method is made out 
  * of child interpreter methods, which are in turn made out of other 
  * interpreter methods, and so on, all the way down to the leafs, which are 
@@ -942,6 +942,62 @@ InterpreterMethodFactory.prototype.select = function(index) {
   
 };
 
+/**
+ * <p>
+ * The wrap interpreter method factory accepts any number of leading regular 
+ * expressions, followed by an {@link interpreterMethodName}, followed by any 
+ * number of trailing regular expressions and optionally a 
+ * {@link external:ThisBinding#wrapInterpretation} callback function.
+ * The returned {@link external:InterpreterObject#wrapTypeInterpreterMethod} 
+ * parses the leading regular expression from the text, parses its part and 
+ * parses the trailing regular expressions. 
+ * If something fails to parse, the whole method fails to parse, and the 
+ * pointer is restored to the point in the text where it started.
+ * If everything succeeds to parse it runs its part and remembers the result. 
+ * If it was made without an interpretation, it returns the result of its part. 
+ * Otherwise it calls its interpretation with the result as if it was a method 
+ * of the same object, i. e. with <tt>this</tt> bound to its object inside the 
+ * body of the interpretation.
+ * <p></p>
+ * Wrap type interpreter methods without interpretations are useful for 
+ * language constructs that always contains only one part, followed and/or 
+ * trailed by exact strings, like a punctators or reserved words. 
+ * Such exact strings only serves as indicators of what their {@link part} is; 
+ * which one of the interpreter methods should be used to interpret it, but 
+ * they don't carry any meaning in themselves, so the result of the part can 
+ * be returned without further interpretation.
+ * <p></p>
+ * Wrap type interpreter methods with interpretations but no regular 
+ * expressions are useful for language custructs that has the same syntax, but 
+ * should be interpreted in different ways. 
+ * Then, often, it is possible for one of the interpreter methods to reuse the 
+ * interpretation of the other interpreter. 
+ * In such case, the first interpreter method should be a wrap of the second 
+ * one, with an interpretation describing how it should further refine the 
+ * result of the first one.
+ * <p></p>
+ * Wrap type interpreter methods defined with both regular expression(s) and an 
+ * interpretation are fine, but avoid such methods both without regular 
+ * expressions and interpretation.
+ * The prefered way to achieve that functionality is using 
+ * {@link InterpreterMethodFactory#or} with only one {@link part}
+ * </p>
+ * @param {...RegExp} [leadingRegexes] - These regular expressions will be 
+ * skiped over by the returned interpreter method, before its part have parsed. 
+ * @param {interpreterMethodName} partName - The only {@link part} of the 
+ * returned interpreter method.
+ * @param {...RegExp} [trailingRegexes] - Regular expressions to be skiped over 
+ * by the returned interpreter method, after its part have been parsed.
+ * @param {external:ThisBinding#wrapInterpretation} [interpretation] -
+ * An optional callback function describing how the result of the part should 
+ * be interpreted. 
+ * If pressent, the result of this function will also be the result of the 
+ * interpreter method. 
+ * Otherwise the result of the part will be returned, untouched. 
+ * @returns {external:InterpreterObject#wrapTypeInterpreterMethod}
+ * An interpreter method that can wrap its {@link part} in regular expressions 
+ * and/or interpret the result of its part further.
+ */
 InterpreterMethodFactory.prototype.wrap = function() {
   "use strict";
   var factory = this;
@@ -951,8 +1007,19 @@ InterpreterMethodFactory.prototype.wrap = function() {
   var leadingRegexes = this.readRegexesFromArguments(arguments, p);
   var partName = arguments[p.i++];
   var trailingRegexes = this.readRegexesFromArguments(arguments, p);
+  
+  /**
+   * @method external:ThisBinding#wrapInterpretation
+   * @todo Describe me!
+   * @description Description.
+   */
   var interpretation = arguments[p.i++];
   
+  /**
+   * @method external:InterpreterObject#wrapTypeInterpreterMethod
+   * @todo Describe me!
+   * @description Description.
+   */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction;
     if(factory.skipRegexes(codePointer, leadingRegexes, interpreter) && 
@@ -978,6 +1045,10 @@ InterpreterMethodFactory.prototype.functionReturning = function(value) {
 
 };
 
+/**
+ * @todo Describe me!
+ * 
+ */
 InterpreterMethodFactory.prototype.or = function() {
   var factory = this;
   var alternativesNames = arguments;
