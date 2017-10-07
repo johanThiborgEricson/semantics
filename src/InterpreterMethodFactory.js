@@ -1010,15 +1010,58 @@ InterpreterMethodFactory.prototype.wrap = function() {
   
   /**
    * @method external:ThisBinding#wrapInterpretation
-   * @todo Describe me!
-   * @description Description.
+   * @description A wrap interpretation is a callback function passed to 
+   * {@link InterpreterMethodFactory#wrap} along with optional leading regular 
+   * expressions, a mandatory {@link interpreterMethodName} of its only 
+   * {@link part} and optional trailing regular expressions. 
+   * It describes how the resulting  
+   * {@link external:InterpreterObject#wrapTypeInterpreterMethod} should 
+   * interpret the result of its part. 
+   * It is meant to be thought of as a special kind of method of the same 
+   * object as its interpreter method, with the added ability to, before it is 
+   * called, compute the argument it should be called with. 
+   * It computes its argument by skiping over any text parsed by the leading 
+   * regular expressions, then computing the argument as the result of letting 
+   * its part parse from there, and finally skipping over the text parsed by 
+   * the trailing regular expressions. 
+   * @param {InterpreterMethodResult} partResult - The result of the only  
+   * {@link part} of the interpretations interpreter method.
+   * @returns {*} User defined. 
+   * The value returned by the interpretation will also be the return value of 
+   * its interpreter method. 
    */
   var interpretation = arguments[p.i++];
   
   /**
    * @method external:InterpreterObject#wrapTypeInterpreterMethod
-   * @todo Describe me!
-   * @description Description.
+   * @description <p>
+   * A wrap type interpreter method is a type of 
+   * {@link external:InterpreterObject#interpreterMethod} 
+   * that parses another interpreter function, possibly surrounded by padding 
+   * text that can be parsed by optional leading and trailing regular 
+   * expressions defined in its factory {@link InterpreterMethodFactory#wrap}. 
+   * If any of these fails to parse, then the whole interpreter method fails to 
+   * parse and the text pointer is restored to where it was when the method 
+   * started to parse. 
+   * Also, no interpretations of its descendant {@link part}s are run until 
+   * the the whole interpreter method is successfully parsed.
+   * </p><p> 
+   * If the interpreter method was made with an 
+   * {@link external:ThisBinding#wrapInterpretation}, it will call that with 
+   * the result of its {@link part}, and return the result. The interpretation 
+   * will be called with <tt>this</tt> bound to the object of the interpreter 
+   * method. 
+   * Otherwise it will return the result of its part, untouched.
+   * </p>
+   * @param {string} text - The text to be parsed by the {@link part}, possibly 
+   * surrounded by text that is to be parsed by the optional leading and 
+   * trailing regular expressions.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}. 
+   * @returns {InterpreterMethodResult} An 
+   * {@link InterpreterMethodFactory#MultiPropertyObject}-like object 
+   * or the result of calling the interpretation with the result of its
+   * {@link part}s. 
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction;

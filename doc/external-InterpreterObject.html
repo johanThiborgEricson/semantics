@@ -1198,7 +1198,7 @@ change).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1223">line 1223</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1266">line 1266</a>
     </li></ul></dd>
     
 
@@ -1256,7 +1256,7 @@ binding.
     
 
     
-    <h4 class="name" id="wrapTypeInterpreterMethod"><span class="type-signature"></span>wrapTypeInterpreterMethod<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="wrapTypeInterpreterMethod"><span class="type-signature"></span>wrapTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a>}</span></h4>
     
 
     
@@ -1264,7 +1264,25 @@ binding.
 
 
 <div class="description">
-    Description.
+    <p>
+A wrap type interpreter method is a type of 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> 
+that parses another interpreter function, possibly surrounded by padding 
+text that can be parsed by optional leading and trailing regular 
+expressions defined in its factory <a href="InterpreterMethodFactory.html#wrap">InterpreterMethodFactory#wrap</a>. 
+If any of these fails to parse, then the whole interpreter method fails to 
+parse and the text pointer is restored to where it was when the method 
+started to parse. 
+Also, no interpretations of its descendant <a href="global.html#part">part</a>s are run until 
+the the whole interpreter method is successfully parsed.
+</p><p> 
+If the interpreter method was made with an 
+<a href="external-ThisBinding.html#wrapInterpretation">external:ThisBinding#wrapInterpretation</a>, it will call that with 
+the result of its <a href="global.html#part">part</a>, and return the result. The interpretation 
+will be called with <tt>this</tt> bound to the object of the interpreter 
+method. 
+Otherwise it will return the result of its part, untouched.
+</p>
 </div>
 
 
@@ -1273,6 +1291,101 @@ binding.
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The text to be parsed by the <a href="global.html#part">part</a>, possibly 
+surrounded by text that is to be parsed by the optional leading and 
+trailing regular expressions.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>printDebuggingMessages</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">See 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1308,7 +1421,7 @@ binding.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1018">line 1018</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1035">line 1035</a>
     </li></ul></dd>
     
 
@@ -1316,13 +1429,6 @@ binding.
 
     
 
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>Describe me!</li>
-        </ul>
-    </dd>
     
 </dl>
 
@@ -1338,6 +1444,31 @@ binding.
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An 
+<a href="InterpreterMethodFactory_MultiPropertyObject.html">InterpreterMethodFactory#MultiPropertyObject</a>-like object 
+or the result of calling the interpretation with the result of its
+<a href="global.html#part">part</a>s.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1365,7 +1496,7 @@ binding.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 07 2017 09:51:47 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 07 2017 12:14:01 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
