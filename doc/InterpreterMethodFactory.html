@@ -100,7 +100,7 @@ created by the user.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line292">line 292</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line293">line 293</a>
     </li></ul></dd>
     
 
@@ -173,8 +173,9 @@ created by the user.</div>
 <a href="external-InterpreterObject.html#atomTypeInterpreterMethod">external:InterpreterObject#atomTypeInterpreterMethod</a> meant to be an 
 interpreter method of a user created <a href="external-InterpreterObject.html">external:InterpreterObject</a>.
 The returned method parses text with the supplied regular expression. 
-Optionally, an {external:ThisBinding#atomInterpretation} callback function 
-may be supplied to describe how the parsed text should be interpreted. 
+Optionally, an <a href="external-ThisBinding.html#atomInterpretation">external:ThisBinding#atomInterpretation</a> callback 
+function may be supplied to describe how the parsed text should be 
+interpreted. 
 The interpretation will be run as if it was a method of the interpreter 
 object, i. e. <tt>this</tt> will be bound to the interpreter object inside 
 the interpretation body.
@@ -351,7 +352,7 @@ Otherwise the parsed string will be returned.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line532">line 532</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line534">line 534</a>
     </li></ul></dd>
     
 
@@ -523,7 +524,7 @@ interpreter method.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line648">line 648</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line650">line 650</a>
     </li></ul></dd>
     
 
@@ -588,7 +589,8 @@ nonparsing interpreter method.
 
 
 <div class="description">
-    The group interpreter method factory accepts any number of 
+    <p>
+The group interpreter method factory accepts any number of 
 <a href="global.html#interpreterMethodName">interpreterMethodName</a>s and regular expressions in any order as 
 arguments and creates a 
 <a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a> meant to be a 
@@ -596,6 +598,7 @@ method of an <a href="external-InterpreterObject.html">external:InterpreterObjec
 The returned method parses the supplied regular expressions and the 
 <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s named by 
 the interpreter method names, in the specified order. 
+</p><p>
 It is possible to describe how the returned method should interpret the 
 results of its <a href="global.html#part">part</a>s by supplying an 
 <a href="external-ThisBinding.html#groupInterpretation">external:ThisBinding#groupInterpretation</a> callback function.
@@ -606,6 +609,7 @@ If an interpretation is supplied, the result of the interpretation will also
 be the result of the metod. Otherwise the method will return an object 
 with properties with the same name as the names of the <a href="global.html#part">part</a>s that 
 holds the results of the respective <a href="global.html#part">part</a>s.
+</p>
 </div>
 
 
@@ -752,7 +756,7 @@ Otherwise it will return an object with the result of its <a href="global.html#p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line735">line 735</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line744">line 744</a>
     </li></ul></dd>
     
 
@@ -817,17 +821,20 @@ regular expressions and other interpreter methods.
 
 
 <div class="description">
-    This method takes an <a href="global.html#interpreterMethodName">interpreterMethodName</a> and returns an 
+    <p>
+This method takes an <a href="global.html#interpreterMethodName">interpreterMethodName</a> and returns an 
 <a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a>
 meant to be a method of an <a href="external-InterpreterObject.html">external:InterpreterObject</a>.
 When called, a method factory type interpreter method returns a function 
 that does exactely the same thing as the named <a href="global.html#part">part</a> would have done, 
 but with the possibility to run the descendant interpretations with another 
 <a href="external-ThisBinding.html">external:ThisBinding</a>. 
+</p><p>
 This type of <a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>s are 
 useful for implementing e. g. functions or loops, for setting another object 
 then the interpreter as the this binding and for running the parsed 
-instruction many times without having to parse it each time.
+instruction many times without having to parse it each time. 
+</p>
 </div>
 
 
@@ -921,7 +928,7 @@ the function returned by the interpreter method will run.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1262">line 1262</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1275">line 1275</a>
     </li></ul></dd>
     
 
@@ -1027,7 +1034,7 @@ descendant interpretations with another <tt>this</tt> binding.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1095">line 1095</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1105">line 1105</a>
     </li></ul></dd>
     
 
@@ -1327,7 +1334,7 @@ Otherwise the result of the part will be returned, untouched.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1001">line 1001</a>
+        <a href="InterpreterMethodFactory.js.html">InterpreterMethodFactory.js</a>, <a href="InterpreterMethodFactory.js.html#line1011">line 1011</a>
     </li></ul></dd>
     
 
@@ -1400,7 +1407,7 @@ and/or interpret the result of its part further.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 07 2017 12:14:01 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Oct 07 2017 13:05:45 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,11 +1,4 @@
-atom link
-methodFactory paragraphs
-group paragraphs
-group interpretation, elaborate, link part in param, linebreak in returns.
-InterpreterMehtodResult describe its purpose, to clarify the flow of 
-  information.
+group interpretation, elaborate.
 group returns called as if it was a method
-group param text clarify that this is what will be parse be the regexes and 
-  parts
-file variants of interpreter methods see also 
-  external:InterpreterObject#interpreterMethod.
+atom more lively description of what the interpretation is meant to be thought 
+   of as.

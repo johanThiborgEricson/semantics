@@ -38,6 +38,7 @@
  * interpretation.
  * It is perfectly fine to use both variants of interpreter methods in the same 
  * interpreter, as convenient. 
+ * See also {@link external:InterpreterObject#interpreterMethod}.
  * </p><p>
  * Interpretations are meant to be thought of as a kind of methods of the 
  * interpreter object, but with added ability to parse text and be built in 
@@ -512,8 +513,9 @@ InterpreterMethodFactory.prototype
  * {@link external:InterpreterObject#atomTypeInterpreterMethod} meant to be an 
  * interpreter method of a user created {@link external:InterpreterObject}.
  * The returned method parses text with the supplied regular expression. 
- * Optionally, an {external:ThisBinding#atomInterpretation} callback function 
- * may be supplied to describe how the parsed text should be interpreted. 
+ * Optionally, an {@link external:ThisBinding#atomInterpretation} callback 
+ * function may be supplied to describe how the parsed text should be 
+ * interpreted. 
  * The interpretation will be run as if it was a method of the interpreter 
  * object, i. e. <tt>this</tt> will be bound to the interpreter object inside 
  * the interpretation body.
@@ -688,6 +690,10 @@ InterpreterMethodFactory.prototype
  * This will either be some kind of container for the results of the 
  * {@link part}s of the interpreter method, or a user defined result of an 
  * interpretation, which may have any type. 
+ * The purpose of this type definition is to explain the values that are 
+ * returned by interpreter methods in type dependent containers, if they have 
+ * no interpretation, or passed as arguments to their interpretation, if they 
+ * have one.
  */
 
 /**
@@ -701,6 +707,7 @@ InterpreterMethodFactory.prototype
  */
 
 /**
+ * <p>
  * The group interpreter method factory accepts any number of 
  * {@link interpreterMethodName}s and regular expressions in any order as 
  * arguments and creates a 
@@ -709,6 +716,7 @@ InterpreterMethodFactory.prototype
  * The returned method parses the supplied regular expressions and the 
  * {@link external:InterpreterObject#interpreterMethod}s named by 
  * the interpreter method names, in the specified order. 
+ * </p><p>
  * It is possible to describe how the returned method should interpret the 
  * results of its {@link part}s by supplying an 
  * {@link external:ThisBinding#groupInterpretation} callback function.
@@ -719,6 +727,7 @@ InterpreterMethodFactory.prototype
  * be the result of the metod. Otherwise the method will return an object 
  * with properties with the same name as the names of the {@link part}s that 
  * holds the results of the respective {@link part}s.
+ * </p>
  * @param {...(interpreterMethodName|RegExp)} parsable - A name of an 
  * interpreter metod on the same object or a regular expression that should be 
  * parsed. 
@@ -746,11 +755,11 @@ InterpreterMethodFactory.prototype
    * {@link external:ThisBinding}. 
    * The interpretation is called with the results of the {@link part}s of the 
    * interpreter method. 
-   * @param {...InterpreterMethodResult} partResults - The results of the parts 
-   * of the method. 
+   * @param {...InterpreterMethodResult} partResults - The results of the 
+   * {@link part}s of the method. 
    * @returns {*} User defined. 
-   * The value returned by the interpretation will 
-   * also be the return value of its interpreter method. 
+   * The value returned by the interpretation will also be the return value of 
+   * its interpreter method. 
    */
   var interpretation;
   var p = {
@@ -790,7 +799,8 @@ InterpreterMethodFactory.prototype
    * {@link InterpreterMethodFactory#MultiPropertyObject}-like object with 
    * properties named as the {@link interpreterMethodName}s containing 
    * the results of the {@link part}s of the method. 
-   * @param {string} text - The text to be interpreted. 
+   * @param {string} text - The text to be parsed by the {@link part}s and 
+   * the regular expressions.
    * @param {boolean} [printDebuggingMessages] - See 
    * {@link external:InterpreterObject#interpreterMethod}. 
    * @returns {InterpreterMethodResult} An 
@@ -885,7 +895,7 @@ InterpreterMethodFactory.prototype.MultiPropertyObject = function() {
    * to the array. 
    * @param {interpreterMethodName} name - The name of the property to be 
    * appended. 
-   * @param {InterpreterMethodResult} partResult - The result of a {@link part} 
+   * @param {InterpreterMethodResult} value - The result of a {@link part} 
    * of the interpreter method. 
    */
   this.appendProperty = function(name, partResult) {
@@ -1241,6 +1251,7 @@ InterpreterMethodFactory.prototype
 };
 
 /**
+ * <p>
  * This method takes an {@link interpreterMethodName} and returns an 
  * {@link external:InterpreterObject#methodFactoryTypeInterpreterMethod}
  * meant to be a method of an {@link external:InterpreterObject}.
@@ -1248,10 +1259,12 @@ InterpreterMethodFactory.prototype
  * that does exactely the same thing as the named {@link part} would have done, 
  * but with the possibility to run the descendant interpretations with another 
  * {@link external:ThisBinding}. 
+ * </p><p>
  * This type of {@link external:InterpreterObject#interpreterMethod}s are 
  * useful for implementing e. g. functions or loops, for setting another object 
  * then the interpreter as the this binding and for running the parsed 
  * instruction many times without having to parse it each time. 
+ * </p> 
  * @param {interpreterMethodName} partName - The name of the {@link part} that 
  * the function returned by the interpreter method will run.
  * @returns {external:InterpreterObject#methodFactoryTypeInterpreterMethod} 
