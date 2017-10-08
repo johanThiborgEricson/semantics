@@ -1,8 +1,3 @@
 typedef {interpreterMethod} decsendant.
-or param alternatives > 80.
 all param is new paragraph
-UsageExampleJavaScriptInterpreter interpreterMethod(/part/, "part") =>
-  interpreterMethod (/part/, "part")
 semantics/src/README.md => semantics/JSDocREADME.md
-UsageExampleJavaScriptInterpreter interpreterMethod (/part/, "part") =>
-  interpreterMethod (/part/, "part", function(part) {...})
