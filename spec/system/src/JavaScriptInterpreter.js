@@ -302,7 +302,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\[/, "elementList", /\]/);
   
   /**
-   * <tt>star("assignmentExpression", /,/)</tt>
+   * <tt>{@link InterpreterMethodFactory#star|star} ("assignmentExpression", 
+   * /,/)</tt>
    */
   JavaScriptInterpreter.prototype.elementList = 
   interpreterMethodFactory.star("assignmentExpression", /,/);
@@ -325,7 +326,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * <tt>star("propertyAssignment", /,/)</tt>
+   * <tt>{@link InterpreterMethodFactory#star|star} ("propertyAssignment", 
+   * /,/)</tt>
    */
   JavaScriptInterpreter.prototype.propertyNameAndValueList = 
   interpreterMethodFactory.star("propertyAssignment", /,/);
@@ -483,7 +485,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\(/, "argumentList", /\)/);
   
   /**
-   * <tt>star("assignmentExpression", /,/)</tt>
+   * <tt>{@link InterpreterMethodFactory#star|star} ("assignmentExpression", 
+   * /,/)</tt>
    */
   JavaScriptInterpreter.prototype.argumentList = 
   interpreterMethodFactory.star("assignmentExpression", /,/);
@@ -823,7 +826,8 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\{/, "statementList", /\}/);
   
   /**
-   * <tt>star("deferredStatement", function(deferredStatements) {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#star|star} ("deferredStatement", 
+   * function(deferredStatements) {...})</tt>
    */
   JavaScriptInterpreter.prototype.statementList = 
   interpreterMethodFactory.star("deferredStatement", 
@@ -1117,7 +1121,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * <tt>star("bindingIdentifier", /,/)</tt>
+   * <tt>{@link InterpreterMethodFactory#star|star} ("bindingIdentifier", 
+   * /,/)</tt>
    */
   JavaScriptInterpreter.prototype.formalParameterList = 
   interpreterMethodFactory.star("bindingIdentifier", /,/);

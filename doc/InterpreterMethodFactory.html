@@ -1150,7 +1150,7 @@ the function returned by the interpreter method will run.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1327">line 1327</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1439">line 1439</a>
     </li></ul></dd>
     
 
@@ -1401,6 +1401,289 @@ method that can choose between alternaitves.
     
 
 
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="star"><span class="type-signature"></span>star<span class="signature">(partName, delimiter<span class="signature-attributes">opt</span>, interpretation<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#starTypeInterpreterMethod">external:InterpreterObject#starTypeInterpreterMethod</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>
+The star interpreter method takes a <a href="global.html#interpreterMethodName">interpreterMethodName</a>, an 
+optional delimiter regular expression, and an optional 
+<a href="external-ThisBinding.html#starInterpretation">external:ThisBinding#starInterpretation</a> and produces a
+<a href="external-InterpreterObject.html#starTypeInterpreterMethod">external:InterpreterObject#starTypeInterpreterMethod</a> meant to be 
+put on a user created <a href="external-InterpreterObject.html">external:InterpreterObject</a>. This is a 
+quantifier type interpretation method that parses zero or more of the 
+<a href="global.html#part">part</a> indicated by the <a href="global.html#interpreterMethodName">interpreterMethodName</a>, with the 
+option to parse delimiting regular expressions between them. 
+The results are put in an array that either is returned or supplied to the 
+interpretation, if there is one.
+</p><p>
+If a interpretation is supplied, that interpretation is meant to be thougt of 
+as a method with the special abillity to compute the argument it is called 
+with by letting its part repeatedly parse the texts, as many times as it 
+can, and then letting an array of the result of the parsings be its 
+argument. 
+More specifically, this means that <tt>this</tt> will be bound to the object 
+of its interpreter method inside its body, and also that its result will 
+also be the result of its interpreter method.
+</p><p>
+Note that this interpreter method cannot fail to parse. If it can't parse 
+its part at all, it successfully returns (or calls its interpretation with) 
+an empty array.
+</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>partName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#interpreterMethodName">interpreterMethodName</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Indicates the <a href="global.html#part">part</a> that 
+should be quantified.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delimiter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">RegExp</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A regular expression that should be parsed 
+between the parsings of its part. Think 
+<tt>String.prototype.split</tt>, but with a regex.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interpretation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external-ThisBinding.html#starInterpretation">external:ThisBinding#starInterpretation</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A 
+callback function describing how the results of repeatedly parsing its part 
+should be interpreted. 
+Inside its body, <tt>this</tt> will be bound to the object of its 
+interpreter method.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1247">line 1247</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="global.html#starUnitTests">starUnitTests</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An 
+interpreter method parsing its part as many times as it can, possibly 
+parsing delimiters in between, and possibly interpreting their results.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="external-InterpreterObject.html#starTypeInterpreterMethod">external:InterpreterObject#starTypeInterpreterMethod</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var f = new InterpreterMethodFactory();
+// interpreter.aStar is the Semantics! equivalent of /(a*)/
+// (Ignore the parentheses, its just not posible to document a regex ending
+// with an asterisk in a JavaScript multiline comment.)
+var interpreter = {a: f.atom(/a/), aStar: f.star("a")};
+return interpreter.aStar("aa"); // ["a", "a"]</code></pre>
 
 
 
@@ -1749,7 +2032,7 @@ and/or interpret the result of its part further.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 08 2017 13:49:09 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 08 2017 20:18:13 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

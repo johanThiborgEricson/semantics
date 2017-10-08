@@ -1,3 +1,6 @@
 typedef {interpreterMethod} decsendant.
 all param is new paragraph
 semantics/src/README.md => semantics/JSDocREADME.md
+group example /(ab)/
+group interpretation elaborate.
+interpreter method move to makeMethod.

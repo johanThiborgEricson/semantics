@@ -1194,10 +1194,86 @@ InterpreterMethodFactory.prototype.longest = function() {
   });
 };
 
+/**
+ * <p>
+ * The star interpreter method takes a {@link interpreterMethodName}, an 
+ * optional delimiter regular expression, and an optional 
+ * {@link external:ThisBinding#starInterpretation} and produces a
+ * {@link external:InterpreterObject#starTypeInterpreterMethod} meant to be 
+ * put on a user created {@link external:InterpreterObject}. This is a 
+ * quantifier type interpretation method that parses zero or more of the 
+ * {@link part} indicated by the {@link interpreterMethodName}, with the 
+ * option to parse delimiting regular expressions between them. 
+ * The results are put in an array that either is returned or supplied to the 
+ * interpretation, if there is one.
+ * </p><p>
+ * If a interpretation is supplied, that interpretation is meant to be thougt of 
+ * as a method with the special abillity to compute the argument it is called 
+ * with by letting its part repeatedly parse the texts, as many times as it 
+ * can, and then letting an array of the result of the parsings be its 
+ * argument. 
+ * More specifically, this means that <tt>this</tt> will be bound to the object 
+ * of its interpreter method inside its body, and also that its result will 
+ * also be the result of its interpreter method.
+ * </p><p>
+ * Note that this interpreter method cannot fail to parse. If it can't parse 
+ * its part at all, it successfully returns (or calls its interpretation with) 
+ * an empty array.
+ * </p>
+ * 
+ * @param {interpreterMethodName} partName - Indicates the {@link part} that 
+ * should be quantified.
+ * @param {RegExp} [delimiter] - A regular expression that should be parsed 
+ * between the parsings of its part. Think 
+ * <tt>String.prototype.split</tt>, but with a regex.
+ * @param {external:ThisBinding#starInterpretation} [interpretation] - A 
+ * callback function describing how the results of repeatedly parsing its part 
+ * should be interpreted. 
+ * Inside its body, <tt>this</tt> will be bound to the object of its 
+ * interpreter method.
+ * @returns {external:InterpreterObject#starTypeInterpreterMethod} An 
+ * interpreter method parsing its part as many times as it can, possibly 
+ * parsing delimiters in between, and possibly interpreting their results.
+ * 
+ * @example 
+ * var f = new InterpreterMethodFactory();
+ * // interpreter.aStar is the Semantics! equivalent of /(a*)/
+ * // (Ignore the parentheses, its just not posible to document a regex ending
+ * // with an asterisk in a JavaScript multiline comment.)
+ * var interpreter = {a: f.atom(/a/), aStar: f.star("a")};
+ * return interpreter.aStar("aa"); // ["a", "a"]
+ * @see {@link starUnitTests}
+ */
 InterpreterMethodFactory.prototype
 .star = function(partName) {
   "use strict";
   var factory = this;
+  
+  /**
+   * @method external:ThisBinding#starInterpretation
+   * @description A star interpretation is a callback function passed to 
+   * {@link InterpreterMethodFactory#star} to define how the resulting 
+   * {@link external:InterpreterObject#starTypeInterpreterMethod} should 
+   * interpret the result of parsing its {@link part} as many times as 
+   * possible.
+   * It should be thought of as a regular method of the same object as its 
+   * interpreter method, but with added ability to, before it is run, compute 
+   * the argument that is will be called with.
+   * Before it runs, it let its {@link part} parse the text repeatedly as many 
+   * times as it can, and then gets the array of the results as its only 
+   * argument.
+   * Also, just like a regular method, it will have <tt>this</tt> bound to the 
+   * object of its interpreter method when it is run, and its result will also 
+   * be the result of its method.
+   * 
+   * @param {InterpreterMethodResult[]} partResults - The results of parsing 
+   * its {@link part} as many times as it can, or zero if it can't, in an 
+   * array. 
+   * @returns {InterpreterMethodResult} User defined. 
+   * The value returned by the interpretation will also be the returned value 
+   * of its interpreter method.
+   * @see {@link starUnitTests}
+   */
   var interpretation;
   var delimiter;
   var delimiterAndPart;
@@ -1212,6 +1288,42 @@ InterpreterMethodFactory.prototype
     interpretation = arguments[2];
   }
   
+  /**
+   * @method external:InterpreterObject#starTypeInterpreterMethod
+   * @description <p>
+   * A star type interpreter method is a type of 
+   * {@link external:InterpreterObject#interpreterMethod} meant to be put on a 
+   * {@link external:InterpreterObject} created by the user. 
+   * It is the result of calling {@link InterpreterMethodFactory#star} with 
+   * the {@link interpreterMethodName} of its only {@link part} and optionally 
+   * a regular expression that will act as a delimiter.
+   * </p><p>
+   * Among the different types of interpreter methods, this is the equivalent 
+   * of the * quantifier in regular expressions. 
+   * It lets its {@link part} parse the text over and over until it can't parse 
+   * anymore, optionally skipping over a delimiter regular expression in 
+   * between the parsings. 
+   * Just like the regex *, it may successfully parse nothing.
+   * </p><p>
+   * The result of an interpreter method of this type is an, possibly zero 
+   * length, array with the results of the repeated parsings of its 
+   * {@link part}, if it wasn't defined with a 
+   * {@link external:ThisBinding#starInterpretation}.
+   * If it was, the result will be the result of calling its interpretation 
+   * as if it was a method of the same object with the abovementioned array as 
+   * the only argument. 
+   * Inside the body of the interpretation, <tt>this</tt> will be bound to the 
+   * object of the interpreter method.
+   * </p>
+   * @param {string} text - The text that the {@link part} should parse, as 
+   * many times as it can, or zero times if it can't.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}.
+   * @returns {InterpretationMethodResult} The result of its interpretation, 
+   * if it has one, otherwise an (possibly zero length) array with the results 
+   * of repeatedly letting its {@link part} parse the text.
+   * @see {@link starUnitTests}
+   */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = [];
     var maybeInstruction = factory
