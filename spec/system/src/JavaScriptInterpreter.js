@@ -24,11 +24,18 @@ JavaScriptInterpreter.hack = function() {
   var identifierName = /[a-zA-Z_\$][a-zA-Z0-9_\$]*/;
   
   // Lexical Grammar
+  /**
+   * <tt>{@link InterpreterMethodFactory#star|star}("space")</tt>
+   */
   JavaScriptInterpreter.prototype.spaces = 
   interpreterMethodFactory.star("space", function(spaces) {
     return spaces.join("");
   });
 
+  /**
+   * <tt>{@link InterpreterMethodFactory#or|or}("whiteSpace", "lineTerminator", 
+   * "singleLineComment", "multiLineComment")</tt>
+   */
   JavaScriptInterpreter.prototype.space = 
   interpreterMethodFactory.or("whiteSpace", "lineTerminator", 
   "singleLineComment", "multiLineComment");
@@ -51,6 +58,9 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.singleLineComment = 
   interpreterMethodFactory.atom(/\/\/.*/);
 
+  /**
+   * <tt>{@link InterpreterMethodFactory#atom|atom}(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//)</tt>
+   */
   JavaScriptInterpreter.prototype.multiLineComment = 
   interpreterMethodFactory.atom(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
   
