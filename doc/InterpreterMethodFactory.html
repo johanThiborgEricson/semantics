@@ -836,6 +836,205 @@ regular expressions and other interpreter methods.
     
 
     
+    <h4 class="name" id="longest"><span class="type-signature"></span>longest<span class="signature">(&hellip;alternatives)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#longestTypeInterpreterMethod">external:InterpreterObject#longestTypeInterpreterMethod</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>
+The longest interpreter method factory takes any number of 
+<a href="global.html#interpreterMethodName">interpreterMethodName</a>s and creates a 
+<a href="external-InterpreterObject.html#longestTypeInterpreterMethod">external:InterpreterObject#longestTypeInterpreterMethod</a> meant to be 
+put on a user created <a href="external-InterpreterObject.html">external:InterpreterObject</a>. 
+In the returned interpreter method, each interpreter method name corresponds 
+to an alternative <a href="global.html#part">part</a> of that method.
+</p><p>
+A longest type interpreter method is similar to an 
+<a href="external-InterpreterObject.html#orTypeInterpreterMethod">external:InterpreterObject#orTypeInterpreterMethod</a> with the 
+difference that it tries to parse <i>all</i> of its parts from the current 
+position in the text, unlike or type interpreter methods that doesn't try to 
+parse any more alternatives once it has found one that succeeds.
+The interpreter method only runs the one of its <a href="global.html#part">part</a>s that has 
+succeeding parsing the most text so none of the other parts descendant 
+interpretations will be run, even if they have parsed successfully.
+If two or more parts parses the same amount of text, then the first of them 
+will be shoosen, to mimic the behaviour of or.
+The result of that <a href="global.html#part">part</a> will also be the result of the whole 
+interpreter method.
+</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>alternatives</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">InterpreterMehtodName</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The names of the 
+alternatives <a href="global.html#part">part</a>s of the returned interpreter method.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1141">line 1141</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="global.html#longestUnitTests">longestUnitTests</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An 
+interpreter method that chooses the one of its parts that parses the most 
+text.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="external-InterpreterObject.html#longestTypeInterpreterMethod">external:InterpreterObject#longestTypeInterpreterMethod</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="methodFactory"><span class="type-signature"></span>methodFactory<span class="signature">(partName)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#methodFactoryTypeInterpreterMethod">external:InterpreterObject#methodFactoryTypeInterpreterMethod</a>}</span></h4>
     
 
@@ -951,7 +1150,7 @@ the function returned by the interpreter method will run.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1271">line 1271</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1327">line 1327</a>
     </li></ul></dd>
     
 
@@ -1550,7 +1749,7 @@ and/or interpret the result of its part further.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 08 2017 09:19:45 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 08 2017 12:17:33 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

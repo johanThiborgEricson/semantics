@@ -1108,6 +1108,36 @@ InterpreterMethodFactory.prototype.or = function() {
   });
 };
 
+/**
+ * <p>
+ * The longest interpreter method factory takes any number of 
+ * {@link interpreterMethodName}s and creates a 
+ * {@link external:InterpreterObject#longestTypeInterpreterMethod} meant to be 
+ * put on a user created {@link external:InterpreterObject}. 
+ * In the returned interpreter method, each interpreter method name corresponds 
+ * to an alternative {@link part} of that method.
+ * </p><p>
+ * A longest type interpreter method is similar to an 
+ * {@link external:InterpreterObject#orTypeInterpreterMethod} with the 
+ * difference that it tries to parse <i>all</i> of its parts from the current 
+ * position in the text, unlike or type interpreter methods that doesn't try to 
+ * parse any more alternatives once it has found one that succeeds.
+ * The interpreter method only runs the one of its {@link part}s that has 
+ * succeeding parsing the most text so none of the other parts descendant 
+ * interpretations will be run, even if they have parsed successfully.
+ * If two or more parts parses the same amount of text, then the first of them 
+ * will be shoosen, to mimic the behaviour of or.
+ * The result of that {@link part} will also be the result of the whole 
+ * interpreter method.
+ * </p>
+ *
+ * @param {...InterpreterMehtodName} alternatives - The names of the 
+ * alternatives {@link part}s of the returned interpreter method.
+ * @returns {external:InterpreterObject#longestTypeInterpreterMethod} An 
+ * interpreter method that chooses the one of its parts that parses the most 
+ * text. 
+ * @see {@link longestUnitTests}
+ */
 InterpreterMethodFactory.prototype.longest = function() {
   "use strict";
   var factory = this;
@@ -1115,8 +1145,34 @@ InterpreterMethodFactory.prototype.longest = function() {
   
   /**
    * @method external:InterpreterObject#longestTypeInterpreterMethod
-   * @describe Description.
-   * @todo Describe me!
+   * @description <p>
+   * A longest type interpreter method is a type of 
+   * {@link external:InterpreterObject#interpreterMethod} on a user created 
+   * {@link external:InterpreterObject} constructed by providing the 
+   * {@link interpreterMethodName}s of its {@link part}s to 
+   * {@link InterpreterMethodFactory#longest}. 
+   * </p><p>
+   * It is similar to an 
+   * {@link external:InterpreterObject#orTypeInterpreterMethod} with the 
+   * difference that it tries to parse <i>all</i> of its parts from the current 
+   * position in the text, unlike or type interpreter methods that doesn't try 
+   * to parse any more alternatives once it has found one that succeeds.
+   * It only runs the one of its {@link part}s that has succeeding parsing the 
+   * most text so none of the other parts descendant interpretations will be 
+   * run, even if they have parsed successfully.
+   * If two or more parts parses the same amount of text, then the first of 
+   * them will be shoosen, to mimic the behaviour of or.
+   * The result of that {@link part} will also be the result of the whole 
+   * interpreter method.
+   * </p>
+   *
+   * @param {string} text - The text that all the {@link part}s should try to 
+   * parse.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}. 
+   * @returns {InterpreterMethodResult} The result of the {@link part} that 
+   * successfully parsed the most text, or the first one if it is a tie.
+   * @see {@link longestUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var backup = codePointer.backup();
