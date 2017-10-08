@@ -342,7 +342,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * <tt>{@link InterpreterMethodFactory#longest|longest}("newExpression", "newExpressionQualifier1")</tt>
+   * <tt>{@link InterpreterMethodFactory#longest|longest}("newExpression", 
+   * "newExpressionQualifier1")</tt>
    */
   JavaScriptInterpreter.prototype.newExpressionQualifier = 
   interpreterMethodFactory.longest("newExpression", "newExpressionQualifier1");
@@ -396,7 +397,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * <tt>{@link InterpreterMethodFactory#longest|longest}("callExpressionQualifier1", "callExpressionQualifier2")</tt>
+   * <tt>{@link InterpreterMethodFactory#longest|longest}
+   * ("callExpressionQualifier1", "callExpressionQualifier2")</tt>
    */
   JavaScriptInterpreter.prototype.callExpressionQualifier = 
   interpreterMethodFactory.longest("callExpressionQualifier1", 
@@ -499,8 +501,9 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * <tt>{@link InterpreterMethodFactory#longest|longest}("updateExpression1", "updateExpression2", "updateExpression3", 
-   * "callExpression", "rightHandSideExpression")</tt>
+   * <tt>{@link InterpreterMethodFactory#longest|longest}("updateExpression1", 
+   * "updateExpression2", "updateExpression3", "callExpression", 
+   * "rightHandSideExpression")</tt>
    */
   JavaScriptInterpreter.prototype.updateExpression = 
   interpreterMethodFactory.longest("updateExpression1", "updateExpression2", 
