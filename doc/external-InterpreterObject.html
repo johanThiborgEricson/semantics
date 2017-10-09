@@ -1451,7 +1451,7 @@ change).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1443">line 1443</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1556">line 1556</a>
     </li></ul></dd>
     
 
@@ -1737,6 +1737,241 @@ parsed successfully.
     
 
     
+    <h4 class="name" id="plusTypeInterpreterMethod"><span class="type-signature"></span>plusTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {InterpretationMethodResult}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>
+A plus type interpreter method is a type of 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> meant to be put on a 
+<a href="external-InterpreterObject.html">external:InterpreterObject</a> created by the user. 
+It is the result of calling <a href="InterpreterMethodFactory.html#plus">InterpreterMethodFactory#plus</a> with 
+the <a href="global.html#interpreterMethodName">interpreterMethodName</a> of its only <a href="global.html#part">part</a> and optionally 
+a regular expression that will act as a delimiter.
+</p><p>
+Among the different types of interpreter methods, this is the equivalent 
+of the + quantifier in regular expressions. 
+It lets its <a href="global.html#part">part</a> parse the text over and over until it can't parse 
+anymore, optionally skipping over a delimiter regular expression in 
+between the parsings. 
+Just like the regex +, it needs to parse its part at least once to 
+be successfully parsed.
+</p><p>
+The result of an interpreter method of this type is an array with the 
+results of the repeated parsings of its <a href="global.html#part">part</a>, if it wasn't defined 
+with a <a href="external-ThisBinding.html#plusInterpretation">external:ThisBinding#plusInterpretation</a>.
+If it was, the result will be the result of calling its interpretation 
+as if it was a method of the same object with the abovementioned array as 
+the only argument. 
+Inside the body of the interpretation, <tt>this</tt> will be bound to the 
+object of the interpreter method.
+</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The text that the <a href="global.html#part">part</a> should parse, as 
+many times as it can, but at least one time.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>printDebuggingMessages</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">See 
+<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1449">line 1449</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="global.html#plusUnitTests">plusUnitTests</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The result of its interpretation, 
+if it has one, otherwise an array with the results of repeatedly letting 
+its <a href="global.html#part">part</a> parse the text.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">InterpretationMethodResult</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="starTypeInterpreterMethod"><span class="type-signature"></span>starTypeInterpreterMethod<span class="signature">(text, printDebuggingMessages<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {InterpretationMethodResult}</span></h4>
     
 
@@ -1907,7 +2142,7 @@ many times as it can, or zero times if it can't.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1291">line 1291</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1292">line 1292</a>
     </li></ul></dd>
     
 
@@ -2219,7 +2454,7 @@ or the result of calling the interpretation with the result of its
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 08 2017 20:18:13 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 09 2017 15:15:30 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
