@@ -1354,7 +1354,7 @@ InterpreterMethodFactory.prototype
 
 /**
  * <p>
- * The plus interpreter method takes a {@link interpreterMethodName}, an 
+ * This method takes an {@link interpreterMethodName}, an 
  * optional delimiter regular expression, and an optional 
  * {@link external:ThisBinding#plusInterpretation} and produces a
  * {@link external:InterpreterObject#plusTypeInterpreterMethod} meant to be 
@@ -1512,13 +1512,98 @@ InterpreterMethodFactory.prototype
   
 };
 
+/**
+ * The opt interpreter method factory method takes an 
+ * {@link interpreterMethodName} and optionally an 
+ * {@link external:ThisBinding#optFallbackReplacement} and produces a
+ * {@link external:InterpreterObject#optTypeInterpreterMethod} meant to be 
+ * put on a user created {@link external:InterpreterObject}. 
+ * This is a quantifier type interpretation method that tries to parse the 
+ * {@link part} indicated by the {@link interpreterMethodName} once. 
+ * The result of the interpreter method is the result of its {@link part}, if 
+ * the manages to parse.
+ * Otherwise the it will behave as if it was the fallback method that was 
+ * called. 
+ * More precisely, the interpreter method will call the fallback method with 
+ * <tt>this</tt> bound to its object and return the result.
+ * 
+ * @param {interpreterMethodName} partName - The name of the optional 
+ * {@link part}.
+ * @param {external:ThisBinding#optFallbackReplacement} 
+ * [fallbackReplacement] - If the {@link part} couldn't be parsed, the 
+ * interpreter method will behave as if it was the fallback replacement that 
+ * was called. If there is no fallback, the interpreter method will return 
+ * <tt>undefined</tt> in case its part fails to parse.
+ * @returns {external:InterpreterObject#optTypeInterpreterMethod} An 
+ * interpreter method that will succeed to parse, even of its part doesn't.
+ * 
+ * @example 
+ * var f = new InterpreterMethodFactory();
+ * // interpreter.aOpt is the Semantics! equivalent of /a?/
+ * var interpreter = {
+ *   a: f.atom(/a/), 
+ *   aOpt: f.opt("a", function() {
+ *     return "fallback result";
+ *   },
+ * };
+ * var anA = interpreter.aOpt("a"); // anA == "a"
+ * var noA = interpreter.aOpt(""); // noA == "fallback result" 
+ * @see {@link optUnitTests}
+ */
 InterpreterMethodFactory.prototype
 .opt = function(name, interpretation) {
+  /**
+   * @method external:ThisBinding#optFallbackReplacement
+   * @description An opt fallback replacement is a callback function passed to 
+   * {@link InterpreterMethodFactory#opt} when defining an
+   * {@link external:InterpreterObject#optTypeInterpreterMethod} that 
+   * acts like a replacement method for the interpreter method if that fails to 
+   * parse its {@link part} from the text.
+   * Then the interpreter method will behave exactly as if it was the fallback 
+   * replacement that was called. 
+   * This means that <tt>this</tt> will be bound to the object of the 
+   * interpreter method inside the body of the fallback replacement, and that 
+   * the method will return the result of the fallback replacement, if the 
+   * {@link part} can't be parsed.
+   * 
+   * @returns {InterpreterMethodResult} User defined. If the {@link part} 
+   * cannot be parsed, the interpreter method will return the result of calling 
+   * this fallback replacement.
+   * @see {@link optUnitTests}
+   */
   var factory = this;
   var defaultInterpretation = function() {
     return undefined;
   };
   
+  /**
+   * @method external:InterpreterObject#optTypeInterpreterMethod
+   * @description <p>
+   * An opt type interpreter method is a type of 
+   * {@link external:InterpreterObject#interpreterMethod} meant to be on an 
+   * {@link external:InterpreterObject} created by the user. 
+   * It is the result of calling {@link InterpreterMethodFactory#opt} with 
+   * the {@link interpreterMethodName} of its only {@link part} and an 
+   * {@link external:ThisBinding#optFallbackReplacement}.
+   * </p><p>
+   * Among the different types of interpreter methods, this is the equivalent 
+   * of the <tt>?</tt> quantifier in regular expressions, with the addition of 
+   * having a defined behaviour if there is no {@link part}.
+   * The result of an interpreter method of this type is either the result of 
+   * the part, if it could be parsed, or the result of its fallback 
+   * replacement, if it couldn't be parsed, or <tt>undefined</tt>, if it 
+   * couldn't be parsed and it has no fallback replacement. 
+   * Inside the body of the interpretation, <tt>this</tt> will be bound to the 
+   * object of the interpreter method.
+   * </p>
+   * @param {string} text - The text optionally parsed by the {@link part}.
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}.
+   * @returns {InterpretationMethodResult} The result of its interpretation, 
+   * if it has one, otherwise an array with the results of repeatedly letting 
+   * its {@link part} parse the text.
+   * @see {@link optUnitTests}
+   */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction = factory
     .callInterpreterMethod(interpreter, name, codePointer);

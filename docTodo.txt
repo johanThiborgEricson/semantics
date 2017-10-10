@@ -3,4 +3,19 @@ all param is new paragraph
 semantics/src/README.md => semantics/JSDocREADME.md
 group example /(ab)/
 group interpretation elaborate.
+group is Semantics! equivalent of regex groups, putting things 
+  between <tt>(</tt> and <tt>)</tt>.
 interpreter method move to makeMethod.
+atom(identifierName) is confusing.
+plus and star aren't interpreter methods. They are factories for producing 
+  interpreter methods.
+define absteract InterpreterMethodFactory#interpreterMethodFactoryMethod
+plus star param partName indicates sounds wierd.
+quantifiers factories should link to interpreterMethod when they say they are 
+  quantifier types of that.
+opt fallback replacement => fallback replacement method.
+? * + => <tt>?</tt> <tt>*</tt> <tt>+</tt>
+opt unit tests i => interpreter
+examples a: f.atom(/a/) => part: f.atom(/text/)
+undefined => <tt>undefined</tt>
+this => <tt>this</tt>
