@@ -836,6 +836,229 @@ regular expressions and other interpreter methods.
     
 
     
+    <h4 class="name" id="insignificant"><span class="type-signature"></span>insignificant<span class="signature">(insignificant, partName)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#insignificantTypeInterpreterMethod">external:InterpreterObject#insignificantTypeInterpreterMethod</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    This factory method takes one <a href="global.html#interpreterMethodName">interpreterMethodName</a> or regular 
+expression describing how to match the insignificant text, and one 
+<a href="global.html#interpreterMethodName">interpreterMethodName</a> naming its only <a href="global.html#part">part</a> and produces 
+an <a href="external-InterpreterObject.html#insignificantTypeInterpreterMethod">external:InterpreterObject#insignificantTypeInterpreterMethod</a> 
+meant to be put on an <a href="external-InterpreterObject.html">external:InterpreterObject</a> created by the user. 
+The returned interpreter method changes the parsing behaviour of its 
+descendants. 
+The descendants of an insignificant interpreter method will parse 
+insignificant text between its symbols.
+Note that a descendant part will fail to parse if it isn't padded with an 
+insignificant.
+Therefore, if insignificants are not meant to be mandatory, they should be 
+defined as optional, either by putting them in a <tt>/()?/</tt> in case it 
+is a regular expression, or inside an <a href="InterpreterMethodFactory.html#opt">InterpreterMethodFactory#opt</a> 
+if it is an interpreter method.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>insignificant</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">RegExp</span>
+|
+
+<span class="param-type"><a href="global.html#interpreterMethodName">interpreterMethodName</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A description of 
+what should be parsed unnoticed between the significant parts.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>partName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#interpreterMethodName">interpreterMethodName</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The top interpreter method where 
+the parts should be parsed with insignificants in between.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1772">line 1772</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An interpreter method where the parsing behaviour has been altered to skip 
+insignificant symbols.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="external-InterpreterObject.html#insignificantTypeInterpreterMethod">external:InterpreterObject#insignificantTypeInterpreterMethod</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var f = new InterpreterMethodFactory();
+var interpreter = {
+  a: f.atom(/a/), 
+  b: f.atom(/b/),
+  part: f.group("a", "b"),
+  insign: f.atom(/i/),
+  iPart: f.insignificant("insign", "part"),
+  jiPart: f.insignificant(/j/, "iPart"),
+};
+var ab1 = interpreter.iPart("iaibi");       // ab1 == {a: "a", b: "b"}
+var ab2 = interpreter.jiPart("jiaibij");    // ab1 == {a: "a", b: "b"}
+var missingInsign = interpreter.iPart("ab") // parse fail</code></pre>
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="longest"><span class="type-signature"></span>longest<span class="signature">(&hellip;alternatives)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#longestTypeInterpreterMethod">external:InterpreterObject#longestTypeInterpreterMethod</a>}</span></h4>
     
 
@@ -2555,7 +2778,7 @@ and/or interpret the result of its part further.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 10 2017 13:51:40 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 10 2017 14:53:50 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
