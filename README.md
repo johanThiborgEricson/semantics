@@ -5,11 +5,11 @@ http://johanthiborgericson.github.io/semantics/src/InterpreterMethodFactory.js
 
 And reference it in your project:
     
-    &lt;html&gt;
-      &lt;head&gt;
-        &lt;script src="InterpreterMethodFactory.js"&gt;
-      &lt;/head&gt;
-    &lt;/html&gt;
+    <html>
+      <head>
+        <script src="InterpreterMethodFactory.js">
+      </head>
+    </html>
     
 ## Semantics!, the foolproof interpreter factory
 
