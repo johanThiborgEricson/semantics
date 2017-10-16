@@ -77,7 +77,7 @@ Now for the implementation. We will make an interpreter object with one method f
       // It is evaluated by making a number out of the parsed string.
       number: f.atom(/\d+/, function(digits) {
         return Number(digits);
-      })
+      }),
       
       // A sum1 is a sum followed by a plus sign and a number. 
       // This rule is evaluated by adding the number to the sum.
