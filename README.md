@@ -1,3 +1,16 @@
+## Installation
+
+Download this file to your project folder:
+http://johanthiborgericson.github.io/semantics/src/InterpreterMethodFactory.js
+
+And reference it in your project:
+    
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;script src="InterpreterMethodFactory.js"&gt;
+      &lt;/head&gt;
+    &lt;/html&gt;
+    
 ## Semantics!, the foolproof interpreter factory
 
 Semantics! is a foolproof JavaScript library for making parsers or interpreters. Unlike most parsing libraries, you don’t have to learn any library specific syntax to use it. Instead, it uses native JavaScript features to describe the rules of the interpreter/parser. Since there is no syntax, you never have to worry about syntax errors.
@@ -97,7 +110,7 @@ Anyway, let's try the code.
     console.log(interpreter.sum("1+2"));   // 3
     console.log(interpreter.sum("1+2-4")); // -1
 
-Note that Semantics has no concept of top symbol. The method you call will be treated as the top symbol. This allows for easy testing. 
+Note that Semantics! has no concept of top symbol. The method you call will be treated as the top symbol. This allows for easy testing. 
 
 ## How does Semantics! work?
 
