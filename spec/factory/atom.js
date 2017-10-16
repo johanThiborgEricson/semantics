@@ -5,9 +5,6 @@ describe("An atom", function() {
   
   var interpreter;
   var f;
-  var add = function(a, b) {
-    return a+b;
-  };
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();
@@ -32,9 +29,9 @@ describe("An atom", function() {
   it("can be parsed at any point", function() {
     interpreter.a = f.atom(/a/);
     interpreter.b = f.atom(/b/);
-    interpreter.ab = f.group("a", "b", add);
+    interpreter.ab = f.group("a", "b");
     
-    expect(interpreter.ab("ab")).toBe("ab");
+    expect(interpreter.ab("ab")).toEqual({a: "a", b: "b"});
   });
   
   it("returns the match if no interpretation is supplied", function() {
@@ -80,11 +77,11 @@ describe("An atom", function() {
   it("only accepts matches at the current position in the code", function() {
     interpreter.a = f.atom(/a/);
     interpreter.b = f.atom(/b/);
-    interpreter.bb = f.group("b", "b", add);
-    interpreter.ab = f.group("a", "b", add);
+    interpreter.bb = f.group("b", "b");
+    interpreter.ab = f.group("a", "b");
     interpreter.bbab = f.or("bb", "ab");
     
-    expect(interpreter.bbab("ab")).toBe("ab");
+    expect(interpreter.bbab("ab")).toEqual({a: "a", b: "b"});
   });
   
 });

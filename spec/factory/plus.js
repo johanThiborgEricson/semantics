@@ -5,13 +5,6 @@ describe("A plus quantifier", function() {
   
   var f;
   var interpreter;
-  var id = function(x) {
-    return x;
-  };
-  
-  var add = function(a, b) {
-    return a+b;
-  };
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();
@@ -46,12 +39,20 @@ describe("A plus quantifier", function() {
   });
   
   it("doesn't leave a part half parsed", function() {
-    interpreter.ab = f.group("a", "b", add);
+    interpreter.ab = f.group("a", "b");
     interpreter.abp = f.plus("ab");
     interpreter.abpa = f.group("abp", "a");
     
     var expected = {
-      abp:["ab", "ab"], 
+      abp:[
+        {
+          a: "a", 
+          b: "b"
+        }, {
+          a: "a", 
+          b: "b"
+        }
+      ], 
       a:"a"};
     
     expect(interpreter.abpa("ababa")).toEqual(expected);

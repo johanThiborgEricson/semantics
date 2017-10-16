@@ -5,9 +5,6 @@ describe("The longest nonterminal", function() {
   
   var f;
   var interpreter;
-  var add = function(a, b) {
-    return a+b;
-  };
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();
@@ -42,9 +39,9 @@ describe("The longest nonterminal", function() {
   
   it("returns the first alternative if the second one fails", function() {
     interpreter.longest = f.longest("a", "b");
-    interpreter.program = f.group("longest", "b", add);
+    interpreter.program = f.group("longest", "b");
     
-    expect(interpreter.program("ab")).toBe("ab");
+    expect(interpreter.program("ab")).toEqual({longest: "a", b: "b"});
   });
   
   it("continues matching from the end of the longest match, not the last " + 

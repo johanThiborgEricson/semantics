@@ -5,13 +5,6 @@ describe("A star quantifier", function() {
   
   var f;
   var interpreter;
-  var id = function(x) {
-    return x;
-  };
-  
-  var add = function(a, b) {
-    return a+b;
-  };
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();
@@ -44,12 +37,20 @@ describe("A star quantifier", function() {
   });
   
   it("doesn't leave a part half parsed", function() {
-    interpreter.ab = f.group("a", "b", add);
+    interpreter.ab = f.group("a", "b");
     interpreter.abs = f.star("ab");
     interpreter.absa = f.group("abs", "a");
     
     var expected = {
-      abs:["ab", "ab"], 
+      abs:[
+        {
+          a: "a", 
+          b: "b"
+        }, {
+          a: "a", 
+          b: "b"
+        }
+      ], 
       a:"a"};
     
     expect(interpreter.absa("ababa")).toEqual(expected);

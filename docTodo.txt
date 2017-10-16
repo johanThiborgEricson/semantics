@@ -1,11 +1,9 @@
 typedef {interpreterMethod} decsendant.
 all param is new paragraph
-semantics/src/README.md => semantics/JSDocREADME.md
 group example /(ab)/
 group interpretation elaborate.
 group is Semantics! equivalent of regex groups, putting things 
   between <tt>(</tt> and <tt>)</tt>.
-interpreter method move to makeMethod.
 atom(identifierName) is confusing.
 plus and star aren't interpreter methods. They are factories for producing 
   interpreter methods.
@@ -20,3 +18,5 @@ examples a: f.atom(/a/) => part: f.atom(/text/)
 undefined => <tt>undefined</tt>
 this => <tt>this</tt>
 insignificant example.
+atom unit tests interpreter.a = => interpreter = {a:
+method factory unit test o => thisBinding

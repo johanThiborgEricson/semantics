@@ -4,9 +4,6 @@
 describe("An or", function() {
   var f;
   var i;
-  var id = function(x) {
-    return x;
-  };
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();
