@@ -176,6 +176,7 @@ If you want to build a normal syntax tree you might find this extension useful:
           return result&&typeof result==="object"?result:object;
         };
         
+        return args;
       }
       
       InterpreterMethodFactory.prototype.terminalNode = function() {
