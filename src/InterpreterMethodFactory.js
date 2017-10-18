@@ -713,6 +713,56 @@ InterpreterMethodFactory.prototype
  * counted among its parts. 
  */
 
+InterpreterMethodFactory.prototype
+.getChildren = function(args) {
+  var parts = [];
+
+  var interpretation;
+  var p = {
+    i: 0,
+  };
+  var argument;
+  var leadingRegexes = this.readRegexesFromArguments(args, p);
+  while(p.i < args.length) {
+    argument = args[p.i++];
+    if(typeof argument === "string") {
+      parts.push({
+        name: argument,
+        trailingRegexes: this.readRegexesFromArguments(args, p),
+      });
+    } else {
+      interpretation = argument;
+    }
+  }
+  
+  return {
+    leadingRegexes: leadingRegexes,
+    parts: parts,
+    interpretation: interpretation,
+  };
+};
+
+InterpreterMethodFactory.prototype
+.parseChildren = function(codePointer, interpreter, args) {
+  var partInstructions = [];
+  if(!this.skipRegexes(codePointer, args.leadingRegexes, interpreter)){
+    return null;
+  }
+  for(var i = 0; i < args.parts.length; i++){
+    var maybeInstruction = this
+          .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
+    if(!maybeInstruction
+      ||!this.skipRegexes(codePointer, args.parts[i].trailingRegexes, 
+      interpreter)) {
+      return null;
+    }
+    maybeInstruction.partName = args.parts[i].name;
+    
+    partInstructions.push(maybeInstruction);
+  }
+  return partInstructions;
+};
+
 /**
  * <p>
  * The group interpreter method factory accepts any number of 
@@ -753,7 +803,6 @@ InterpreterMethodFactory.prototype
 .group = function() {
   "use strict";
   var factory = this;
-  var parts = [];
   
   /**
    * @method external:ThisBinding#groupInterpretation
@@ -770,24 +819,8 @@ InterpreterMethodFactory.prototype
    * its interpreter method. 
    * @see {@link groupUnitTests}
    */
-  var interpretation;
-  var p = {
-    i: 0,
-  };
-  var argument;
-  var leadingRegexes = this.readRegexesFromArguments(arguments, p);
-  while(p.i < arguments.length) {
-    argument = arguments[p.i++];
-    if(typeof argument === "string") {
-      parts.push({
-        name: argument,
-        trailingRegexes: this.readRegexesFromArguments(arguments, p),
-      });
-    } else {
-      interpretation = argument;
-    }
-  }
-  
+  var args = this.getChildren(arguments);
+
   /**
    * @method external:InterpreterObject#groupTypeInterpreterMethod
    * @description A group type interpreter method is an 
@@ -819,26 +852,15 @@ InterpreterMethodFactory.prototype
    * @see {@link groupUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    if(!factory.skipRegexes(codePointer, leadingRegexes, interpreter)){
+    var partInstructions = factory.parseChildren(codePointer, interpreter, args);
+    
+    if(partInstructions === null) {
       return null;
     }
-    var partInstructions = [];
-    for(var i = 0; i < parts.length; i++){
-      var maybeInstruction = factory
-            .callInterpreterMethod(interpreter, parts[i].name, codePointer);
-      if(!maybeInstruction
-        ||!factory.skipRegexes(codePointer, parts[i].trailingRegexes, 
-        interpreter)) {
-        return null;
-      }
-      maybeInstruction.partName = parts[i].name;
-      
-      partInstructions.push(maybeInstruction);
-    }
     
-    if(interpretation) {
+    if(args.interpretation) {
       return function instruction() {
-        return interpretation.apply(this, factory
+        return args.interpretation.apply(this, factory
             .mapRunAsMethod(this, partInstructions));
       };
     } else {
@@ -1022,13 +1044,8 @@ InterpreterMethodFactory.prototype.select = function(index) {
 InterpreterMethodFactory.prototype.wrap = function() {
   "use strict";
   var factory = this;
-  var p = {
-    i: 0,
-  };
-  var leadingRegexes = this.readRegexesFromArguments(arguments, p);
-  var partName = arguments[p.i++];
-  var trailingRegexes = this.readRegexesFromArguments(arguments, p);
-  
+  var args = this.getChildren(arguments);
+
   /**
    * @method external:ThisBinding#wrapInterpretation
    * @description A wrap interpretation is a callback function passed to 
@@ -1052,8 +1069,7 @@ InterpreterMethodFactory.prototype.wrap = function() {
    * its interpreter method. 
    * @see {@link wrapUnitTests}
    */
-  var interpretation = arguments[p.i++];
-  
+
   /**
    * @method external:InterpreterObject#wrapTypeInterpreterMethod
    * @description <p>
@@ -1087,18 +1103,15 @@ InterpreterMethodFactory.prototype.wrap = function() {
    * @see {@link wrapUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var maybeInstruction;
-    if(factory.skipRegexes(codePointer, leadingRegexes, interpreter) && 
-    (maybeInstruction = factory
-    .callInterpreterMethod(interpreter, partName, codePointer)) &&
-    factory.skipRegexes(codePointer, trailingRegexes, interpreter)) {
-      return !interpretation?maybeInstruction:function instruction() {
-        return interpretation.call(this, maybeInstruction.call(this));
-      };
-      
-    } else {
+    var partInstructions = 
+    factory.parseChildren(codePointer, interpreter, args);
+    if(partInstructions === null) {
       return null;
     }
+    var maybeInstruction = partInstructions[0];
+    return !args.interpretation?maybeInstruction:function instruction() {
+      return args.interpretation.call(this, maybeInstruction.call(this));
+    };
     
   });
   
