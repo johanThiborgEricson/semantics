@@ -43,7 +43,41 @@
 
 
     <section>
-        <article><h2>Installation</h2><p>Download this file to your project folder:
+        <article><pre class="prettyprint source"><code>/*
+ * number:
+ *   /\d+/
+ * 
+ * sum:
+ *   number
+ *   sum1
+ *   sum2
+ * 
+ * sum1:
+ *   sum + number
+ * 
+ * sum2:
+ *   sum - number
+ */
+
+var f = new InterpreterMethodFactory();
+var interpreter = {
+  number: f.atom(/\d+/, function(digits) {
+    return Number(digits);
+  }),
+
+  sum: f.longest(&quot;number&quot;, &quot;sum1&quot;, &quot;sum2&quot;), 
+
+  sum1: f.group(&quot;sum&quot;, /\+/, &quot;number&quot;, function(sum, number) {
+    return sum + number;
+  }),
+
+  sum2: f.group(&quot;sum&quot;, /-/, &quot;number&quot;, function(sum, number) {
+    return sum - number;
+  }),
+
+};
+
+console.log(interpreter.number(&quot;8+4-2-1&quot;));  // 9</code></pre><h2>Installation</h2><p>Download this file to your project folder:
 http://johanthiborgericson.github.io/semantics/src/InterpreterMethodFactory.js</p>
 <p>And reference it in your project:</p>
 <pre class="prettyprint source"><code>&lt;html&gt;
@@ -51,18 +85,21 @@ http://johanthiborgericson.github.io/semantics/src/InterpreterMethodFactory.js</
     &lt;script src=&quot;InterpreterMethodFactory.js&quot;&gt;
   &lt;/head&gt;
 &lt;/html&gt;</code></pre><h2>Semantics!, the foolproof interpreter factory</h2><p>Semantics! is a foolproof JavaScript library for making parsers or interpreters. Unlike most parsing libraries, you don’t have to learn any library specific syntax to use it. Instead, it uses native JavaScript features to describe the rules of the interpreter/parser. Since there is no syntax, you never have to worry about syntax errors.</p>
-<p>Also, unlike most parsing libraries, it only allows rules in their canonical form and simple quantifiers. Although this requires more code, it also greatly reduces the risk of making mistakes and, if a mistake is made, it is much easier to debug. Also, Semantics! uses semantic actions to make interpreters, and that would be messy if compound rules was allowed.</p>
+<p>Also, unlike most parsing libraries, it only allows rules in their canonical form and simple quantifiers. Although this requires more code, it also greatly reduces the risk of making mistakes and, if a mistake is made, it is much easier to debug. Also, Semantics! uses semantic actions to make interpreters, and that would be messy if compound rules were allowed.</p>
 <p>Semantics! is a Backrat parser with semantic actions that supports left recursion using an algorithm similar to the one described by Warth, Douglass and Millstein in “Packrat Parsers Can Support Left Recursion” that I accidentally reinvented. In plain English, this means: “It just works”.</p>
 <h2>How to use Semantics!</h2><p>The Semantics! library only has one public class, InterpreterMethodFactory. As the name suggests, it is a factory for producing methods that can interpret or parse text. Each produced method represents a production rule of the language. The methods are meant to be placed on an object created by the user that will be called the interpreter. Together, the interpreter methods of the interpreter object forms the language.</p>
 <p>Now, let's look at this simple language for adding and subtracting numbers.</p>
-<pre class="prettyprint source"><code>sum:
+<pre class="prettyprint source"><code>number:
+  /\d+/
+
+sum:
   number
   sum + number
-  sum - number
+  sum - number</code></pre><p>This language says that a number is a sequence of digits. Further, a sum might be a number, but it might also be a sum followed by a plus sign or a minus sign followed by another number. As mentioned above, Semantics! only supports rules on canonical form and simple quantifiers. Therefore, we will have to rewrite the language. </p>
+<pre class="prettyprint source"><code>number:
+  /\d+/
 
-number
-  /\d+/</code></pre><p>This language says that a sum might be a number, but it might also be a sum followed by a plus sign or a minus sign followed by another number. Further, a number is described as one or more digits. As mentioned above, Semantics! only supports rules on canonical form and simple quantifiers. Therefore, we will have to rewrite the language. </p>
-<pre class="prettyprint source"><code>sum:
+sum:
   number
   sum1
   sum2
@@ -71,11 +108,11 @@ sum1:
   sum + number
 
 sum2:
-  sum - number
+  sum - number</code></pre><p>Finally, Semantics doesn't support the concept of sequence or concatenation<sup>1</sup>, so we have to specify sum1 and sum2 as groups. </p>
+<pre class="prettyprint source"><code>number:
+  /\d+/
 
-number
-  /\d+/</code></pre><p>Finally, Semantics doesn't support the concept of sequence or concatenation<sup>1</sup>, so we have to specify sum1 and sum2 as groups. </p>
-<pre class="prettyprint source"><code>sum:
+sum:
   number
   sum1
   sum2
@@ -84,21 +121,18 @@ sum1:
   (sum + number)
 
 sum2:
-  (sum - number)
-
-number
-  /\d+/</code></pre><p>Now for the implementation. We will make an interpreter object with one method for each canonical rule in our language: sum, sum1, sum2 and number. The methods will be created using the factory methods longest, group and atom of an interpreter method factory. </p>
+  (sum - number)</code></pre><p>Now for the implementation. We will make an interpreter object with one method for each canonical rule in our language: sum, sum1, sum2 and number. The methods will be created using the factory methods longest, group and atom of an interpreter method factory. </p>
 <pre class="prettyprint source"><code>// An interpreter method factory to produce interpreter methods.
 var f = new InterpreterMethodFactory();
 // An interpreter object parsing and computing sums.
 var interpreter = {
-  // A sum is a number, a sum1 or a sum2, whichever can parse the longest.
-  sum: f.longest(&quot;number&quot;, &quot;sum1&quot;, &quot;sum2&quot;), 
-  // Number is a method that parses positive numbers.
-  // It is evaluated by making a number out of the parsed string.
+  // Number parses one or more digits and interpret it as a positive number.
   number: f.atom(/\d+/, function(digits) {
     return Number(digits);
-  })
+  }),
+
+  // A sum is a number, a sum1 or a sum2, whichever can parse the longest.
+  sum: f.longest(&quot;number&quot;, &quot;sum1&quot;, &quot;sum2&quot;), 
 
   // A sum1 is a sum followed by a plus sign and a number. 
   // This rule is evaluated by adding the number to the sum.
@@ -159,13 +193,14 @@ ab &quot;ab&quot;  // the rule ab successfully parsed &quot;ab&quot;</code></pre
   // A function accepting an array ending with a function that replaces that 
   // function with that function turned into a constructor.
   function lastAsConstructor(args) {
+    var Constructor = args[args.legnth-1];
     args[args.legnth-1] = function() {
-      var Constructor = args[args.legnth-1];
       var object = Object.create(Constructor.prototype);
       var result = Constructor.apply(object, arguments);
       return result&&typeof result===&quot;object&quot;?result:object;
     };
 
+    return args;
   }
 
   InterpreterMethodFactory.prototype.terminalNode = function() {
@@ -176,7 +211,9 @@ ab &quot;ab&quot;  // the rule ab successfully parsed &quot;ab&quot;</code></pre
     return this.group.apply(this, lastAsConstructor(arguments)); 
   };
 
-})();</code></pre><p><sup>1</sup> I am using the group concept rather than the sequence/concatenation concept, because you can do non-fooproof things with sequences and quantifiers. For example, Semantics doesn't have any equivalent of the regular expression /ab<em>/, ie a sequence of one a followed by zero or more as. A language described by Semantics! should either take this /(ab</em>)/ or this /(ab)*/ form. The name group is meant to emphasize this restriction.</p></article>
+})();</code></pre><p><sup>1</sup> I am using the group concept rather than the sequence/concatenation concept, because you can do non-fooproof things with sequences and quantifiers. For example, Semantics doesn't have any equivalent of the regular expression /ab<em>/, ie a sequence of one a followed by zero or more as. A language described by Semantics! should either take this /(ab</em>)/ or this /(ab)*/ form. The name group is meant to emphasize this restriction.</p>
+<h2>Run unit tests</h2><p><a href="../SpecRunner.html?inception=false">Run test cases</a>. It might be necessary to specify the path to the InterpreterMethodFactory.js file for the first test to run.</p>
+<p><a href="../SpecRunner.html">Run test cases inception style</a>. An interpreter built with Semantics! is used to interpret the source code of Semantics!. Then the test cases are run on that interpretation. Then the interpreter is built with the interpretation and the testcases of the interpreter is run on that. It should take approximately 50 times longer. If you are running the test cases from a local file (the file:// protocol), the test cases cant read the source code automatically, for security reasons, so you have to locate them manually. Otherwise the tests will run on the normal Semantics!.</p></article>
     </section>
 
 
@@ -348,7 +385,7 @@ should suffice just to read in one place.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 16 2017 12:56:28 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 18 2017 07:42:04 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
