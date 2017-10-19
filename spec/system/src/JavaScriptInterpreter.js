@@ -806,7 +806,7 @@ JavaScriptInterpreter.hack = function() {
   // Statements
   
   /**
-   * <tt>{@link InterpreterMethodFactory#or|or} ("variableStatement", 
+   * <tt>{@link InterpreterMethodFactory#or|or} ("block", "variableStatement", 
    * "ifStatement", "iterationStatement", "returnStatement", "throwStatement", 
    * "functionDeclaration", "expressionStatement")</tt>
    */
