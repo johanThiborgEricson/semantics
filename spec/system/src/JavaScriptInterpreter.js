@@ -806,17 +806,21 @@ JavaScriptInterpreter.hack = function() {
   // Statements
   
   /**
-   * <tt>{@link InterpreterMethodFactory#or|or} ("statement", "block")</tt>
+   * <tt>{@link InterpreterMethodFactory#or|or} ("variableStatement", 
+   * "ifStatement", "iterationStatement", "returnStatement", "throwStatement", 
+   * "functionDeclaration", "expressionStatement")</tt>
    */
-  JavaScriptInterpreter.prototype.statementOrBlock = 
-  interpreterMethodFactory.or("statement", "block");
+  JavaScriptInterpreter.prototype.statement = 
+  interpreterMethodFactory.or("block", "variableStatement", "ifStatement", 
+  "iterationStatement", "returnStatement", "throwStatement", 
+  "functionDeclaration", "expressionStatement");
   
   /**
    * <tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
-   * ("statementOrBlock")</tt>
+   * ("statement")</tt>
    */
-  JavaScriptInterpreter.prototype.deferredStatementOrBlock = 
-  interpreterMethodFactory.methodFactory("statementOrBlock");
+  JavaScriptInterpreter.prototype.deferredStatement = 
+  interpreterMethodFactory.methodFactory("statement");
   
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} (/\{/, "statementList", 
@@ -848,23 +852,6 @@ JavaScriptInterpreter.hack = function() {
   JavaScriptInterpreter.prototype.deferredStatementList = 
   interpreterMethodFactory.methodFactory("statementList");
 
-  /**
-   * <tt>{@link InterpreterMethodFactory#or|or} ("variableStatement", 
-   * "ifStatement", "iterationStatement", "returnStatement", "throwStatement", 
-   * "functionDeclaration", "expressionStatement")</tt>
-   */
-  JavaScriptInterpreter.prototype.statement = 
-  interpreterMethodFactory.or("variableStatement", "ifStatement", 
-  "iterationStatement", "returnStatement", "throwStatement", 
-  "functionDeclaration", "expressionStatement");
-  
-  /**
-   * <tt>{@link InterpreterMethodFactory#methodFactory|methodFactory}
-   * ("statement")</tt>
-   */
-  JavaScriptInterpreter.prototype.deferredStatement = 
-  interpreterMethodFactory.methodFactory("statement");
-  
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/var/, 
    * "variableDeclarationList", /;/, function() {...})</tt>
@@ -918,16 +905,16 @@ JavaScriptInterpreter.hack = function() {
   
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/if/, /\(/, "expression", 
-   * /\)/, "deferredStatementOrBlock", 
-   * "deferredElseStatementOpt", function(expression, deferredStatementOrBlock, 
+   * /\)/, "deferredStatement", 
+   * "deferredElseStatementOpt", function(expression, deferredStatement, 
    * deferredElseStatementOpt) {...})</tt>
    */
   JavaScriptInterpreter.prototype.ifStatement = 
   interpreterMethodFactory.group(/if/, /\(/, "expression", /\)/, 
-  "deferredStatementOrBlock", "deferredElseStatementOpt", 
-  function(expression, deferredStatementOrBlock, deferredElseStatementOpt) {
+  "deferredStatement", "deferredElseStatementOpt", 
+  function(expression, deferredStatement, deferredElseStatementOpt) {
     if(expression) {
-      return deferredStatementOrBlock.call(this);
+      return deferredStatement.call(this);
     } else {
       return deferredElseStatementOpt.call(this);
     }
@@ -950,15 +937,15 @@ JavaScriptInterpreter.hack = function() {
   
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/while/, /\(/, 
-   * "deferredExpression", /\)/, "deferredStatementOrBlock", 
-   * function(deferredExpression, deferredStatementOrBlock) {...})</tt>
+   * "deferredExpression", /\)/, "deferredStatement", 
+   * function(deferredExpression, deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement2 = 
   interpreterMethodFactory.group(/while/, /\(/, "deferredExpression", /\)/, 
-  "deferredStatementOrBlock", 
-  function(deferredExpression, deferredStatementOrBlock) {
+  "deferredStatement", 
+  function(deferredExpression, deferredStatement) {
     while(deferredExpression.call(this)) {
-      var returnValue = deferredStatementOrBlock.call(this);
+      var returnValue = deferredStatement.call(this);
       if(returnValue[0] === "return") {
         return returnValue;
       }
@@ -969,18 +956,18 @@ JavaScriptInterpreter.hack = function() {
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/for/, /\(/, /var/, 
    * "variableDeclarationList", /;/, "deferredExpression", /;/, 
-   * "deferredExpression", /\)/, "deferredStatementOrBlock", 
+   * "deferredExpression", /\)/, "deferredStatement", 
    * function(variableDeclarationList, deferredExpression1, deferredExpression2, 
-   * deferredStatementOrBlock) {...})</tt>
+   * deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement4 = 
   interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclarationList", 
   /;/, "deferredExpression", /;/, "deferredExpression", /\)/, 
-  "deferredStatementOrBlock", 
+  "deferredStatement", 
   function(variableDeclarationList, deferredExpression1, deferredExpression2, 
-  deferredStatementOrBlock) {
+  deferredStatement) {
     for( ; deferredExpression1.call(this); deferredExpression2.call(this)){
-      var returnValue = deferredStatementOrBlock.call(this);
+      var returnValue = deferredStatement.call(this);
       if(returnValue[0] === "return") {
         return returnValue;
       }
@@ -991,16 +978,16 @@ JavaScriptInterpreter.hack = function() {
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/for/, /\(/, /var/, 
    * "variableDeclaration", /in/, "expression", 
-   * /\)/, "deferredStatementOrBlock", function(variableDeclaration, 
-   * expression, deferredStatementOrBlock) {...})</tt>
+   * /\)/, "deferredStatement", function(variableDeclaration, 
+   * expression, deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement6 = 
   interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclaration", 
-  /in/, "expression", /\)/, "deferredStatementOrBlock", 
-  function(variableDeclaration, expression, deferredStatementOrBlock) {
+  /in/, "expression", /\)/, "deferredStatement", 
+  function(variableDeclaration, expression, deferredStatement) {
     for(var propertyName in expression) {
       this.executionContext.variables[variableDeclaration] = propertyName;
-      var returnValue = deferredStatementOrBlock.call(this);
+      var returnValue = deferredStatement.call(this);
       if(returnValue[0] === "return") {
         return returnValue;
       }
@@ -1026,10 +1013,10 @@ JavaScriptInterpreter.hack = function() {
   
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} (/else/, 
-   * "statementOrBlock")</tt>
+   * "statement")</tt>
    */
   JavaScriptInterpreter.prototype.elseStatement = 
-  interpreterMethodFactory.wrap(/else/, "statementOrBlock");
+  interpreterMethodFactory.wrap(/else/, "statement");
   
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/return/, 
