@@ -133,197 +133,6 @@ if they would be run as methods of some other object refered to as
     
 
     
-    <h4 class="name" id="atomInterpretation"><span class="type-signature"></span>atomInterpretation<span class="signature">(parsedText)</span><span class="type-signature"> &rarr; {*}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>
-An atom interpretation is a callback function passed to 
-<a href="InterpreterMethodFactory.html#atom">InterpreterMethodFactory#atom</a> along with a regular expression to 
-make an <a href="external-InterpreterObject.html#atomTypeInterpreterMethod">external:InterpreterObject#atomTypeInterpreterMethod</a> of an 
-<a href="external-InterpreterObject.html">external:InterpreterObject</a> made by the user.
-It should be thought of as a method of the interpreter object which has 
-been given the ability to parse text, using the regular expression of its 
-interpreter method.
-</p><p>
-When its interpreter method is called, it will parse a string from the 
-input text and call the interpretation with that text. 
-Then the method will return the result of the interpretation. 
-Most importantly, the method will run the interpretation as if it was a 
-method of the same object as the interpreter method. 
-This means that inside the body of the interpretation, <tt>this</tt> will 
-be bound to the interpreter object.
-In all, the only difference between the call to the interpreter method and 
-the call to its interpretation is that the interpreter method is called 
-with the full input text, while the interpretation is only called with 
-the part of the text that has been parsed by the regular expression.
-Another difference between interpreter methods and ordinary methods is 
-that interpreter methods can be chained, so that the second interpeter 
-method starts parsing where the first interpreter method finished parsing. 
-</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>parsedText</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The text parsed by the regular expression.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line541">line 541</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="global.html#atomUnitTests">atomUnitTests</a></li>
-        
-            <li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    User defined. 
-The value returned by the interpretation will also be the return value of 
-its interpreter method.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
     <h4 class="name" id="groupInterpretation"><span class="type-signature"></span>groupInterpretation<span class="signature">(&hellip;partResults)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
 
@@ -443,7 +252,7 @@ interpreter method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line807">line 807</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line811">line 811</a>
     </li></ul></dd>
     
 
@@ -570,7 +379,7 @@ the method will return the result of the fallback replacement, if the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1634">line 1634</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1638">line 1638</a>
     </li></ul></dd>
     
 
@@ -750,7 +559,7 @@ its <a href="global.html#part">part</a> as many times as it can, but at least on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1490">line 1490</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1494">line 1494</a>
     </li></ul></dd>
     
 
@@ -931,7 +740,7 @@ array.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1332">line 1332</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1336">line 1336</a>
     </li></ul></dd>
     
 
@@ -979,6 +788,198 @@ of its interpreter method.
     <dd>
         
 <span class="param-type"><a href="global.html#InterpreterMethodResult">InterpreterMethodResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="terminalInterpretation"><span class="type-signature"></span>terminalInterpretation<span class="signature">(parsedText)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>
+A terminal interpretation is a callback function passed to 
+<a href="InterpreterMethodFactory.html#terminal">InterpreterMethodFactory#terminal</a> along with a regular expression 
+to make a 
+<a href="external-InterpreterObject.html#terminalTypeInterpreterMethod">external:InterpreterObject#terminalTypeInterpreterMethod</a> of an 
+<a href="external-InterpreterObject.html">external:InterpreterObject</a> made by the user.
+It should be thought of as a method of the interpreter object which has 
+been given the ability to parse text, using the regular expression of its 
+interpreter method.
+</p><p>
+When its interpreter method is called, it will parse a string from the 
+input text and call the interpretation with that text. 
+Then the method will return the result of the interpretation. 
+Most importantly, the method will run the interpretation as if it was a 
+method of the same object as the interpreter method. 
+This means that inside the body of the interpretation, <tt>this</tt> will 
+be bound to the interpreter object.
+In all, the only difference between the call to the interpreter method and 
+the call to its interpretation is that the interpreter method is called 
+with the full input text, while the interpretation is only called with 
+the part of the text that has been parsed by the regular expression.
+Another difference between interpreter methods and ordinary methods is 
+that interpreter methods can be chained, so that the second interpeter 
+method starts parsing where the first interpreter method finished parsing. 
+</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parsedText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The text parsed by the regular expression.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line542">line 542</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li>
+        
+            <li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    User defined. 
+The value returned by the interpretation will also be the return value of 
+its interpreter method.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
 
 
     </dd>
@@ -1111,7 +1112,7 @@ the trailing regular expressions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1049">line 1049</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1053">line 1053</a>
     </li></ul></dd>
     
 
@@ -1186,13 +1187,13 @@ its interpreter method.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#atomUnitTests">atomUnitTests</a></li><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#optUnitTests">optUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#optUnitTests">optUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 19 2017 08:35:34 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 19:18:25 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

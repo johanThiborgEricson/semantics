@@ -43,7 +43,7 @@ describe("A wrapper", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
+      a: f.terminal(/a/),
     };
     
   });
@@ -70,7 +70,7 @@ describe("A wrapper", function() {
   it("calls its part as a method", function() {
     interpreter = {
       wrapper: f.wrap("charEater", function() {}),
-      charEater: f.atom(/./, function(theChar) {
+      charEater: f.terminal(/./, function(theChar) {
         this.eatenChar = theChar;
       }),
       
@@ -91,7 +91,7 @@ describe("A wrapper", function() {
   
   it("fails to parse if its part fails to parse", function() {
     interpreter.wrapper = f.wrap("a", function() {});
-    interpreter.fail = f.atom(/b/, function() {
+    interpreter.fail = f.terminal(/b/, function() {
       return "failure";
     });
     
@@ -102,7 +102,7 @@ describe("A wrapper", function() {
   
   it("returns the result of its part if it has no interpretation", function() {
     interpreter.wrap = f.wrap("a");
-    interpreter.a = f.atom(/a/, function() {
+    interpreter.a = f.terminal(/a/, function() {
       return "part result";
     });
     
@@ -112,7 +112,7 @@ describe("A wrapper", function() {
   it("fails to parse if its part fails to parse, even if it has no " +
   "interpretation", function() {
     interpreter.wrapper = f.wrap("a");
-    interpreter.fail = f.atom(/b/, function() {
+    interpreter.fail = f.terminal(/b/, function() {
       return "failure";
     });
     
@@ -129,7 +129,7 @@ describe("A wrapper", function() {
   
   it("fails to parse if a leading regex fails to parse", function() {
     interpreter.ba = f.wrap(/b/, "a");
-    interpreter.fail = f.atom(/a/, fail);
+    interpreter.fail = f.terminal(/a/, fail);
     interpreter.program = f.or("ba", "fail");
     
     expect(interpreter.program("a")).toBe("failure");
@@ -143,7 +143,7 @@ describe("A wrapper", function() {
   
   it("fails to parse if a leading regex fails to parse", function() {
     interpreter.ab = f.wrap("a", /b/);
-    interpreter.fail = f.atom(/a/, fail);
+    interpreter.fail = f.terminal(/a/, fail);
     interpreter.program = f.or("ab", "fail");
     
     expect(interpreter.program("a")).toBe("failure");
@@ -169,13 +169,13 @@ describe("A wrapper", function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#atomUnitTests">atomUnitTests</a></li><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#optUnitTests">optUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#optUnitTests">optUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 19 2017 08:35:34 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 19:18:25 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
