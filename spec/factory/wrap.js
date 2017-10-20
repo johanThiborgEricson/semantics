@@ -15,7 +15,7 @@ describe("A wrapper", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
+      a: f.terminal(/a/),
     };
     
   });
@@ -42,7 +42,7 @@ describe("A wrapper", function() {
   it("calls its part as a method", function() {
     interpreter = {
       wrapper: f.wrap("charEater", function() {}),
-      charEater: f.atom(/./, function(theChar) {
+      charEater: f.terminal(/./, function(theChar) {
         this.eatenChar = theChar;
       }),
       
@@ -63,7 +63,7 @@ describe("A wrapper", function() {
   
   it("fails to parse if its part fails to parse", function() {
     interpreter.wrapper = f.wrap("a", function() {});
-    interpreter.fail = f.atom(/b/, function() {
+    interpreter.fail = f.terminal(/b/, function() {
       return "failure";
     });
     
@@ -74,7 +74,7 @@ describe("A wrapper", function() {
   
   it("returns the result of its part if it has no interpretation", function() {
     interpreter.wrap = f.wrap("a");
-    interpreter.a = f.atom(/a/, function() {
+    interpreter.a = f.terminal(/a/, function() {
       return "part result";
     });
     
@@ -84,7 +84,7 @@ describe("A wrapper", function() {
   it("fails to parse if its part fails to parse, even if it has no " +
   "interpretation", function() {
     interpreter.wrapper = f.wrap("a");
-    interpreter.fail = f.atom(/b/, function() {
+    interpreter.fail = f.terminal(/b/, function() {
       return "failure";
     });
     
@@ -101,7 +101,7 @@ describe("A wrapper", function() {
   
   it("fails to parse if a leading regex fails to parse", function() {
     interpreter.ba = f.wrap(/b/, "a");
-    interpreter.fail = f.atom(/a/, fail);
+    interpreter.fail = f.terminal(/a/, fail);
     interpreter.program = f.or("ba", "fail");
     
     expect(interpreter.program("a")).toBe("failure");
@@ -115,7 +115,7 @@ describe("A wrapper", function() {
   
   it("fails to parse if a leading regex fails to parse", function() {
     interpreter.ab = f.wrap("a", /b/);
-    interpreter.fail = f.atom(/a/, fail);
+    interpreter.fail = f.terminal(/a/, fail);
     interpreter.program = f.or("ab", "fail");
     
     expect(interpreter.program("a")).toBe("failure");

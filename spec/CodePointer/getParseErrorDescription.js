@@ -94,7 +94,7 @@ describe("A parse error description", function() {
     var f = new InterpreterMethodFactory();
     var interpreter = {
       maybeA: f.opt("a"),
-      a: f.atom(/a/),
+      a: f.terminal(/a/),
     };
     
     expect(function() {

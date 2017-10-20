@@ -17,7 +17,7 @@ describe("A method factory", function() {
   
   it("can be called", function() {
     var interpretation = jasmine.createSpy("interpretation");
-    interpreter.instruction = f.atom(/a/, interpretation);
+    interpreter.instruction = f.terminal(/a/, interpretation);
     interpreter.deferrer = f.methodFactory("instruction");
     var callable = interpreter.deferrer("a");
     
@@ -28,8 +28,8 @@ describe("A method factory", function() {
   
   it("fails to parse if its part fails to parse", function() {
     interpreter.ab = f.group("deferredA", "b");
-    interpreter.b = f.atom(/b/);
-    interpreter.a = f.atom(/a/);
+    interpreter.b = f.terminal(/b/);
+    interpreter.a = f.terminal(/a/);
     interpreter.deferredA = f.methodFactory("a");
     interpreter.program = f.or("ab", "b");
     
@@ -37,7 +37,7 @@ describe("A method factory", function() {
   });
   
   it("makes a method", function() {
-    interpreter.charEater = f.atom(/./, function(theChar) {
+    interpreter.charEater = f.terminal(/./, function(theChar) {
       this.eatenChar = theChar;
     });
     
@@ -49,7 +49,7 @@ describe("A method factory", function() {
   });
   
   it("makes a method that can be a property of any object", function() {
-    interpreter.charEater = f.atom(/./, function(theChar) {
+    interpreter.charEater = f.terminal(/./, function(theChar) {
       this.eatenChar = theChar;
     });
     
@@ -64,7 +64,7 @@ describe("A method factory", function() {
   });
   
   it("returns the result of its part", function() {
-    interpreter.a = f.atom(/a/);
+    interpreter.a = f.terminal(/a/);
     interpreter.methodFactory = f.methodFactory("a");
     interpreter.method = interpreter.methodFactory("a");
     

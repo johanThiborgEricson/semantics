@@ -15,9 +15,9 @@ describe("The insignificant meta-nonterminal", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      j: f.atom(/j/),
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      j: f.terminal(/j/),
       ia: f.insignificant(/i/, "a"),
     };
     
@@ -35,14 +35,14 @@ describe("The insignificant meta-nonterminal", function() {
   });
   
   it("fails if the trailing insignificant fails", function() {
-    interpreter.fail = f.atom(/ia/, fail);
+    interpreter.fail = f.terminal(/ia/, fail);
     interpreter.program = f.or("ia", "fail");
     
     expect(interpreter.program("ia")).toBe("failure");
   });
   
   it("fails if a leading insignificant fails", function() {
-    interpreter.fail = f.atom(/ai/, fail);
+    interpreter.fail = f.terminal(/ai/, fail);
     interpreter.program = f.or("ia", "fail");
     
     expect(interpreter.program("ai")).toBe("failure");
@@ -62,7 +62,7 @@ describe("The insignificant meta-nonterminal", function() {
   
   it("fails to parse if its outer double padding fails to parse", function() {
     interpreter.doublePadded = f.insignificant(/j/, "ia");
-    interpreter.fail = f.atom(/iaij/, fail);
+    interpreter.fail = f.terminal(/iaij/, fail);
     interpreter.program = f.or("doublePadded", "fail");
     
     expect(interpreter.program("iaij")).toBe("failure");

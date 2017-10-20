@@ -4,7 +4,7 @@ group example /(ab)/
 group interpretation elaborate.
 group is Semantics! equivalent of regex groups, putting things 
   between <tt>(</tt> and <tt>)</tt>.
-atom(identifierName) is confusing.
+terminal(identifierName) is confusing.
 plus and star aren't interpreter methods. They are factories for producing 
   interpreter methods.
 define absteract InterpreterMethodFactory#interpreterMethodFactoryMethod
@@ -14,11 +14,11 @@ quantifiers factories should link to interpreterMethod when they say they are
 opt fallback replacement => fallback replacement method.
 ? * + => <tt>?</tt> <tt>*</tt> <tt>+</tt>
 opt unit tests i => interpreter
-examples a: f.atom(/a/) => part: f.atom(/text/)
+examples a: f.terminal(/a/) => part: f.terminal(/text/)
 undefined => <tt>undefined</tt>
 this => <tt>this</tt>
 insignificant example.
-atom unit tests interpreter.a = => interpreter = {a:
+terminal unit tests interpreter.a = => interpreter = {a:
 method factory unit test o => thisBinding
 elseStatementOpt link
 expression link

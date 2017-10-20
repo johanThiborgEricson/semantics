@@ -1,7 +1,7 @@
 /**
  * @name emptyUnitTests
  */
-describe("The empty string atom", function() {
+describe("The empty string terminal", function() {
   var interpreter;
   var f;
   var noop = function() {};
@@ -25,7 +25,8 @@ describe("The empty string atom", function() {
   it("expects to get an interpretation", function() {
     expect(function() {
       f.empty();
-    }).toThrowError("The empty string atom should be called with a function");
+    }).toThrowError(
+      "The empty string terminal should be called with a function");
   });
   
   it("calls its interpretation with zero arguments and returns the result", 

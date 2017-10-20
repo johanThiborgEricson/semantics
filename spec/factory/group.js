@@ -12,9 +12,9 @@ describe("A group", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      ac: f.atom(/a/, (function() {
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      ac: f.terminal(/a/, (function() {
         var i = 1;
         return function(a) {
           return a+i++;
@@ -31,7 +31,7 @@ describe("A group", function() {
   });
   
   it("calls its parts as methods of the interpreter", function() {
-    interpreter.readChar = f.atom(/./, function(char) {
+    interpreter.readChar = f.terminal(/./, function(char) {
       this.char = char;
     });
     
@@ -69,10 +69,10 @@ describe("A group", function() {
       return "appended property";
     });
     
-    interpreter[hop] = f.atom(/hasOwnProperty/);
-    interpreter.toString = f.atom(/toString/);
-    interpreter[emptyString] = f.atom(/empty/);
-    interpreter.length = f.atom(/length/);
+    interpreter[hop] = f.terminal(/hasOwnProperty/);
+    interpreter.toString = f.terminal(/toString/);
+    interpreter[emptyString] = f.terminal(/empty/);
+    interpreter.length = f.terminal(/length/);
     interpreter.wierdNames = f.group(
       "appendProperty", "hasOwnProperty", "toString", "", "length");
     
@@ -187,14 +187,14 @@ describe("A group", function() {
   
   it("doesn't leave a group half parsed", function() {
     interpreter.ab = f.group("a", "b");
-    interpreter.ac = f.atom(/ac/);
+    interpreter.ac = f.terminal(/ac/);
     interpreter.abac = f.or("ab", "ac");
     
     expect(interpreter.abac("ac")).toBe("ac");
   });
   
   it("correctly reparses a part", function() {
-    interpreter.c = f.atom(/c/);
+    interpreter.c = f.terminal(/c/);
     interpreter.ab = f.group("a", "b");
     interpreter.ac = f.group("a", "c");
     interpreter.abac = f.or("ab", "ac");
