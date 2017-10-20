@@ -632,6 +632,133 @@ InterpreterMethodFactory.prototype
 };
 
 /**
+ * The terminal interpreter method factory takes a regular expression and makes 
+ * a {@link external:InterpreterObject#terminalTypeInterpreterMethod} meant to 
+ * be an interpreter method of a user created 
+ * {@link external:InterpreterObject}.
+ * The returned method parses text with the supplied regular expression. 
+ * Optionally, a {@link external:ThisBinding#terminalInterpretation} callback 
+ * function may be supplied to describe how the parsed text should be 
+ * interpreted. 
+ * The interpretation will be run as if it was a method of the interpreter 
+ * object, i. e. <tt>this</tt> will be bound to the interpreter object inside 
+ * the interpretation body.
+ * @param {RegExp} regex - The regular expression that the interpreter method
+ * should use to parse text. 
+ * @param {string[]} [butNot] - A list of forbidden words. 
+ * If the parsed string equals an element in this list, the parsing fails. 
+ * @param {external:ThisBinding#terminalInterpretation} [interpretation] - 
+ * A callback function describing how the parsed string should be interpreted. 
+ * If pressent, the result of this function will also be the result of the 
+ * interpreter method. 
+ * Otherwise the parsed string will be returned. 
+ * @returns {external:InterpreterObject#terminalTypeInterpreterMethod}
+ * An interpreter method that uses a regular expression to parse text. 
+ * @see {@link terminalUnitTests}
+ * @see {@link butNotUnitTests}
+ */
+InterpreterMethodFactory.prototype
+.terminal = function(regex, interpretationOrButNot) {
+  "use strict";
+  var that = this;
+  var parsingRegex = this.makeParsing(regex);
+  
+  /**
+   * @method external:ThisBinding#terminalInterpretation
+   * @description <p>
+   * A terminal interpretation is a callback function passed to 
+   * {@link InterpreterMethodFactory#terminal} along with a regular expression 
+   * to make a 
+   * {@link external:InterpreterObject#terminalTypeInterpreterMethod} of an 
+   * {@link external:InterpreterObject} made by the user.
+   * It should be thought of as a method of the interpreter object which has 
+   * been given the ability to parse text, using the regular expression of its 
+   * interpreter method.
+   * </p><p>
+   * When its interpreter method is called, it will parse a string from the 
+   * input text and call the interpretation with that text. 
+   * Then the method will return the result of the interpretation. 
+   * Most importantly, the method will run the interpretation as if it was a 
+   * method of the same object as the interpreter method. 
+   * This means that inside the body of the interpretation, <tt>this</tt> will 
+   * be bound to the interpreter object.
+   * In all, the only difference between the call to the interpreter method and 
+   * the call to its interpretation is that the interpreter method is called 
+   * with the full input text, while the interpretation is only called with 
+   * the part of the text that has been parsed by the regular expression.
+   * Another difference between interpreter methods and ordinary methods is 
+   * that interpreter methods can be chained, so that the second interpeter 
+   * method starts parsing where the first interpreter method finished parsing. 
+   * </p>
+   * @param {string} parsedText - The text parsed by the regular expression. 
+   * @returns {*} User defined. 
+   * The value returned by the interpretation will also be the return value of 
+   * its interpreter method. 
+   * @see {@link terminalUnitTests}
+   * @see {@link butNotUnitTests}
+   */
+  var interpretation;
+  var butNot;
+  if(typeof interpretationOrButNot === "function") {
+    interpretation = interpretationOrButNot;
+  } else {
+    butNot = interpretationOrButNot;
+    interpretation = arguments[2];
+  }
+  
+  /**
+   * @method external:InterpreterObject#terminalTypeInterpreterMethod
+   * @description A terminal type interpreter method is a method of an 
+   * {@link external:InterpreterObject} that has been made by passing a regular 
+   * expression and possibly a 
+   * {@link external:ThisBinding#terminalInterpretation} 
+   * to {@link InterpreterMethodFactory#terminal}.
+   * It is a type of {@link external:InterpreterObject#interpreterMethod}
+   * that parses and interprets its input text with its regular expression and 
+   * its interpretation. 
+   * Parsing is done by trying to match the regular expression at the position 
+   * in the text where the last interpreter method finished to parse.
+   * Matches starting at other positions will not be concidered. 
+   * The full match (corresponding to match[0]) will be parsed, so capturing 
+   * groups will not have any effect. 
+   * It returns the parsed text or, if it has an interpretation, the result of 
+   * calling that interpretation as a method of the interpreter object with the 
+   * parsed string. 
+   * Inside the body of the interpretation, <tt>this</tt> will be bound the 
+   * the object of its interpreter method, as if it was called as a method of 
+   * the same object.
+   * If the regular expression can't be matched at the current position in the 
+   * text, the method fails to parse and the interpretation isn't run.
+   * @param {string} text - The text to be interpreted. 
+   * @param {boolean} [printDebuggingMessages] - See 
+   * {@link external:InterpreterObject#interpreterMethod}. 
+   * @returns {InterpreterMethodResult} The parsed string or, if it is defined 
+   * with an interpretation, the result of calling the interpretation as if it 
+   * was a method of the same object with the parsed string. 
+   * @see {@link terminalUnitTests}
+   * @see {@link butNotUnitTests}
+   */
+  return this.makeMethod(function(codePointer, interpreter) {
+    var match = that
+    .parseInsignificantAndToken(codePointer, parsingRegex, interpreter);
+    if(match === null) {
+      return null;
+    }
+    
+    var result = match[0];
+    if(butNot && butNot.indexOf(result) > -1) {
+      return null;
+    }
+    
+    return function instruction() {
+      return interpretation?interpretation.call(this, result):result;
+    };
+    
+  });
+  
+};
+
+/**
  * The empty method factory takes an interpretation callback function and 
  * returns an {@link external:InterpreterObject#emptyTypeInterpreterMethod} 
  * meant to be a method of a user created {@link external:InterpreterObject}. 
