@@ -12,12 +12,12 @@ describe("A plus quantifier", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
+      a: f.terminal(/a/),
       ap: f.plus("a"),
-      b: f.atom(/b/),
-      ab: f.atom(/[ab]/),
+      b: f.terminal(/b/),
+      ab: f.terminal(/[ab]/),
       abp: f.plus("ab"),
-      abc: f.atom(/a|b|c/),
+      abc: f.terminal(/a|b|c/),
       list: f.star("abc", /,/),
     };
     

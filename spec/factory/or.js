@@ -11,9 +11,9 @@ describe("An or", function() {
   
   beforeEach(function() {
     i = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      c: f.atom(/c/),
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      c: f.terminal(/c/),
     };
 
   });

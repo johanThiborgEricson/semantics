@@ -508,11 +508,12 @@ InterpreterMethodFactory.prototype
  */
  
 /**
- * The atom interpreter method factory takes a regular expression and makes an 
- * {@link external:InterpreterObject#atomTypeInterpreterMethod} meant to be an 
- * interpreter method of a user created {@link external:InterpreterObject}.
+ * The terminal interpreter method factory takes a regular expression and makes 
+ * a {@link external:InterpreterObject#terminalTypeInterpreterMethod} meant to 
+ * be an interpreter method of a user created 
+ * {@link external:InterpreterObject}.
  * The returned method parses text with the supplied regular expression. 
- * Optionally, an {@link external:ThisBinding#atomInterpretation} callback 
+ * Optionally, a {@link external:ThisBinding#terminalInterpretation} callback 
  * function may be supplied to describe how the parsed text should be 
  * interpreted. 
  * The interpretation will be run as if it was a method of the interpreter 
@@ -522,28 +523,29 @@ InterpreterMethodFactory.prototype
  * should use to parse text. 
  * @param {string[]} [butNot] - A list of forbidden words. 
  * If the parsed string equals an element in this list, the parsing fails. 
- * @param {external:ThisBinding#atomInterpretation} [interpretation] - 
+ * @param {external:ThisBinding#terminalInterpretation} [interpretation] - 
  * A callback function describing how the parsed string should be interpreted. 
  * If pressent, the result of this function will also be the result of the 
  * interpreter method. 
  * Otherwise the parsed string will be returned. 
- * @returns {external:InterpreterObject#atomTypeInterpreterMethod}
- * An interpreter method that parses a regular expression. 
- * @see {@link atomUnitTests}
+ * @returns {external:InterpreterObject#terminalTypeInterpreterMethod}
+ * An interpreter method that uses a regular expression to parse text. 
+ * @see {@link terminalUnitTests}
  * @see {@link butNotUnitTests}
  */
 InterpreterMethodFactory.prototype
-.atom = function(regex, interpretationOrButNot) {
+.terminal = function(regex, interpretationOrButNot) {
   "use strict";
   var that = this;
   var parsingRegex = this.makeParsing(regex);
   
   /**
-   * @method external:ThisBinding#atomInterpretation
+   * @method external:ThisBinding#terminalInterpretation
    * @description <p>
-   * An atom interpretation is a callback function passed to 
-   * {@link InterpreterMethodFactory#atom} along with a regular expression to 
-   * make an {@link external:InterpreterObject#atomTypeInterpreterMethod} of an 
+   * A terminal interpretation is a callback function passed to 
+   * {@link InterpreterMethodFactory#terminal} along with a regular expression 
+   * to make a 
+   * {@link external:InterpreterObject#terminalTypeInterpreterMethod} of an 
    * {@link external:InterpreterObject} made by the user.
    * It should be thought of as a method of the interpreter object which has 
    * been given the ability to parse text, using the regular expression of its 
@@ -568,7 +570,7 @@ InterpreterMethodFactory.prototype
    * @returns {*} User defined. 
    * The value returned by the interpretation will also be the return value of 
    * its interpreter method. 
-   * @see {@link atomUnitTests}
+   * @see {@link terminalUnitTests}
    * @see {@link butNotUnitTests}
    */
   var interpretation;
@@ -581,11 +583,12 @@ InterpreterMethodFactory.prototype
   }
   
   /**
-   * @method external:InterpreterObject#atomTypeInterpreterMethod
-   * @description An atom type interpreter method is a method of an 
+   * @method external:InterpreterObject#terminalTypeInterpreterMethod
+   * @description A terminal type interpreter method is a method of an 
    * {@link external:InterpreterObject} that has been made by passing a regular 
-   * expression and possibly an {@link external:ThisBinding#atomInterpretation} 
-   * to {@link InterpreterMethodFactory#atom}.
+   * expression and possibly a 
+   * {@link external:ThisBinding#terminalInterpretation} 
+   * to {@link InterpreterMethodFactory#terminal}.
    * It is a type of {@link external:InterpreterObject#interpreterMethod}
    * that parses and interprets its input text with its regular expression and 
    * its interpretation. 
@@ -608,7 +611,7 @@ InterpreterMethodFactory.prototype
    * @returns {InterpreterMethodResult} The parsed string or, if it is defined 
    * with an interpretation, the result of calling the interpretation as if it 
    * was a method of the same object with the parsed string. 
-   * @see {@link atomUnitTests}
+   * @see {@link terminalUnitTests}
    * @see {@link butNotUnitTests}
    */
   return this.makeMethod(function(codePointer, interpreter) {
@@ -657,7 +660,8 @@ InterpreterMethodFactory.prototype
 .empty = function(interpretation) {
   "use strict";
   if(!interpretation) {
-    throw new Error("The empty string atom should be called with a function");
+    throw new Error(
+      "The empty string terminal should be called with a function");
   }
   
   /**

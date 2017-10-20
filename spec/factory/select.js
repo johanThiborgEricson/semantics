@@ -15,9 +15,9 @@ describe("A selection", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      c: f.atom(/c/),
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      c: f.terminal(/c/),
     };
     
   });
@@ -44,7 +44,7 @@ describe("A selection", function() {
     });
     
     it("calls all parts as methods of the interpreter", function() {
-      interpreter.charEater = f.atom(/./, function(theChar) {
+      interpreter.charEater = f.terminal(/./, function(theChar) {
         this.eatenChar = theChar;
       });
       
@@ -57,7 +57,7 @@ describe("A selection", function() {
   });
   
   it("calls the selected part as methods of the interpreter", function() {
-    interpreter.charEater = f.atom(/./, function(theChar) {
+    interpreter.charEater = f.terminal(/./, function(theChar) {
       this.eatenChar = theChar;
     });
     
@@ -71,8 +71,8 @@ describe("A selection", function() {
     var a = jasmine.createSpy("a");
     var b = jasmine.createSpy("b");
     interpreter = {
-      a: f.atom(/a/, a),
-      b: f.atom(/b/, b),
+      a: f.terminal(/a/, a),
+      b: f.terminal(/b/, b),
       ab: f.select(2, "a", "b"),
     };
     
@@ -83,7 +83,7 @@ describe("A selection", function() {
   
   it("fails to parse if a method part fails to parse", function() {
     interpreter.abc = f.select(1, "a", "b", "c");
-    interpreter.fail = f.atom(/a/, fail);
+    interpreter.fail = f.terminal(/a/, fail);
     interpreter.program = f.or("abc", "fail");
     
     expect(interpreter.program("a")).toBe("failure");
@@ -91,7 +91,7 @@ describe("A selection", function() {
   
   it("fails to parse if a regex part fails to parse", function() {
     interpreter.abc = f.select(1, /a/, /b/, /c/);
-    interpreter.fail = f.atom(/a/, fail);
+    interpreter.fail = f.terminal(/a/, fail);
     interpreter.program = f.or("abc", "fail");
     
     expect(interpreter.program("a")).toBe("failure");

@@ -10,10 +10,10 @@ describe("Debugging messages", function() {
   
   beforeEach(function() {
     interpreter = {
-      text: factory.atom(/text/),
-      lineBreak: factory.atom(/\n/),
+      text: factory.terminal(/text/),
+      lineBreak: factory.terminal(/\n/),
       paragraph: factory.group("text", "lineBreak"),
-      somethingElse: factory.atom(/Something else\n?/),
+      somethingElse: factory.terminal(/Something else\n?/),
     };
     
     spyOn(console, "log");
@@ -86,7 +86,7 @@ describe("Debugging messages", function() {
   
   they("can tell the name of the called method, even if there are other " + 
   "methods with the same function", function() {
-    interpreter.a1 = factory.atom(/a/, function() {});
+    interpreter.a1 = factory.terminal(/a/, function() {});
     interpreter.a2 = interpreter.a1;
     interpreter.aa = factory.group("a1", "a2", function() {});
 
@@ -105,7 +105,7 @@ describe("Debugging messages", function() {
     });
 
     it("reports forgetting intermediate results", function() {
-      interpreter.a = f.atom(/a/);
+      interpreter.a = f.terminal(/a/);
       interpreter.abcs = f.or("abcs1", "a");
       interpreter.abcs1 = f.wrap("abcsb", /c/);
       interpreter.abcsb = f.wrap("abcs", /b/);

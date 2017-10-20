@@ -17,7 +17,7 @@
     
     var f = new InterpreterMethodFactory();
     var interpreter = {
-      number: f.atom(/\d+/, function(digits) {
+      number: f.terminal(/\d+/, function(digits) {
         return Number(digits);
       }),
       
@@ -102,14 +102,14 @@ Finally, Semantics doesn't support the concept of sequence or concatenation<sup>
     sum2:
       (sum - number)
 
-Now for the implementation. We will make an interpreter object with one method for each canonical rule in our language: sum, sum1, sum2 and number. The methods will be created using the factory methods longest, group and atom of an interpreter method factory. 
+Now for the implementation. We will make an interpreter object with one method for each canonical rule in our language: sum, sum1, sum2 and number. The methods will be created using the factory methods longest, group and terminal of an interpreter method factory. 
 
     // An interpreter method factory to produce interpreter methods.
     var f = new InterpreterMethodFactory();
     // An interpreter object parsing and computing sums.
     var interpreter = {
       // Number parses one or more digits and interpret it as a positive number.
-      number: f.atom(/\d+/, function(digits) {
+      number: f.terminal(/\d+/, function(digits) {
         return Number(digits);
       }),
       
@@ -130,7 +130,7 @@ Now for the implementation. We will make an interpreter object with one method f
       
     };
 
-Note that the callback functions of sum 1 and 2 only get two values, even though they parses three symbols. This is because Semantics! is meant to be used to implement interpreters with semantic actions, not build parse trees. If you want to build a parse tree with the plus and minus signs, you must put them inside atoms. If you want to build a syntax tree, make the callback return a newly created Add or Subtract object.
+Note that the callback functions of sum 1 and 2 only get two values, even though they parses three symbols. This is because Semantics! is meant to be used to implement interpreters with semantic actions, not build parse trees. If you want to build a parse tree with the plus and minus signs, you must put them inside terminals. If you want to build a syntax tree, make the callback return a newly created Add or Subtract object.
 
 I hope that this example implementation explains why Semantics! doesn't support compound rules such as the sum rule of the first language. If you really, really want compound rules, it should be fairly trivial to write a function that automates the process, something like this:
 
@@ -170,8 +170,8 @@ A more complex example:
     var f = new InterpreterMethodFactory();
     var interpreter = {
       ab: f.group("a", "b", function() {}),
-      a: f.atom(/a/, function() {}),
-      b: f.atom(/b/, function() {})
+      a: f.terminal(/a/, function() {}),
+      b: f.terminal(/b/, function() {})
     };
     
     interpreter.ab("ab", true);
@@ -195,9 +195,9 @@ If you want to print the debugging messages of the sum rule described above, be 
 
 ## Comparison to other parsing libraries
 
-Semantics! isn't meant to build parse trees, although it can. It defines two type of terminals, one type that represents terminals that in some way will be part of the syntax tree, and one type that is forgotten immediately after it has been parsed, representing the leafs of the parse tree that would indicate the type of node in the syntax tree. The first type are the ones created by atoms, and the other type is the anonymous regular expressions of, e. g. groups. To build a parse tree, just use atoms instead of anonymous regexes.
+Semantics! supports anonymous terminals. They correspond to terminals that would appeare in a parse tree but not in the syntax tree. Anonymous terminals are represented by regular expressions supplied when creating nonterminals, e. g. groups. If you want to build a parse tree, just use regular terminals instead of anonymous terminals.
 
-By natively skipping all terminals that should not be in the syntax tree, it can be built without making a parse tree first. However, the syntax tree isn't a normal one. Normally, a syntax tree is a nested data structure with  typed nodes. In Semantics!, each node is instead represented by a function being called with the result of its child node functions. In Semantics!, each rule has its own function. This function is the equivalent of the type of a node in a normal syntax tree. An instance of a node type in an ordinary syntax tree differs from other instances by holding references to its child nodes. A Semantics! node differs from other nodes of the same type by being called with the result of its child nodes. Semantics! can build a syntax tree if all functions returns a newly created typed object with references to the results of its child node functions, which will then also be typed objects with references to … and so on. 
+By natively skipping all anonymous terminals that should not be in the syntax tree, it can be built without making a parse tree first. However, the syntax tree isn't a normal one. Normally, a syntax tree is a nested data structure with  typed nodes. In Semantics!, each node is instead represented by a function being called with the result of its child node functions. In Semantics!, each rule has its own function. This function is the equivalent of the type of a node in a normal syntax tree. An instance of a node type in an ordinary syntax tree differs from other instances by holding references to its child nodes. A Semantics! node differs from other nodes of the same type by being called with the result of its child nodes. Semantics! can build a syntax tree if all functions returns a newly created typed object with references to the results of its child node functions, which will then also be typed objects with references to … and so on. 
 
 If you want to build a normal syntax tree you might find this extension useful: 
     
@@ -217,7 +217,7 @@ If you want to build a normal syntax tree you might find this extension useful:
       }
       
       InterpreterMethodFactory.prototype.terminalNode = function() {
-        return this.atom.apply(this, lastAsConstructor(arguments));
+        return this.terminal.apply(this, lastAsConstructor(arguments));
       };
       
       InterpreterMethodFactory.prototype.nonterminalNode = function() {

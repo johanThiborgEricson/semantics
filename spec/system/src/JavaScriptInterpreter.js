@@ -33,43 +33,45 @@ JavaScriptInterpreter.hack = function() {
   });
 
   /**
-   * <tt>{@link InterpreterMethodFactory#or|or} ("whiteSpace", "lineTerminator", 
-   * "singleLineComment", "multiLineComment")</tt>
+   * <tt>{@link InterpreterMethodFactory#or|or} ("whiteSpace", 
+   * "lineTerminator", "singleLineComment", "multiLineComment")</tt>
    */
   JavaScriptInterpreter.prototype.space = 
   interpreterMethodFactory.or("whiteSpace", "lineTerminator", 
   "singleLineComment", "multiLineComment");
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/\s/)</tt>
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/\s/)</tt>
    */
   JavaScriptInterpreter.prototype.whiteSpace = 
-  interpreterMethodFactory.atom(/\s/);
+  interpreterMethodFactory.terminal(/\s/);
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/\n/)</tt>
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/\n/)</tt>
    */
   JavaScriptInterpreter.prototype.lineTerminator = 
-  interpreterMethodFactory.atom(/\n/);
+  interpreterMethodFactory.terminal(/\n/);
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/\/\/.*</tt><tt>/)</tt>
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} 
+   * (/\/\/.*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.singleLineComment = 
-  interpreterMethodFactory.atom(/\/\/.*/);
+  interpreterMethodFactory.terminal(/\/\/.*/);
 
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} 
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} 
    * (/\/\*\/*(\**[^\*\/]+\/*)*\*+\//)</tt>
    */
   JavaScriptInterpreter.prototype.multiLineComment = 
-  interpreterMethodFactory.atom(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
+  interpreterMethodFactory.terminal(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (identifierName)</tt>
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} 
+   * (identifierName)</tt>
    */
   JavaScriptInterpreter.prototype.identifierName = 
-  interpreterMethodFactory.atom(identifierName);
+  interpreterMethodFactory.terminal(identifierName);
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("undefinedLiteral", 
@@ -82,18 +84,19 @@ JavaScriptInterpreter.hack = function() {
   "regularExpressionLiteral");
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/undefined/, function() 
-   * {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/undefined/, 
+   * function() {...})</tt>
    */
   JavaScriptInterpreter.prototype.undefinedLiteral = 
-  interpreterMethodFactory.atom(/undefined/, function() {return undefined;});
+  interpreterMethodFactory.terminal(/undefined/, function() {
+    return undefined;});
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/null/, function() 
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/null/, function() 
    * {...})</tt>
    */
   JavaScriptInterpreter.prototype.nullLiteral = 
-  interpreterMethodFactory.atom(/null/, function() {return null;});
+  interpreterMethodFactory.terminal(/null/, function() {return null;});
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("trueLiteral", 
@@ -103,25 +106,25 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.or("trueLiteral", "falseLiteral");
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/true/, function() 
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/true/, function() 
    * {...})</tt>
    */
   JavaScriptInterpreter.prototype.trueLiteral = 
-  interpreterMethodFactory.atom(/true/, function() {return true;});
+  interpreterMethodFactory.terminal(/true/, function() {return true;});
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/false/, function() 
-   * {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/false/, 
+   * function() {...})</tt>
    */
   JavaScriptInterpreter.prototype.falseLiteral = 
-  interpreterMethodFactory.atom(/false/, function() {return false;});
+  interpreterMethodFactory.terminal(/false/, function() {return false;});
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/\d+/, 
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/\d+/, 
    * function(numericLiteral) {...})</tt>
    */
   JavaScriptInterpreter.prototype.numericLiteral = 
-  interpreterMethodFactory.atom(/\d+/, function(numericLiteral) {
+  interpreterMethodFactory.terminal(/\d+/, function(numericLiteral) {
     return Number(numericLiteral);
   });
   
@@ -164,18 +167,18 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom}
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal}
    * (/([^"\\]|(\\.))*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.doubleStringCharacters = 
-  interpreterMethodFactory.atom(/([^"\\]|(\\.))*/, unescape);
+  interpreterMethodFactory.terminal(/([^"\\]|(\\.))*/, unescape);
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom}
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal}
    * (/([^'\\]|(\\.))*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.singleStringCharacters = 
-  interpreterMethodFactory.atom(/([^'\\]|(\\.))*/, unescape);
+  interpreterMethodFactory.terminal(/([^'\\]|(\\.))*/, unescape);
   
   var characterEscapeSequence = {
     "\\\'": "\'",
@@ -204,12 +207,12 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\//, "regularExpressionBody", /\//);
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom}
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal}
    * (/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
    * function(regularExpressionBody) {...})</tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionBody = 
-  interpreterMethodFactory.atom(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
+  interpreterMethodFactory.terminal(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
   function(regularExpressionBody) {
     return new RegExp(regularExpressionBody);
   });
@@ -256,11 +259,11 @@ JavaScriptInterpreter.hack = function() {
   "try", "typeof", "undefined", "var", "void", "while", "with", "yield"];
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (identifierName, 
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (identifierName, 
    * reservedWord)</tt>
    */
   JavaScriptInterpreter.prototype.bindingIdentifier = 
-  interpreterMethodFactory.atom(identifierName, reservedWord);
+  interpreterMethodFactory.terminal(identifierName, reservedWord);
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("literal", 
@@ -276,7 +279,8 @@ JavaScriptInterpreter.hack = function() {
    */
   JavaScriptInterpreter.prototype.objectExpression = 
   interpreterMethodFactory.or("identifierExpression", "arrayLiteral", 
-  "objectLiteral", "functionExpression", "objectExpression1", "thisExpression");
+  "objectLiteral", "functionExpression", "objectExpression1", 
+  "thisExpression");
   
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} (/\(/, "expression", 
@@ -286,11 +290,11 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/\(/, "expression", /\)/);
   
   /**
-   * <tt>{@link InterpreterMethodFactory#atom|atom} (/this/, function() 
+   * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/this/, function() 
    * {...})</tt>
    */
   JavaScriptInterpreter.prototype.thisExpression = 
-  interpreterMethodFactory.atom(/this/, function() {
+  interpreterMethodFactory.terminal(/this/, function() {
     return this.executionContext.thisBinding;
   });
   
@@ -373,8 +377,9 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.longest("newExpression", "newExpressionQualifier1");
   
   /**
-   * <tt>{@link InterpreterMethodFactory#group|group} ("newExpressionQualifier", 
-   * "qualifier", function(newExpressionQualifier, qualifier) {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#group|group} 
+   * ("newExpressionQualifier", "qualifier", 
+   * function(newExpressionQualifier, qualifier) {...})</tt>
    */
   JavaScriptInterpreter.prototype.newExpressionQualifier1 = 
   interpreterMethodFactory.group("newExpressionQualifier", "qualifier",
@@ -501,8 +506,9 @@ JavaScriptInterpreter.hack = function() {
   "leftHandSideExpression2", "identifierReference");
   
   /**
-   * <tt>{@link InterpreterMethodFactory#group|group} ("leftHandSideExpression", 
-   * "qualifier", function(leftHandSideExpression, qualifier) {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#group|group} 
+   * ("leftHandSideExpression", "qualifier", 
+   * function(leftHandSideExpression, qualifier) {...})</tt>
    */
   JavaScriptInterpreter.prototype.leftHandSideExpression1 = 
   interpreterMethodFactory.group("leftHandSideExpression", "qualifier", 
@@ -775,18 +781,18 @@ JavaScriptInterpreter.hack = function() {
   "conditionalExpression");
   
   /**
-   * <tt>{@link InterpreterMethodFactory#group|group} ("leftHandSideExpression", 
-   * /=/, "assignmentExpression", function(lhse, assignmentExpression) 
-   * {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#group|group} ( 
+   * "leftHandSideExpression", /=/, "assignmentExpression", 
+   * function(lhse, assignmentExpression) {...})</tt>
    */
   JavaScriptInterpreter.prototype.assignmentExpression1 = 
   interpreterMethodFactory.group("leftHandSideExpression", /=/, 
   "assignmentExpression", function(lhse, assignmentExpression) {
     return (lhse.base[lhse.name] = assignmentExpression);});
   /**
-   * <tt>{@link InterpreterMethodFactory#group|group} ("leftHandSideExpression", 
-   * /\+=/, "assignmentExpression", function(lhse, assignmentExpression) 
-   * {...})</tt>
+   * <tt>{@link InterpreterMethodFactory#group|group} (
+   * "leftHandSideExpression", /\+=/, "assignmentExpression", 
+   * function(lhse, assignmentExpression) {...})</tt>
    */
   JavaScriptInterpreter.prototype.assignmentExpression5 = 
   interpreterMethodFactory.group("leftHandSideExpression", /\+=/, 
@@ -904,8 +910,8 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * <tt>{@link InterpreterMethodFactory#group|group} (/if/, /\(/, "expression", 
-   * /\)/, "deferredStatement", 
+   * <tt>{@link InterpreterMethodFactory#group|group} 
+   * (/if/, /\(/, "expression", /\)/, "deferredStatement", 
    * "deferredElseStatementOpt", function(expression, deferredStatement, 
    * deferredElseStatementOpt) {...})</tt>
    */
@@ -957,8 +963,8 @@ JavaScriptInterpreter.hack = function() {
    * <tt>{@link InterpreterMethodFactory#group|group} (/for/, /\(/, /var/, 
    * "variableDeclarationList", /;/, "deferredExpression", /;/, 
    * "deferredExpression", /\)/, "deferredStatement", 
-   * function(variableDeclarationList, deferredExpression1, deferredExpression2, 
-   * deferredStatement) {...})</tt>
+   * function(variableDeclarationList, deferredExpression1, 
+   * deferredExpression2, deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement4 = 
   interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclarationList", 

@@ -12,9 +12,9 @@ describe("The question mark quantifier", function() {
   
   beforeEach(function() {
     i = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      ar: f.atom(/a/, function() {
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      ar: f.terminal(/a/, function() {
         return "the result";
       }),
       
@@ -47,7 +47,8 @@ describe("The question mark quantifier", function() {
     expect(i.maybeA("a")).toBe("the result");
   });
   
-  it("returns the result of its interpretation if it didn't match", function() {
+  it("returns the result of its interpretation if it didn't match", 
+  function() {
     i.maybeA = f.opt("a", function() {
       return "the default value";
     });
@@ -63,7 +64,7 @@ describe("The question mark quantifier", function() {
   });
   
   it("calls its part as a method of the interpreter", function() {
-    i.charEater = f.atom(/./, function(char) {
+    i.charEater = f.terminal(/./, function(char) {
       this.theChar = char;
     });
     

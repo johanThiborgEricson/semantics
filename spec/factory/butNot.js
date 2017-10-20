@@ -1,7 +1,7 @@
 /**
  * @name butNotUnitTests
  */
-describe("A but not specification of an atom", function() {
+describe("A but not specification of an terminal", function() {
   
   var f;
   var interpreter;
@@ -18,13 +18,13 @@ describe("A but not specification of an atom", function() {
   });
   
   it("may be empty", function() {
-    interpreter.anything = f.atom(/./, []);
+    interpreter.anything = f.terminal(/./, []);
     expect(interpreter.anything("a")).toBe("a");
   });
   
   it("may exclude one alternative", function() {
-    interpreter.notA = f.atom(/./, ["a"]);
-    interpreter.alternativeA = f.atom(/a/, function() {
+    interpreter.notA = f.terminal(/./, ["a"]);
+    interpreter.alternativeA = f.terminal(/a/, function() {
       return "alternative a";
     });
     
@@ -34,8 +34,8 @@ describe("A but not specification of an atom", function() {
   });
   
   it("may exclude many alternatives", function() {
-    interpreter.notAorB = f.atom(/./, ["a", "b"]);
-    interpreter.alternativeB = f.atom(/b/, function() {
+    interpreter.notAorB = f.terminal(/./, ["a", "b"]);
+    interpreter.alternativeB = f.terminal(/b/, function() {
       return "alternative b";
     });
     
@@ -45,7 +45,7 @@ describe("A but not specification of an atom", function() {
   });
   
   it("may have an interpretation", function() {
-    interpreter.aNotB = f.atom(/a/, ["b"], function interpretation() {
+    interpreter.aNotB = f.terminal(/a/, ["b"], function interpretation() {
       return "certainly not b";
     });
     

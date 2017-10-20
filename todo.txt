@@ -26,7 +26,7 @@ Deferred methods should accept parameters, which will be supplied as
   additional arguments to the interpretation.
 baaa => bas in head recursion tests.
 Remove repetition in error message of 
-  i.a = atom(/a/);
+  i.a = terminal(/a/);
   i.aa = or("a", "a");
   i.aa("b");
 What is the error message of empty().call("a")?

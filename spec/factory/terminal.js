@@ -1,7 +1,7 @@
 /**
- * @name atomUnitTests
+ * @name terminalUnitTests
  */
-describe("An atom", function() {
+describe("A terminal", function() {
   
   var interpreter;
   var f;
@@ -15,41 +15,41 @@ describe("An atom", function() {
   });
   
   it("can parse the empty string", function() {
-    interpreter.e = f.atom(/(:?)/);
+    interpreter.e = f.terminal(/(:?)/);
     
     expect(interpreter.e("")).toBe("");
   });
   
   it("can parse a regExp", function() {
-    interpreter.abc = f.atom(/abc/);
+    interpreter.abc = f.terminal(/abc/);
     
     expect(interpreter.abc("abc")).toBe("abc");
   });
   
   it("can be parsed at any point", function() {
-    interpreter.a = f.atom(/a/);
-    interpreter.b = f.atom(/b/);
+    interpreter.a = f.terminal(/a/);
+    interpreter.b = f.terminal(/b/);
     interpreter.ab = f.group("a", "b");
     
     expect(interpreter.ab("ab")).toEqual({a: "a", b: "b"});
   });
   
   it("returns the match if no interpretation is supplied", function() {
-    interpreter.a = f.atom(/a/);
+    interpreter.a = f.terminal(/a/);
     
     expect(interpreter.a("a")).toBe("a");
   });
   
   it("fails if the regular expression can't be matched", function() {
-    interpreter.a = f.atom(/a/);
-    interpreter.b = f.atom(/b/);
+    interpreter.a = f.terminal(/a/);
+    interpreter.b = f.terminal(/b/);
     interpreter.ab = f.or("a", "b");
     expect(interpreter.ab("b")).toBe("b");
   });
   
   it("calls its interpretation with the match", function() {
     var aSpy = jasmine.createSpy("aSpy");
-    interpreter.a = f.atom(/a/, aSpy);
+    interpreter.a = f.terminal(/a/, aSpy);
     
     interpreter.a("a");
     
@@ -57,7 +57,7 @@ describe("An atom", function() {
   });
   
   it("calls its interpretation as a method of the interpreter", function() {
-    interpreter.readChar = f.atom(/./, function(aChar) {
+    interpreter.readChar = f.terminal(/./, function(aChar) {
       this.theChar = aChar;
     });
     
@@ -67,7 +67,7 @@ describe("An atom", function() {
   });
   
   it("returns the result of its interpretation", function() {
-    interpreter.a = f.atom(/a/, function() {
+    interpreter.a = f.terminal(/a/, function() {
       return "result of interpretation";
     });
     
@@ -75,8 +75,8 @@ describe("An atom", function() {
   });
   
   it("only accepts matches at the current position in the code", function() {
-    interpreter.a = f.atom(/a/);
-    interpreter.b = f.atom(/b/);
+    interpreter.a = f.terminal(/a/);
+    interpreter.b = f.terminal(/b/);
     interpreter.bb = f.group("b", "b");
     interpreter.ab = f.group("a", "b");
     interpreter.bbab = f.or("bb", "ab");

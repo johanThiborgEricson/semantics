@@ -26,9 +26,9 @@ describe("Parse result caching", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      c: f.atom(/c/),
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      c: f.terminal(/c/),
     };
     
   });
@@ -53,7 +53,7 @@ describe("Parse result caching", function() {
   
   it("only retrieves a cached result at the position in the code where it " + 
   "was cached", function() {
-    interpreter.ab = f.atom(/a|b/);
+    interpreter.ab = f.terminal(/a|b/);
     interpreter.ab2 = f.group("ab", "ab");
     
     expect(interpreter.ab2("ab")).toEqual({
@@ -65,7 +65,7 @@ describe("Parse result caching", function() {
   it("doesn't parse past anything if retreiving a cached parse failure", 
   function() {
     interpreter.ac = f.group(/a/, /c/);
-    interpreter.ab = f.atom(/ab/);
+    interpreter.ab = f.terminal(/ab/);
     // At last!
     interpreter.acab = f.or("ac", "ab");
     interpreter.acacab = f.or("ac", "acab");

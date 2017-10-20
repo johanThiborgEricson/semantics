@@ -12,8 +12,8 @@ describe("The longest nonterminal", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.atom(/a/),
-      b: f.atom(/b/),
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
     };
     
   });
@@ -47,8 +47,8 @@ describe("The longest nonterminal", function() {
   it("continues matching from the end of the longest match, not the last " + 
   "match", function() {
     interpreter = {
-      a: f.atom(/a/),
-      aa: f.atom(/aa/),
+      a: f.terminal(/a/),
+      aa: f.terminal(/aa/),
       longest: f.longest("aa", "a"),
       program: f.group("longest", "a"),
     };
@@ -62,8 +62,8 @@ describe("The longest nonterminal", function() {
   
   it("returns the longest match", function() {
     interpreter = {
-      a: f.atom(/a/),
-      ab: f.atom(/ab/),
+      a: f.terminal(/a/),
+      ab: f.terminal(/ab/),
       longest: f.longest("a", "ab"),
     };
     
@@ -71,11 +71,11 @@ describe("The longest nonterminal", function() {
   });
   
   it("returns the first match if there are two equaly long ones", function() {
-    interpreter.first = f.atom(/a|b/, function() {
+    interpreter.first = f.terminal(/a|b/, function() {
       return "first";
     });
     
-    interpreter.second = f.atom(/b|c/, function() {
+    interpreter.second = f.terminal(/b|c/, function() {
       return "second";
     });
     

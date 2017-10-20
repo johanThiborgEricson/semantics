@@ -26,9 +26,9 @@ describe("Head recursion", function() {
     
     interpreter = {
       noRecursion: f.noRecursion(instructionMaker), 
-      a: f.atom(/a/),
-      b: f.atom(/b/),
-      c: f.atom(/c/),
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+      c: f.terminal(/c/),
       as: f.or("as1", "ec"),
       as1: f.group("as", "a", add),
       ec: f.empty(function() {
@@ -68,7 +68,7 @@ describe("Head recursion", function() {
   });
   
   it("restores the state if its base case fails to parse", function() {
-    interpreter.baseCase = f.atom(/base case/);
+    interpreter.baseCase = f.terminal(/base case/);
     interpreter.recursionFail = f.or("recursionFail", "baseCase");
     interpreter.program = f.or("recursionFail", "a");
     
@@ -99,13 +99,13 @@ describe("Head recursion", function() {
         return "";
       }),
       
-      newline: f.atom(/\n/),
+      newline: f.terminal(/\n/),
       statements: f.or("statements1", "e"),
       statements1: f.group("statements", "statement", add),
       statement: f.group("expressions", "newline", add),
       expressions: f.or("expressions1", "e"),
       expressions1: f.group("expressions", "expression", add),
-      expression: f.atom(/e\d/),
+      expression: f.terminal(/e\d/),
     };
     
     expect(interpreter.statements("")).toBe("");
@@ -116,9 +116,9 @@ describe("Head recursion", function() {
   
   it("can recurse through multiple paths", function() {
     interpreter = {
-      e: f.atom(/(?:)/),
-      b: f.atom(/b/),
-      c: f.atom(/c/),
+      e: f.terminal(/(?:)/),
+      b: f.terminal(/b/),
+      c: f.terminal(/c/),
       bcs: f.or("bcs1", "e"),
       bcs1: f.or("bcsb", "bcsc"),
       bcsb: f.group("bcs", "b", add),
@@ -136,9 +136,9 @@ describe("Head recursion", function() {
   
   it("can have recursive base cases", function() {
     j = {
-      newExpression: f.atom(/new/),
-      args: f.atom(/\(args\)/),
-      qualifier: f.atom(/\.q/),
+      newExpression: f.terminal(/new/),
+      args: f.terminal(/\(args\)/),
+      qualifier: f.terminal(/\.q/),
     };
     
     j.call = f.or("call1", 
