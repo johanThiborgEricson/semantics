@@ -1881,6 +1881,7 @@ InterpreterMethodFactory.prototype
   var factory = this;
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     codePointer.parse(insignificant);
+    codePointer.insignificant = insignificant;
     var maybeInstruction = factory
           .callInterpreterMethod(interpreter, childName, codePointer);
     codePointer.parse(insignificant);
@@ -1920,4 +1921,69 @@ InterpreterMethodFactory.prototype
     
   });
   
+};
+
+InterpreterMethodFactory.prototype
+.group2 = function() {
+  "use strict";
+  var factory = this;
+  
+  var args = this.getChildren(arguments);
+
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var partInstructions = factory.parseChildren2(codePointer, interpreter, args);
+    
+    if(partInstructions === null) {
+      return null;
+    }
+    
+    if(args.interpretation) {
+      return function instruction() {
+        return args.interpretation.apply(this, factory
+            .mapRunAsMethod(this, partInstructions));
+      };
+    } else {
+      return function instruction() {
+        var that = this;
+        var mpo = new factory.MultiPropertyObject();
+        var result = {};
+        partInstructions.map(function(pi) {
+          mpo.appendProperty.call(result, pi.partName, pi.call(that));
+        });
+        
+        return result;
+      };
+    }
+  });
+  
+};
+
+InterpreterMethodFactory.prototype
+.parseChildren2 = function(codePointer, interpreter, args) {
+  var partInstructions = [];
+  var p = {
+    first: true,
+  };
+  
+  if(!this.skipRegexes(codePointer, args.leadingRegexes, interpreter)){
+    return null;
+  }
+  for(var i = 0; i < args.parts.length; i++){
+    if(p.first) {
+      p.first = false;
+    } else {
+      codePointer.parse(codePointer.insignificant);
+    }
+    var maybeInstruction = this
+          .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
+    if(!maybeInstruction
+      ||!this.skipRegexes(codePointer, args.parts[i].trailingRegexes, 
+      interpreter)) {
+      return null;
+    }
+    maybeInstruction.partName = args.parts[i].name;
+    
+    partInstructions.push(maybeInstruction);
+  }
+  return partInstructions;
 };
