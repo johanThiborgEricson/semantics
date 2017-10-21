@@ -1965,7 +1965,7 @@ InterpreterMethodFactory.prototype
     first: true,
   };
   
-  if(!this.skipRegexes(codePointer, args.leadingRegexes, interpreter)){
+  if(!this.skipRegexes2(codePointer, args.leadingRegexes, interpreter, p)){
     return null;
   }
   for(var i = 0; i < args.parts.length; i++){
@@ -1986,4 +1986,18 @@ InterpreterMethodFactory.prototype
     partInstructions.push(maybeInstruction);
   }
   return partInstructions;
+};
+
+InterpreterMethodFactory.prototype
+.skipRegexes2 = function(codePointer, regexes, interpreter, p) {
+  for(var i = 0; i < regexes.length; i++) {
+    if(!p.first && !this.parseInsignificantAndToken(
+      codePointer, regexes[i], interpreter)){
+      return null;
+    } else {
+      p.first = false;
+      codePointer.parse(regexes[i]);
+    }
+  }
+  return true;
 };

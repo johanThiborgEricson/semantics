@@ -21,4 +21,10 @@ describe("An insignificant pattern", function() {
     expect(interpreter.insignificant("iaiai")).toEqual({a: ["a", "a"]});
   });
   
+  it("is parsed between leading anonymous terminals", function() {
+    interpreter.pairOfAs = f.group2(/a/, /a/);
+    interpreter.insignificant = f.insignificant2("pairOfAs", /i/);
+    expect(interpreter.insignificant("iaiai", true)).toEqual({});
+  });
+  
 });
