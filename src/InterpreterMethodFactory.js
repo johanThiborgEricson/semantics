@@ -1971,9 +1971,8 @@ InterpreterMethodFactory.prototype
   for(var i = 0; i < args.parts.length; i++){
     if(p.first) {
       p.first = false;
-    } else {
-      codePointer.parse(codePointer.insignificant);
-    }
+    } else if(!codePointer.parse(codePointer.insignificant)) return null;
+
     var maybeInstruction = this
           .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
     if(!maybeInstruction
