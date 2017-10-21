@@ -1874,3 +1874,50 @@ InterpreterMethodFactory.prototype
     return instruction;
   });
 };
+
+InterpreterMethodFactory.prototype
+.insignificant2 = function(childName, insignificant) {
+  "use strict";
+  var factory = this;
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    codePointer.parse(insignificant);
+    var maybeInstruction = factory
+          .callInterpreterMethod(interpreter, childName, codePointer);
+    codePointer.parse(insignificant);
+    return maybeInstruction;
+  });
+};
+
+InterpreterMethodFactory.prototype
+.terminal2 = function(regex, interpretationOrButNot) {
+  "use strict";
+  var that = this;
+  var parsingRegex = this.makeParsing(regex);
+  
+  var interpretation;
+  var butNot;
+  if(typeof interpretationOrButNot === "function") {
+    interpretation = interpretationOrButNot;
+  } else {
+    butNot = interpretationOrButNot;
+    interpretation = arguments[2];
+  }
+  
+  return this.makeMethod(function(codePointer, interpreter) {
+    var match = codePointer.parse(parsingRegex);
+    if(match === null) {
+      return null;
+    }
+    
+    var result = match[0];
+    if(butNot && butNot.indexOf(result) > -1) {
+      return null;
+    }
+    
+    return function instruction() {
+      return interpretation?interpretation.call(this, result):result;
+    };
+    
+  });
+  
+};
