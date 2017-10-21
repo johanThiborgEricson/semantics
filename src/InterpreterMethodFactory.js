@@ -1365,9 +1365,7 @@ InterpreterMethodFactory.prototype
     interpretation = arguments[1];
   } else {
     delimiter = arguments[1];
-    delimiterAndPart = this.group(delimiter, partName, function(partName) {
-      return partName;
-    });
+    delimiterAndPart = this.wrap(delimiter, partName);
     
     interpretation = arguments[2];
   }
@@ -1522,9 +1520,7 @@ InterpreterMethodFactory.prototype
     interpretation = arguments[1];
   } else {
     delimiter = arguments[1];
-    delimiterAndPart = this.group(delimiter, partName, function(partName) {
-      return partName;
-    });
+    delimiterAndPart = this.wrap(delimiter, partName);
     
     interpretation = arguments[2];
   }
