@@ -1880,11 +1880,11 @@ InterpreterMethodFactory.prototype
   "use strict";
   var factory = this;
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    codePointer.parse(insignificant);
     codePointer.insignificant = insignificant;
+    factory.parseInsignificant2(codePointer, interpreter);
     var maybeInstruction = factory
           .callInterpreterMethod(interpreter, childName, codePointer);
-    codePointer.parse(insignificant);
+    factory.parseInsignificant2(codePointer, interpreter);
     return maybeInstruction;
   });
 };
@@ -1999,4 +1999,15 @@ InterpreterMethodFactory.prototype
     }
   }
   return true;
+};
+
+InterpreterMethodFactory.prototype
+.parseInsignificant2 = function(codePointer, interpreter) {
+  if(codePointer.insignificant instanceof RegExp) {
+    return codePointer.parse(codePointer.insignificant);
+  } else if(typeof codePointer.insignificant === "string"){
+    this.callInterpreterMethod(interpreter, codePointer.insignificant, codePointer);
+  } else {
+    return true;
+  }
 };

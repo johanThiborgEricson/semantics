@@ -90,3 +90,4 @@ return ["normal", undefined] => return ["normal"]
 qualifier => propertyAccessor
 map run as method that => interpreter.
 if and the like should be statement plus.
+Parse success of leading and trailing insignificant is not checked.

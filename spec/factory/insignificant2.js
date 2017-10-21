@@ -9,6 +9,7 @@ describe("An insignificant pattern", function() {
   beforeEach(function() {
     interpreter = {
       a: f.terminal2(/a/),
+      i: f.terminal2(/i/),
     };
     
   });
@@ -48,6 +49,11 @@ describe("An insignificant pattern", function() {
     interpreter.fourAs = f.group2("a", /a/, /a/, "a");
     interpreter.insignificant = f.insignificant2("fourAs", /i/);
     expect(interpreter.insignificant("iaiaiaiai")).toEqual({a: ["a", "a"]});
+  });
+  
+  it("may be a terminal", function() {
+    interpreter.insignificant = f.insignificant2("a", "i");
+    expect(interpreter.insignificant("iai")).toBe("a");
   });
   
 });
