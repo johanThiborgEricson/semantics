@@ -40,9 +40,9 @@ describe("An insignificant pattern", function() {
   });
   
   it("is parsed between many leading anonymous terminals", function() {
-    interpreter.pairOfAs = f.group2(/a/, /a/, /a/);
+    interpreter.pairOfAs = f.group2(/a/, /a/);
     interpreter.insignificant = f.insignificant2("pairOfAs", /i/);
-    expect(interpreter.insignificant("iaiaiai")).toEqual({});
+    expect(interpreter.insignificant("iaiai")).toEqual({});
   });
   
   it("is parsed between middle anonymous terminals of a group", function() {
@@ -54,6 +54,12 @@ describe("An insignificant pattern", function() {
   it("may be a terminal", function() {
     interpreter.insignificant = f.insignificant2("a", "i");
     expect(interpreter.insignificant("iai")).toBe("a");
+  });
+  
+  it("may be a terminal between children", function() {
+    interpreter.pairOfAs = f.group2("a", "a");
+    interpreter.insignificant = f.insignificant2("pairOfAs", "i");
+    expect(interpreter.insignificant("iaiai")).toEqual({a: ["a", "a"]});
   });
   
 });

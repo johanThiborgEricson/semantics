@@ -1971,7 +1971,7 @@ InterpreterMethodFactory.prototype
   for(var i = 0; i < args.parts.length; i++){
     if(p.first) {
       p.first = false;
-    } else if(!codePointer.parse(codePointer.insignificant)) return null;
+    } else if(!this.parseInsignificant2(codePointer, interpreter)) return null;
 
     var maybeInstruction = this
           .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
@@ -2003,10 +2003,11 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.prototype
 .parseInsignificant2 = function(codePointer, interpreter) {
-  if(codePointer.insignificant instanceof RegExp) {
+  var insignificant = codePointer.insignificant;
+  if(insignificant instanceof RegExp) {
     return codePointer.parse(codePointer.insignificant);
-  } else if(typeof codePointer.insignificant === "string"){
-    this.callInterpreterMethod(interpreter, codePointer.insignificant, codePointer);
+  } else if(typeof insignificant === "string"){
+    return this.callInterpreterMethod(interpreter, insignificant, codePointer);
   } else {
     return true;
   }
