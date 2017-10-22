@@ -62,4 +62,11 @@ describe("An insignificant pattern", function() {
     expect(interpreter.insignificant("iaiai")).toEqual({a: ["a", "a"]});
   });
   
+  it("only affects descendants", function() {
+    interpreter.insignificant = f.insignificant2("a", /i/);
+    interpreter.b2 = f.group2(/b/, /b/);
+    interpreter.program = f.or("insignificant", "b2");
+    expect(interpreter.program("bb")).toEqual({});
+  });
+  
 });

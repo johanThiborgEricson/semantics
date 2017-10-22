@@ -1885,6 +1885,7 @@ InterpreterMethodFactory.prototype
     var maybeInstruction = factory
           .callInterpreterMethod(interpreter, childName, codePointer);
     factory.parseInsignificant2(codePointer, interpreter);
+    delete codePointer.insignificant;
     return maybeInstruction;
   });
 };
