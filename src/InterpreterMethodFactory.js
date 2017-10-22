@@ -1881,10 +1881,13 @@ InterpreterMethodFactory.prototype
   var factory = this;
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     codePointer.insignificant = insignificant;
-    factory.parseInsignificant2(codePointer, interpreter);
-    var maybeInstruction = factory
-          .callInterpreterMethod(interpreter, childName, codePointer);
-    factory.parseInsignificant2(codePointer, interpreter);
+    var maybeInstruction;
+    if( !factory.parseInsignificant2(codePointer, interpreter) || 
+        !(maybeInstruction = factory.callInterpreterMethod(
+          interpreter, childName, codePointer)) || 
+       !factory.parseInsignificant2(codePointer, interpreter)) {
+      maybeInstruction = null;
+    }
     delete codePointer.insignificant;
     return maybeInstruction;
   });

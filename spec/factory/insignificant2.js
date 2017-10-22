@@ -69,4 +69,12 @@ describe("An insignificant pattern", function() {
     expect(interpreter.program("bb")).toEqual({});
   });
   
+  it("must be parsed before and after", function() {
+    interpreter.insignificant = f.insignificant2("a", /i/);
+    interpreter.fail = f.terminal2(/i?ai?/, fail);
+    interpreter.program = f.or("insignificant", "fail");
+    expect(interpreter.program("ai")).toBe("failure");
+    expect(interpreter.program("ia")).toBe("failure");
+  });
+  
 });
