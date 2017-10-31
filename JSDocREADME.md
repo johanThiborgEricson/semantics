@@ -227,7 +227,7 @@ If you want to build a normal syntax tree you might find this extension useful:
     })();
     
 
-<sup>1</sup> I am using the group concept rather than the sequence/concatenation concept, because you can do non-fooproof things with sequences and quantifiers. For example, Semantics doesn't have any equivalent of the regular expression /ab*/, ie a sequence of one a followed by zero or more as. A language described by Semantics! should either take this /(ab*)/ or this /(ab)*/ form. The name group is meant to emphasize this restriction.
+<sup>1</sup> I am using the group concept rather than the sequence/concatenation concept, because you can do non-fooproof things with sequences and quantifiers. For example, Semantics doesn't have any equivalent of the regular expression `/ab*/`, ie a sequence of one a followed by zero or more as. A language described by Semantics! should either take this `/(ab*)/` or this `/(ab)*/` form. The name group is meant to emphasize this restriction.
 
 ## Run unit tests
 <a href="../SpecRunner.html?inception=false">Run test cases</a>. It might be necessary to specify the path to the InterpreterMethodFactory.js file for the first test to run.
