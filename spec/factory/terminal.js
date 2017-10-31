@@ -11,7 +11,10 @@ describe("A terminal", function() {
   });
   
   beforeEach(function() {
-    interpreter = {};
+    interpreter = {
+      a: f.terminal(/a/),
+      b: f.terminal(/b/),
+    };
   });
   
   it("can parse the empty string", function() {
@@ -22,27 +25,19 @@ describe("A terminal", function() {
   
   it("can parse a regExp", function() {
     interpreter.abc = f.terminal(/abc/);
-    
     expect(interpreter.abc("abc")).toBe("abc");
   });
   
   it("can be parsed at any point", function() {
-    interpreter.a = f.terminal(/a/);
-    interpreter.b = f.terminal(/b/);
     interpreter.ab = f.group("a", "b");
-    
     expect(interpreter.ab("ab")).toEqual({a: "a", b: "b"});
   });
   
   it("returns the match if no interpretation is supplied", function() {
-    interpreter.a = f.terminal(/a/);
-    
     expect(interpreter.a("a")).toBe("a");
   });
   
   it("fails if the regular expression can't be matched", function() {
-    interpreter.a = f.terminal(/a/);
-    interpreter.b = f.terminal(/b/);
     interpreter.ab = f.or("a", "b");
     expect(interpreter.ab("b")).toBe("b");
   });
@@ -50,9 +45,7 @@ describe("A terminal", function() {
   it("calls its interpretation with the match", function() {
     var aSpy = jasmine.createSpy("aSpy");
     interpreter.a = f.terminal(/a/, aSpy);
-    
     interpreter.a("a");
-    
     expect(aSpy).toHaveBeenCalledWith("a");
   });
   
@@ -62,7 +55,6 @@ describe("A terminal", function() {
     });
     
     interpreter.readChar("a");
-    
     expect(interpreter.theChar).toBe("a");
   });
   
@@ -75,12 +67,9 @@ describe("A terminal", function() {
   });
   
   it("only accepts matches at the current position in the code", function() {
-    interpreter.a = f.terminal(/a/);
-    interpreter.b = f.terminal(/b/);
     interpreter.bb = f.group("b", "b");
     interpreter.ab = f.group("a", "b");
     interpreter.bbab = f.or("bb", "ab");
-    
     expect(interpreter.bbab("ab")).toEqual({a: "a", b: "b"});
   });
   
