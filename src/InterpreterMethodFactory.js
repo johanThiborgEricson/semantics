@@ -2016,3 +2016,19 @@ InterpreterMethodFactory.prototype
     return true;
   }
 };
+
+InterpreterMethodFactory.prototype
+.atLeast = function(atLeast, childName) {
+  var factory = this;
+  return this.makeMethod(function(codePointer, interpreter) {
+    var partInstructions = [];
+    partInstructions.push(factory.callInterpreterMethod(
+      interpreter, childName, codePointer));
+    return function() {
+      return factory
+            .mapRunAsMethod(this, partInstructions);
+    };
+    
+  });
+  
+};

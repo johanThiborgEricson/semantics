@@ -91,3 +91,4 @@ qualifier => propertyAccessor
 map run as method that => interpreter.
 if and the like should be statement plus.
 Implement insginificant changeing.
+Tests should make factory in beforeAll, new tests especially.
