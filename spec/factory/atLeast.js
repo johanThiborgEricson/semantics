@@ -3,8 +3,11 @@ describe("The at least quantifier", function() {
   var f;
   var interpreter;
   
-  beforeEach(function() {
+  beforeAll(function() {
     f = new InterpreterMethodFactory();
+  });
+  
+  beforeEach(function() {
     interpreter = {
       a: f.terminal(/a/),
       atLeastZero: f.atLeast(0, "a"),

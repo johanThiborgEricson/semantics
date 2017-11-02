@@ -3,8 +3,11 @@ describe("An error", function() {
   var interpreter;
   var f;
   
-  beforeEach(function() {
+  beforeAll(function() {
     f = new InterpreterMethodFactory();
+  });
+  
+  beforeEach(function() {
     interpreter = {
       
     };

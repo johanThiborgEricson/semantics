@@ -1,10 +1,14 @@
 describe("An insignificant pattern", function() {
   
-  var f = new InterpreterMethodFactory();
+  var f;
   var interpreter;
   function fail() {
     return "failure";
   }
+  
+  beforeAll(function() {
+    f = new InterpreterMethodFactory();
+  });
   
   beforeEach(function() {
     interpreter = {
