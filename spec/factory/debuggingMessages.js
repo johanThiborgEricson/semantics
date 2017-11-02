@@ -2,18 +2,18 @@ describe("Debugging messages", function() {
   var they = it;
   var xthey = xit;
   var interpreter;
-  var factory;
+  var f;
   
   beforeAll(function() {
-    factory = new InterpreterMethodFactory();
+    f = new InterpreterMethodFactory();
   });
   
   beforeEach(function() {
     interpreter = {
-      text: factory.terminal(/text/),
-      lineBreak: factory.terminal(/\n/),
-      paragraph: factory.group("text", "lineBreak"),
-      somethingElse: factory.terminal(/Something else\n?/),
+      text: f.terminal(/text/),
+      lineBreak: f.terminal(/\n/),
+      paragraph: f.group("text", "lineBreak"),
+      somethingElse: f.terminal(/Something else\n?/),
     };
     
     spyOn(console, "log");
@@ -34,7 +34,7 @@ describe("Debugging messages", function() {
   they("aren't showed when called externally internally if failing if " + 
   "turned off", 
   function() {
-    interpreter.program = factory.or("paragraph", "somethingElse");
+    interpreter.program = f.or("paragraph", "somethingElse");
     interpreter.program("Something else\n");
     
     expect(console.log).not.toHaveBeenCalled();
@@ -57,7 +57,7 @@ describe("Debugging messages", function() {
   they("report parse start, end and failure when called internally and " + 
   "externally and failing", 
   function() {
-    interpreter.program = factory.or("paragraph", "somethingElse");
+    interpreter.program = f.or("paragraph", "somethingElse");
     interpreter.program("Something else\n", true);
     
     expect(console.log).toHaveBeenCalledWith("%s%s", "  ", "paragraph");
@@ -77,7 +77,7 @@ describe("Debugging messages", function() {
   
   they("if a match fails, reports the failure, the regExp and the rest of " + 
   "the current line", function() {
-    interpreter.program = factory.or("paragraph", "somethingElse");
+    interpreter.program = f.or("paragraph", "somethingElse");
     interpreter.program("Something else", true);
     
     expect(console.log).toHaveBeenCalledWith("%s\n%s", 
@@ -86,9 +86,9 @@ describe("Debugging messages", function() {
   
   they("can tell the name of the called method, even if there are other " + 
   "methods with the same function", function() {
-    interpreter.a1 = factory.terminal(/a/, function() {});
+    interpreter.a1 = f.terminal(/a/, function() {});
     interpreter.a2 = interpreter.a1;
-    interpreter.aa = factory.group("a1", "a2", function() {});
+    interpreter.aa = f.group("a1", "a2", function() {});
 
     interpreter.aa("aa", true);
     

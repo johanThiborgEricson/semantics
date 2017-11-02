@@ -4,7 +4,7 @@
 describe("The question mark quantifier", function() {
   
   var f;
-  var i;
+  var interpreter;
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();

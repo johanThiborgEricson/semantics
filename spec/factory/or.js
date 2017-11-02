@@ -3,14 +3,14 @@
  */
 describe("An or", function() {
   var f;
-  var i;
+  var interpreter;
   
   beforeAll(function() {
     f = new InterpreterMethodFactory();
   });
   
   beforeEach(function() {
-    i = {
+    interpreter = {
       a: f.terminal(/a/),
       b: f.terminal(/b/),
       c: f.terminal(/c/),
@@ -19,35 +19,35 @@ describe("An or", function() {
   });
   
   it("returns the first successfully parsed alternative", function() {
-    i.da = f.or("a");
+    interpreter.da = f.or("a");
     
-    expect(i.da("a")).toBe("a");
+    expect(interpreter.da("a")).toBe("a");
   });
   
   it("always fails if it has zero alternatives", function() {
-    i.noChoice = f.or();
-    i.choice = f.or("noChoice", "a");
+    interpreter.noChoice = f.or();
+    interpreter.choice = f.or("noChoice", "a");
     
-    expect(i.choice("a")).toBe("a");
+    expect(interpreter.choice("a")).toBe("a");
   });
   
   it("returns the second alternative if the first fails to parse", function() {
-    i.dba = f.or("b", "a");
-    expect(i.dba("a")).toBe("a");
+    interpreter.dba = f.or("b", "a");
+    expect(interpreter.dba("a")).toBe("a");
   });
   
   it("returns the third alternative if the first two alternatives fails to " + 
   "parse", function() {
-    i.dba = f.or("b", "b", "a");
-    expect(i.dba("a")).toBe("a");
+    interpreter.dba = f.or("b", "b", "a");
+    expect(interpreter.dba("a")).toBe("a");
   });
   
   it("fails if all its alternatives fail", function() {
     
-    i.outerOr = f.or("dab", "c");
-    i.dab = f.or("a", "b");
+    interpreter.outerOr = f.or("dab", "c");
+    interpreter.dab = f.or("a", "b");
 
-    expect(i.outerOr("c")).toBe("c");
+    expect(interpreter.outerOr("c")).toBe("c");
   });
   
 });
