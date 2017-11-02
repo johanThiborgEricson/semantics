@@ -77,4 +77,12 @@ describe("An insignificant pattern", function() {
     expect(interpreter.program("ia")).toBe("failure");
   });
   
+  it("must be parsed between leading anonymous terminals", function() {
+    interpreter.doubleAs = f.group2("a", "a");
+    interpreter.insignificant = f.insignificant2("doubleAs", /i/);
+    interpreter.fail = f.terminal(/aa/, fail);
+    interpreter.program = f.or("insignificant", "fail");
+    expect(interpreter.program("aa")).toBe("failure");
+  });
+  
 });
