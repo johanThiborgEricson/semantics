@@ -2018,15 +2018,23 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.atLeast = function(atLeast, childName) {
+.atLeast = function(atLeast, childName, delimiter) {
   var factory = this;
   return this.makeMethod(function(codePointer, interpreter) {
-    var partInstructions = [];
-    partInstructions.push(factory.callInterpreterMethod(
-      interpreter, childName, codePointer));
+    var childrenInstructions = [];
+    var childInstruction = factory.callInterpreterMethod(
+      interpreter, childName, codePointer);
+    while(childInstruction) {
+      childrenInstructions.push(childInstruction);
+      if(!delimiter || codePointer.parse(delimiter)){
+        childInstruction = factory.callInterpreterMethod(
+          interpreter, childName, codePointer);
+      } else {
+        childInstruction = null;
+      }
+    }
     return function() {
-      return factory
-            .mapRunAsMethod(this, partInstructions);
+      return factory.mapRunAsMethod(this, childrenInstructions);
     };
     
   });

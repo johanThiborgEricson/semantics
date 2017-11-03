@@ -92,3 +92,4 @@ map run as method that => interpreter.
 if and the like should be statement plus.
 Implement insginificant changeing.
 Tests should make factory in beforeAll, new tests especially.
+Fail is a really bad name. It is part of the Jasmine API.
