@@ -15,6 +15,8 @@ describe("The at least quantifier", function() {
       a: f.terminal2(/a/),
       atLeastZero: f.atLeast(0, "a"),
       list: f.atLeast(0, "a", /d/),
+      insignificant: f.insignificant2("atLeastZero", /i/),
+      insigList: f.insignificant2("list", /i/),
     };
     
   });
@@ -52,15 +54,20 @@ describe("The at least quantifier", function() {
   });
   
   it("can parse insignificants", function() {
-    interpreter.insignificant = f.insignificant2("atLeastZero", /i/);
     expect(interpreter.insignificant("iaiai")).toEqual(["a", "a"]);
   });
   
   it("must parse the insignificant", function() {
     interpreter.fail = f.terminal(/iaai/, parseFail);
-    interpreter.insignificant = f.insignificant2("atLeastZero", /i/);
     interpreter.program = f.longest("insignificant", "fail");
     expect(interpreter.program("iaai")).toBe("parse fail");
+  });
+  
+  it("unparses delimiters if child can't be parsed", function() {
+    interpreter.fail = f.terminal(/ad/, parseFail);
+    interpreter.listAndDelimiter = f.group("list", /d/);
+    interpreter.program = f.or("listAndDelimiter", "fail");
+    expect(interpreter.program("ad")).toEqual({list: ["a"]});
   });
   
 });

@@ -2028,6 +2028,7 @@ InterpreterMethodFactory.prototype
     if(delimiter){
       while(childInstruction) {
         childrenInstructions.push(childInstruction);
+        backup = codePointer.backup();
         if(codePointer.parse(delimiter)){
           childInstruction = factory.callInterpreterMethod(
             interpreter, childName, codePointer);
@@ -2035,6 +2036,7 @@ InterpreterMethodFactory.prototype
           childInstruction = null;
         }
       }
+      codePointer.restore(backup);
     } else {
       while(childInstruction) {
         childrenInstructions.push(childInstruction);
