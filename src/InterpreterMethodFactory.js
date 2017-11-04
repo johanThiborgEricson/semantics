@@ -2018,9 +2018,16 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.atLeast = function(atLeast, childName, delimiter) {
+.atLeast = function(atLeast, childName, delimiterOrInterpretation, 
+interpretation) {
   "use strict";
   var factory = this;
+  var delimiter;
+  if(typeof delimiterOrInterpretation === "function") {
+    interpretation = delimiterOrInterpretation;
+  } else {
+    delimiter = delimiterOrInterpretation;
+  }
   return this.makeMethod(function(codePointer, interpreter) {
     var childrenInstructions = [];
     var childInstruction = factory.callInterpreterMethod(
@@ -2047,10 +2054,18 @@ InterpreterMethodFactory.prototype
     if(childrenInstructions.length < atLeast) {
       return null;
     }
-    return function() {
-      return factory.mapRunAsMethod(this, childrenInstructions);
-    };
-    
+    if(interpretation){
+      return function() {
+        return interpretation.call(
+          interpreter, factory.mapRunAsMethod(this, childrenInstructions));
+      };
+      
+    } else {
+      return function() {
+        return factory.mapRunAsMethod(this, childrenInstructions);
+      };
+      
+    }
   });
   
 };

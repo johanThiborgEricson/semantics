@@ -88,4 +88,44 @@ describe("The at least quantifier", function() {
     expect(interpreter.program("aa")).toBe("parse fail");
   });
   
+  it("may have an interpretation", function() {
+    var interpretation = jasmine.createSpy("interpretation");
+    interpreter = {
+      child: f.terminal(/(children)|(results)/),
+      atLeast: f.atLeast(0, "child", interpretation),
+    };
+    
+    interpreter.atLeast("childrenresults");
+    expect(interpretation).toHaveBeenCalledWith(["children", "results"]);
+  });
+  
+  it("calls its interpretation as a method of the interpreter", function() {
+    interpreter = {
+      charEater: f.terminal(/./),
+      charsEater: f.atLeast(0, "charEater", function(theChars) {
+        this.eatenChars = theChars;
+      }),
+      
+    };
+    
+    interpreter.charsEater("chars");
+    expect(interpreter.eatenChars).toEqual(["c", "h", "a", "r", "s"]);
+  });
+  
+  it("returns the result of its interpretation", function() {
+    interpreter.atLeast = f.atLeast(0, "a", function() {
+      return "interpretation result";
+    });
+    
+    expect(interpreter.atLeast("")).toBe("interpretation result");
+  });
+  
+  it("may have both delimiters and an interpretation", function() {
+    interpreter.interpretedList = f.atLeast(0, "a", /d/, function() {
+      return "fancy interpretation";
+    });
+    
+    expect(interpreter.interpretedList("adada")).toBe("fancy interpretation");
+  });
+  
 });
