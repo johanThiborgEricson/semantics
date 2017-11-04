@@ -2025,36 +2025,25 @@ InterpreterMethodFactory.prototype
     var childInstruction = factory.callInterpreterMethod(
       interpreter, childName, codePointer);
     var backup;
+    var skip;
     if(delimiter){
-      while(childInstruction) {
-        childrenInstructions.push(childInstruction);
-        backup = codePointer.backup();
-        if(
-          factory.parseInsignificant2(codePointer, interpreter) && 
+      skip = function() {
+        return factory.parseInsignificant2(codePointer, interpreter) && 
           codePointer.parse(delimiter) && 
-          factory.parseInsignificant2(codePointer, interpreter)
-        ){
-          childInstruction = factory.callInterpreterMethod(
-            interpreter, childName, codePointer);
-        } else {
-          childInstruction = null;
-        }
-      }
-      codePointer.restore(backup);
+          factory.parseInsignificant2(codePointer, interpreter);
+      };
     } else {
-      while(childInstruction) {
-        childrenInstructions.push(childInstruction);
-        backup = codePointer.backup();
-        if(factory.parseInsignificant2(codePointer, interpreter)){
-          childInstruction = factory.callInterpreterMethod(
-            interpreter, childName, codePointer);
-        } else {
-          childInstruction = null;
-        }
-        
-      }
-      codePointer.restore(backup);
+      skip = function() {
+        return factory.parseInsignificant2(codePointer, interpreter);
+      };
     }
+    while(childInstruction) {
+      childrenInstructions.push(childInstruction);
+      backup = codePointer.backup();
+      childInstruction = skip() && factory.callInterpreterMethod(
+          interpreter, childName, codePointer);
+    }
+    codePointer.restore(backup);
     return function() {
       return factory.mapRunAsMethod(this, childrenInstructions);
     };
