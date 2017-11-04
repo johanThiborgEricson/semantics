@@ -2025,18 +2025,17 @@ InterpreterMethodFactory.prototype
     var childInstruction = factory.callInterpreterMethod(
       interpreter, childName, codePointer);
     var backup;
-    var skip;
-    if(delimiter){
-      skip = function() {
+    var skip = delimiter ? 
+      function() {
         return factory.parseInsignificant2(codePointer, interpreter) && 
-          codePointer.parse(delimiter) && 
-          factory.parseInsignificant2(codePointer, interpreter);
-      };
-    } else {
-      skip = function() {
+        codePointer.parse(delimiter) && 
+        factory.parseInsignificant2(codePointer, interpreter);
+      }
+    :
+      function() {
         return factory.parseInsignificant2(codePointer, interpreter);
       };
-    }
+    
     while(childInstruction) {
       childrenInstructions.push(childInstruction);
       backup = codePointer.backup();
