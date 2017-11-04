@@ -2029,7 +2029,11 @@ InterpreterMethodFactory.prototype
       while(childInstruction) {
         childrenInstructions.push(childInstruction);
         backup = codePointer.backup();
-        if(codePointer.parse(delimiter)){
+        if(
+          factory.parseInsignificant2(codePointer, interpreter) && 
+          codePointer.parse(delimiter) && 
+          factory.parseInsignificant2(codePointer, interpreter)
+        ){
           childInstruction = factory.callInterpreterMethod(
             interpreter, childName, codePointer);
         } else {

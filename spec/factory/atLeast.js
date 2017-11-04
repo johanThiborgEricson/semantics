@@ -63,11 +63,22 @@ describe("The at least quantifier", function() {
     expect(interpreter.program("iaai")).toBe("parse fail");
   });
   
-  it("unparses delimiters if child can't be parsed", function() {
+  it("unparses delimiter if child can't be parsed", function() {
     interpreter.fail = f.terminal(/ad/, parseFail);
     interpreter.listAndDelimiter = f.group("list", /d/);
     interpreter.program = f.or("listAndDelimiter", "fail");
     expect(interpreter.program("ad")).toEqual({list: ["a"]});
+  });
+  
+  it("can parse insgnificants before delimiters", function() {
+    expect(interpreter.insigList("iaidiai")).toEqual(["a", "a"]);
+  });
+  
+  it("must parse insignificants before delimiters", function() {
+    interpreter.fail = f.terminal(/iai?di?ai/, parseFail);
+    interpreter.program = f.longest("insigList", "fail");
+    expect(interpreter.program("iadiai")).toBe("parse fail");
+    expect(interpreter.program("iaidai")).toBe("parse fail");
   });
   
 });
