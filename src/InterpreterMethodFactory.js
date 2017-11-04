@@ -2019,6 +2019,7 @@ InterpreterMethodFactory.prototype
 
 InterpreterMethodFactory.prototype
 .atLeast = function(atLeast, childName, delimiter) {
+  "use strict";
   var factory = this;
   return this.makeMethod(function(codePointer, interpreter) {
     var childrenInstructions = [];
@@ -2043,6 +2044,9 @@ InterpreterMethodFactory.prototype
           interpreter, childName, codePointer);
     }
     codePointer.restore(backup);
+    if(childrenInstructions.length < atLeast) {
+      return null;
+    }
     return function() {
       return factory.mapRunAsMethod(this, childrenInstructions);
     };

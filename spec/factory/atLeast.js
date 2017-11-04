@@ -81,4 +81,11 @@ describe("The at least quantifier", function() {
     expect(interpreter.program("iaidai")).toBe("parse fail");
   });
   
+  it("may specify a lowest accepted bound of children", function() {
+    interpreter.atLeastThree = f.atLeast(3, "a");
+    interpreter.fail = f.terminal(/aa/, parseFail);
+    interpreter.program = f.or("atLeastThree", "fail");
+    expect(interpreter.program("aa")).toBe("parse fail");
+  });
+  
 });
