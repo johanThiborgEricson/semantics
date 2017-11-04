@@ -2024,14 +2024,30 @@ InterpreterMethodFactory.prototype
     var childrenInstructions = [];
     var childInstruction = factory.callInterpreterMethod(
       interpreter, childName, codePointer);
-    while(childInstruction) {
-      childrenInstructions.push(childInstruction);
-      if(!delimiter || codePointer.parse(delimiter)){
-        childInstruction = factory.callInterpreterMethod(
-          interpreter, childName, codePointer);
-      } else {
-        childInstruction = null;
+    var backup;
+    if(delimiter){
+      while(childInstruction) {
+        childrenInstructions.push(childInstruction);
+        if(codePointer.parse(delimiter)){
+          childInstruction = factory.callInterpreterMethod(
+            interpreter, childName, codePointer);
+        } else {
+          childInstruction = null;
+        }
       }
+    } else {
+      while(childInstruction) {
+        childrenInstructions.push(childInstruction);
+        backup = codePointer.backup();
+        if(factory.parseInsignificant2(codePointer, interpreter)){
+          childInstruction = factory.callInterpreterMethod(
+            interpreter, childName, codePointer);
+        } else {
+          childInstruction = null;
+        }
+        
+      }
+      codePointer.restore(backup);
     }
     return function() {
       return factory.mapRunAsMethod(this, childrenInstructions);

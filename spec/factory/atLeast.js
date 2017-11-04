@@ -12,7 +12,7 @@ describe("The at least quantifier", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.terminal(/a/),
+      a: f.terminal2(/a/),
       atLeastZero: f.atLeast(0, "a"),
       list: f.atLeast(0, "a", /d/),
     };
@@ -49,6 +49,18 @@ describe("The at least quantifier", function() {
     interpreter.fail = f.terminal(/aa/, parseFail);
     interpreter.program = f.longest("list", "fail");
     expect(interpreter.program("aa")).toBe("parse fail");
+  });
+  
+  it("can parse insignificants", function() {
+    interpreter.insignificant = f.insignificant2("atLeastZero", /i/);
+    expect(interpreter.insignificant("iaiai")).toEqual(["a", "a"]);
+  });
+  
+  it("must parse the insignificant", function() {
+    interpreter.fail = f.terminal(/iaai/, parseFail);
+    interpreter.insignificant = f.insignificant2("atLeastZero", /i/);
+    interpreter.program = f.longest("insignificant", "fail");
+    expect(interpreter.program("iaai")).toBe("parse fail");
   });
   
 });
