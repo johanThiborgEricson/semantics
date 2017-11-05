@@ -93,8 +93,3 @@ if and the like should be statement plus.
 Tests should make factory in beforeAll, new tests especially.
 Fail is a really bad name. It is part of the Jasmine API.
 At least quantifier should use break in the while loops.
-Write tests for skip regexes 2 for cases 
-  p.first === true && parse success
-  p.first === false && parse success
-  p.first === true && parse fail
-  p.first === false && parse fail

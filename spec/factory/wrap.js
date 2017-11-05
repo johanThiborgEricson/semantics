@@ -136,4 +136,18 @@ describe("A wrapper", function() {
     expect(interpreter.insignificant("ibiaibi")).toBe("a");
   });
   
+  it("must parse all leading anonymous terminals and insignificants", 
+  function() {
+    interpreter.wrap = f.wrap2(/c/, /b/, "a");
+    interpreter.insignificant = f.insignificant2("wrap", /i/);
+    interpreter.fail = f.terminal(/i?c?i?b?i?a?i?/, fail);
+    interpreter.program = f.or("insignificant", "fail");
+    expect(interpreter.program("icibiai")).toBe("a");
+    expect(interpreter.program("cibiai")).toBe("failure");
+    expect(interpreter.program("iibiai")).toBe("failure");
+    expect(interpreter.program("icbiai")).toBe("failure");
+    expect(interpreter.program("iciiai")).toBe("failure");
+    expect(interpreter.program("icibai")).toBe("failure");
+  });
+  
 });
