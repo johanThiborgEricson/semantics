@@ -1995,12 +1995,16 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .skipRegexes2 = function(codePointer, regexes, interpreter, p) {
   for(var i = 0; i < regexes.length; i++) {
-    if(!p.first && !this.parseInsignificantAndToken(
-      codePointer, regexes[i], interpreter)){
-      return null;
+    if(!p.first){
+      if(!this.parseInsignificantAndToken(
+          codePointer, regexes[i], interpreter)) {
+        return null;
+      }
     } else {
       p.first = false;
-      codePointer.parse(regexes[i]);
+      if(!codePointer.parse(regexes[i])){
+        return null;
+      }
     }
   }
   return true;
@@ -2080,3 +2084,24 @@ InterpreterMethodFactory.prototype
 .plus2 = function(childName, delimiterOrInterpretation, interpretation) {
   return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
 };
+
+InterpreterMethodFactory.prototype.wrap2 = function() {
+  "use strict";
+  var factory = this;
+  var args = this.getChildren(arguments);
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var partInstructions = 
+    factory.parseChildren2(codePointer, interpreter, args);
+    if(partInstructions === null) {
+      return null;
+    }
+    var maybeInstruction = partInstructions[0];
+    return !args.interpretation?maybeInstruction:function instruction() {
+      return args.interpretation.call(this, maybeInstruction.call(this));
+    };
+    
+  });
+  
+};
+
+
