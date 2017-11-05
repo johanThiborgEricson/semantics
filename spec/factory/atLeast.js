@@ -86,6 +86,7 @@ describe("The at least quantifier", function() {
     interpreter.fail = f.terminal(/aa/, parseFail);
     interpreter.program = f.or("atLeastThree", "fail");
     expect(interpreter.program("aa")).toBe("parse fail");
+    expect(interpreter.program("aaa")).toEqual(["a", "a", "a"]);
   });
   
   it("may have an interpretation", function() {
