@@ -1880,6 +1880,7 @@ InterpreterMethodFactory.prototype
   "use strict";
   var factory = this;
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var outerInsignificant = codePointer.insignificant;
     codePointer.insignificant = insignificant;
     var maybeInstruction;
     if( !factory.parseInsignificant2(codePointer, interpreter) || 
@@ -1888,7 +1889,7 @@ InterpreterMethodFactory.prototype
        !factory.parseInsignificant2(codePointer, interpreter)) {
       maybeInstruction = null;
     }
-    delete codePointer.insignificant;
+    codePointer.insignificant = outerInsignificant;
     return maybeInstruction;
   });
 };

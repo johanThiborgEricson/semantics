@@ -89,4 +89,18 @@ describe("An insignificant pattern", function() {
     expect(interpreter.program("aa")).toBe("failure");
   });
   
+  it("is double padded when insignificant is changed", function() {
+    interpreter = {
+      a: f.terminal2(/a/),
+      jaj: f.insignificant2("a", /j/),
+      ajaja: f.group2("a", "jaj", "a", function(a1, jaj, a2) {
+        return a1 + jaj + a2;
+      }),
+      
+      iaijajiai: f.insignificant2("ajaja", /i/),
+    };
+    
+    expect(interpreter.iaijajiai("iaijajiai")).toBe("aaa");
+  });
+  
 });
