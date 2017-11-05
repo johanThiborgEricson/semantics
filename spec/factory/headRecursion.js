@@ -26,11 +26,11 @@ describe("Head recursion", function() {
     
     interpreter = {
       noRecursion: f.noRecursion(instructionMaker), 
-      a: f.terminal(/a/),
-      b: f.terminal(/b/),
-      c: f.terminal(/c/),
+      a: f.terminal2(/a/),
+      b: f.terminal2(/b/),
+      c: f.terminal2(/c/),
       as: f.or("as1", "ec"),
-      as1: f.group("as", "a", add),
+      as1: f.group2("as", "a", add),
       ec: f.empty(function() {
         var i = 0;
         return function() {
@@ -39,7 +39,7 @@ describe("Head recursion", function() {
       }()),
       
       bas: f.or("bas1", "b"),
-      bas1: f.group("bas", "a", add),
+      bas1: f.group2("bas", "a", add),
     };
     
   });
@@ -68,7 +68,7 @@ describe("Head recursion", function() {
   });
   
   it("restores the state if its base case fails to parse", function() {
-    interpreter.baseCase = f.terminal(/base case/);
+    interpreter.baseCase = f.terminal2(/base case/);
     interpreter.recursionFail = f.or("recursionFail", "baseCase");
     interpreter.program = f.or("recursionFail", "a");
     
@@ -78,17 +78,17 @@ describe("Head recursion", function() {
   it("forgets any recursive definitions before trying to parse a nonterminal", 
   function() {
     interpreter.abs = f.or("abs1", "a");
-    interpreter.abs1 = f.group("abs", "b", add);
+    interpreter.abs1 = f.group2("abs", "b", add);
     interpreter.abscs = f.or("abscs1", "abs");
-    interpreter.abscs1 = f.group("abscs", "c", add);
+    interpreter.abscs1 = f.group2("abscs", "c", add);
     
     expect(interpreter.abscs("abc")).toBe("abc");
   });
   
   it("can occur inside many nested nonterminals", function() {
     interpreter.abcs = f.or("abcs1", "a");
-    interpreter.abcs1 = f.group("abcsb", "c", add);
-    interpreter.abcsb = f.group("abcs", "b", add);
+    interpreter.abcs1 = f.group2("abcsb", "c", add);
+    interpreter.abcsb = f.group2("abcs", "b", add);
     
     expect(interpreter.abcs("abc")).toBe("abc");
   });
@@ -99,13 +99,13 @@ describe("Head recursion", function() {
         return "";
       }),
       
-      newline: f.terminal(/\n/),
+      newline: f.terminal2(/\n/),
       statements: f.or("statements1", "e"),
-      statements1: f.group("statements", "statement", add),
-      statement: f.group("expressions", "newline", add),
+      statements1: f.group2("statements", "statement", add),
+      statement: f.group2("expressions", "newline", add),
       expressions: f.or("expressions1", "e"),
-      expressions1: f.group("expressions", "expression", add),
-      expression: f.terminal(/e\d/),
+      expressions1: f.group2("expressions", "expression", add),
+      expression: f.terminal2(/e\d/),
     };
     
     expect(interpreter.statements("")).toBe("");
@@ -116,13 +116,13 @@ describe("Head recursion", function() {
   
   it("can recurse through multiple paths", function() {
     interpreter = {
-      e: f.terminal(/(?:)/),
-      b: f.terminal(/b/),
-      c: f.terminal(/c/),
+      e: f.terminal2(/(?:)/),
+      b: f.terminal2(/b/),
+      c: f.terminal2(/c/),
       bcs: f.or("bcs1", "e"),
       bcs1: f.or("bcsb", "bcsc"),
-      bcsb: f.group("bcs", "b", add),
-      bcsc: f.group("bcs", "c", add),
+      bcsb: f.group2("bcs", "b", add),
+      bcsc: f.group2("bcs", "c", add),
     };
     
     expect(interpreter.bcs("")).toBe("");
@@ -134,31 +134,32 @@ describe("Head recursion", function() {
     expect(interpreter.bcs("cc")).toBe("cc");
   });
   
-  it("can have recursive base cases", function() {
+  it("may be indirect", function() {
     j = {
-      newExpression: f.terminal(/new/),
-      args: f.terminal(/\(args\)/),
-      qualifier: f.terminal(/\.q/),
+      newExpression: f.terminal2(/new/),
+      args: f.terminal2(/\(args\)/),
+      qualifier: f.terminal2(/\.q/),
+      call: f.or("call1", "call2", "newExpression"), 
+      call1: f.group2("call", "args", add),
+      call2: f.group2("callQualifier", "args", add),
+      callQualifier: f.longest("callQualifier1", "callQualifier2"),
+      callQualifier1: f.group2("call", "qualifier", add),
+      callQualifier2: f.group2("callQualifier", "qualifier", add),
     };
     
-    j.call = f.or("call1", 
-    "call2", "newExpression");
-    
-    j.call1 = f.group("call", "args", add);
-    
-    j.call2 = f.group("callQualifier", "args", add);
-    
-    j.callQualifier = f.longest("callQualifier1", 
-    "callQualifier2");
-    
-    j.callQualifier1 = f.group("call", 
-    "qualifier", add);
-    
-    j.callQualifier2 = f.group("callQualifier", 
-    "qualifier", add);
-    
     expect(j.call("new.q.q(args)")).toBe("new.q.q(args)");
+  });
+  
+  it("skips insignificants between recursive calls", function() {
+    interpreter = {
+      b: f.terminal2(/b/),
+      a: f.terminal2(/a/),
+      bas: f.group2("bas1", "a", add),
+      bas1: f.or("bas", "b"),
+      insignificant2: f.insignificant2("bas", /i/),
+    };
     
+    expect(interpreter.insignificant2("ibiai")).toBe("ba");
   });
   
 });
