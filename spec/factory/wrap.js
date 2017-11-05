@@ -150,4 +150,12 @@ describe("A wrapper", function() {
     expect(interpreter.program("icibai")).toBe("failure");
   });
   
+  it("doesn't parse the second anonymous terminal twice", function() {
+    // Don't ask...
+    interpreter.wrap = f.wrap2(/c/, /b/, "a");
+    interpreter.fail = f.terminal(/cbba/, fail);
+    interpreter.program = f.or("wrap", "fail");
+    expect(interpreter.program("cbba")).toBe("failure");
+  });
+  
 });
