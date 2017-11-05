@@ -2070,3 +2070,13 @@ interpretation) {
   });
   
 };
+
+InterpreterMethodFactory.prototype
+.star2 = function(childName, delimiterOrInterpretation, interpretation) {
+  return this.atLeast(0, childName, delimiterOrInterpretation, interpretation); 
+};
+
+InterpreterMethodFactory.prototype
+.plus2 = function(childName, delimiterOrInterpretation, interpretation) {
+  return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
+};
