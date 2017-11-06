@@ -833,14 +833,14 @@ JavaScriptInterpreter.hack = function() {
    * /\}/)</tt>
    */
   JavaScriptInterpreter.prototype.block = 
-  interpreterMethodFactory.wrap(/\{/, "statementList", /\}/);
+  interpreterMethodFactory.wrap2(/\{/, "statementList", /\}/);
   
   /**
    * <tt>{@link InterpreterMethodFactory#star|star} ("deferredStatement", 
    * function(deferredStatements) {...})</tt>
    */
   JavaScriptInterpreter.prototype.statementList = 
-  interpreterMethodFactory.star("deferredStatement", 
+  interpreterMethodFactory.star2("deferredStatement", 
   function(deferredStatements) {
     for(var i = 0; i < deferredStatements.length; i++) {
       var returnValue = deferredStatements[i].call(this);
@@ -863,7 +863,7 @@ JavaScriptInterpreter.hack = function() {
    * "variableDeclarationList", /;/, function() {...})</tt>
    */
   JavaScriptInterpreter.prototype.variableStatement = 
-  interpreterMethodFactory.group(/var/, "variableDeclarationList", /;/, 
+  interpreterMethodFactory.group2(/var/, "variableDeclarationList", /;/, 
   function() {
     return ["normal", undefined];
   });
@@ -916,7 +916,7 @@ JavaScriptInterpreter.hack = function() {
    * deferredElseStatementOpt) {...})</tt>
    */
   JavaScriptInterpreter.prototype.ifStatement = 
-  interpreterMethodFactory.group(/if/, /\(/, "expression", /\)/, 
+  interpreterMethodFactory.group2(/if/, /\(/, "expression", /\)/, 
   "deferredStatement", "deferredElseStatementOpt", 
   function(expression, deferredStatement, deferredElseStatementOpt) {
     if(expression) {
@@ -947,7 +947,7 @@ JavaScriptInterpreter.hack = function() {
    * function(deferredExpression, deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement2 = 
-  interpreterMethodFactory.group(/while/, /\(/, "deferredExpression", /\)/, 
+  interpreterMethodFactory.group2(/while/, /\(/, "deferredExpression", /\)/, 
   "deferredStatement", 
   function(deferredExpression, deferredStatement) {
     while(deferredExpression.call(this)) {
@@ -967,7 +967,7 @@ JavaScriptInterpreter.hack = function() {
    * deferredExpression2, deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement4 = 
-  interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclarationList", 
+  interpreterMethodFactory.group2(/for/, /\(/, /var/, "variableDeclarationList", 
   /;/, "deferredExpression", /;/, "deferredExpression", /\)/, 
   "deferredStatement", 
   function(variableDeclarationList, deferredExpression1, deferredExpression2, 
@@ -988,7 +988,7 @@ JavaScriptInterpreter.hack = function() {
    * expression, deferredStatement) {...})</tt>
    */
   JavaScriptInterpreter.prototype.iterationStatement6 = 
-  interpreterMethodFactory.group(/for/, /\(/, /var/, "variableDeclaration", 
+  interpreterMethodFactory.group2(/for/, /\(/, /var/, "variableDeclaration", 
   /in/, "expression", /\)/, "deferredStatement", 
   function(variableDeclaration, expression, deferredStatement) {
     for(var propertyName in expression) {
@@ -1022,7 +1022,7 @@ JavaScriptInterpreter.hack = function() {
    * "statement")</tt>
    */
   JavaScriptInterpreter.prototype.elseStatement = 
-  interpreterMethodFactory.wrap(/else/, "statement");
+  interpreterMethodFactory.wrap2(/else/, "statement");
   
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/return/, 
@@ -1124,7 +1124,7 @@ JavaScriptInterpreter.hack = function() {
    * <tt>select(2, "useStrictDeclarationOpt", "deferredSourceElements")</tt>
    */
   JavaScriptInterpreter.prototype.functionBody = 
-  interpreterMethodFactory.select(2, "useStrictDeclarationOpt", 
+  interpreterMethodFactory.select2(2, "useStrictDeclarationOpt", 
   "deferredSourceElements");
   
   /**
