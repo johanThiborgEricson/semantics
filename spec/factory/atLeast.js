@@ -129,4 +129,19 @@ describe("The at least quantifier", function() {
     expect(interpreter.interpretedList("adada")).toBe("fancy interpretation");
   });
   
+  it("can handle if the first child messes up the code pointer when it fails", 
+  function() {
+    f.uglyFail = function() {
+      return this.makeMethod(function(codePointer, interpreter) {
+        codePointer._pointer++;
+        return null;
+      });
+      
+    };
+    
+    interpreter.uglyFail = f.uglyFail();
+    interpreter.atLeast = f.atLeast(0, "uglyFail");
+    interpreter.program = f.wrap("atLeast", /a/);
+    expect(interpreter.program("a")).toEqual([]);
+  });
 });

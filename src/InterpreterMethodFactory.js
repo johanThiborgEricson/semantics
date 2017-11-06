@@ -2035,9 +2035,9 @@ interpretation) {
   }
   return this.makeMethod(function(codePointer, interpreter) {
     var childrenInstructions = [];
+    var backup = codePointer.backup();
     var childInstruction = factory.callInterpreterMethod(
       interpreter, childName, codePointer);
-    var backup;
     var skip = delimiter ? 
       function() {
         return factory.parseInsignificant2(codePointer, interpreter) && 
