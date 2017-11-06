@@ -2104,4 +2104,26 @@ InterpreterMethodFactory.prototype.wrap2 = function() {
   
 };
 
-
+InterpreterMethodFactory.prototype.select2 = function(selected) {
+  "use strict";
+  var factory = this;
+  var childrenNames = Array.prototype.slice.call(arguments, 1);
+  var args = this.getChildren(childrenNames);
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var childrenInstructions = 
+    factory.parseChildren2(codePointer, interpreter, args);
+    if(!childrenInstructions) return null;
+    if(selected === 0){
+      return function() {
+        return childrenInstructions.map(function(childInstruction) {
+          return childInstruction.call(interpreter);
+        });
+        
+      };
+    } else {
+      return childrenInstructions[selected-1];
+    }
+    
+  });
+  
+};
