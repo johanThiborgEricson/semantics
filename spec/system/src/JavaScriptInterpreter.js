@@ -28,7 +28,7 @@ JavaScriptInterpreter.hack = function() {
    * <tt>{@link InterpreterMethodFactory#star|star} ("space")</tt>
    */
   JavaScriptInterpreter.prototype.spaces = 
-  interpreterMethodFactory.star("space", function(spaces) {
+  interpreterMethodFactory.star2("space", function(spaces) {
     return spaces.join("");
   });
 
@@ -44,34 +44,34 @@ JavaScriptInterpreter.hack = function() {
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/\s/)</tt>
    */
   JavaScriptInterpreter.prototype.whiteSpace = 
-  interpreterMethodFactory.terminal(/\s/);
+  interpreterMethodFactory.terminal2(/\s/);
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/\n/)</tt>
    */
   JavaScriptInterpreter.prototype.lineTerminator = 
-  interpreterMethodFactory.terminal(/\n/);
+  interpreterMethodFactory.terminal2(/\n/);
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} 
    * (/\/\/.*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.singleLineComment = 
-  interpreterMethodFactory.terminal(/\/\/.*/);
+  interpreterMethodFactory.terminal2(/\/\/.*/);
 
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} 
    * (/\/\*\/*(\**[^\*\/]+\/*)*\*+\//)</tt>
    */
   JavaScriptInterpreter.prototype.multiLineComment = 
-  interpreterMethodFactory.terminal(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
+  interpreterMethodFactory.terminal2(/\/\*\/*(\**[^\*\/]+\/*)*\*+\//);
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} 
    * (identifierName)</tt>
    */
   JavaScriptInterpreter.prototype.identifierName = 
-  interpreterMethodFactory.terminal(identifierName);
+  interpreterMethodFactory.terminal2(identifierName);
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("undefinedLiteral", 
@@ -88,7 +88,7 @@ JavaScriptInterpreter.hack = function() {
    * function() {...})</tt>
    */
   JavaScriptInterpreter.prototype.undefinedLiteral = 
-  interpreterMethodFactory.terminal(/undefined/, function() {
+  interpreterMethodFactory.terminal2(/undefined/, function() {
     return undefined;});
   
   /**
@@ -96,7 +96,7 @@ JavaScriptInterpreter.hack = function() {
    * {...})</tt>
    */
   JavaScriptInterpreter.prototype.nullLiteral = 
-  interpreterMethodFactory.terminal(/null/, function() {return null;});
+  interpreterMethodFactory.terminal2(/null/, function() {return null;});
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("trueLiteral", 
@@ -110,30 +110,30 @@ JavaScriptInterpreter.hack = function() {
    * {...})</tt>
    */
   JavaScriptInterpreter.prototype.trueLiteral = 
-  interpreterMethodFactory.terminal(/true/, function() {return true;});
+  interpreterMethodFactory.terminal2(/true/, function() {return true;});
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/false/, 
    * function() {...})</tt>
    */
   JavaScriptInterpreter.prototype.falseLiteral = 
-  interpreterMethodFactory.terminal(/false/, function() {return false;});
+  interpreterMethodFactory.terminal2(/false/, function() {return false;});
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal} (/\d+/, 
    * function(numericLiteral) {...})</tt>
    */
   JavaScriptInterpreter.prototype.numericLiteral = 
-  interpreterMethodFactory.terminal(/\d+/, function(numericLiteral) {
+  interpreterMethodFactory.terminal2(/\d+/, function(numericLiteral) {
     return Number(numericLiteral);
   });
   
   /**
-   * <tt>insignificant(null, "stringLiteralSignificantSpaces")</tt>
+   * <tt>insignificant("stringLiteralSignificantSpaces", null)</tt>
    */
   JavaScriptInterpreter.prototype.stringLiteral = 
   interpreterMethodFactory.
-  insignificant(null, "stringLiteralSignificantSpaces");
+  insignificant2("stringLiteralSignificantSpaces", null);
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or}
@@ -149,14 +149,14 @@ JavaScriptInterpreter.hack = function() {
    * "doubleStringCharacters", /"/)</tt>
    */
   JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces1 = 
-  interpreterMethodFactory.wrap(/"/, "doubleStringCharacters", /"/);
+  interpreterMethodFactory.wrap2(/"/, "doubleStringCharacters", /"/);
   
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} (/'/, 
    * "singleStringCharacters", /'/)</tt>
    */
   JavaScriptInterpreter.prototype.stringLiteralSignificantSpaces2 = 
-  interpreterMethodFactory.wrap(/'/, "singleStringCharacters", /'/);
+  interpreterMethodFactory.wrap2(/'/, "singleStringCharacters", /'/);
   
   var unescape = function(s) {
     s = s.replace(/\\['"\\bfnrtv]/g, function(match) {
@@ -171,14 +171,14 @@ JavaScriptInterpreter.hack = function() {
    * (/([^"\\]|(\\.))*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.doubleStringCharacters = 
-  interpreterMethodFactory.terminal(/([^"\\]|(\\.))*/, unescape);
+  interpreterMethodFactory.terminal2(/([^"\\]|(\\.))*/, unescape);
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal}
    * (/([^'\\]|(\\.))*</tt><tt>/)</tt>
    */
   JavaScriptInterpreter.prototype.singleStringCharacters = 
-  interpreterMethodFactory.terminal(/([^'\\]|(\\.))*/, unescape);
+  interpreterMethodFactory.terminal2(/([^'\\]|(\\.))*/, unescape);
   
   var characterEscapeSequence = {
     "\\\'": "\'",
@@ -193,18 +193,18 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * <tt>insignificant(null, "regularExpressionLiteralSignificantSpaces")</tt>
+   * <tt>insignificant("regularExpressionLiteralSignificantSpaces, null")</tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionLiteral = 
   interpreterMethodFactory.
-  insignificant(null, "regularExpressionLiteralSignificantSpaces");
+  insignificant2("regularExpressionLiteralSignificantSpaces", null);
   
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} (/\//, 
    * "regularExpressionBody", /\//)</tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionLiteralSignificantSpaces = 
-  interpreterMethodFactory.wrap(/\//, "regularExpressionBody", /\//);
+  interpreterMethodFactory.wrap2(/\//, "regularExpressionBody", /\//);
   
   /**
    * <tt>{@link InterpreterMethodFactory#terminal|terminal}
@@ -212,7 +212,7 @@ JavaScriptInterpreter.hack = function() {
    * function(regularExpressionBody) {...})</tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionBody = 
-  interpreterMethodFactory.terminal(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
+  interpreterMethodFactory.terminal2(/([^/\\\[]|(\\.)|(\[([^\]\\]|(\\.))*\]))+/, 
   function(regularExpressionBody) {
     return new RegExp(regularExpressionBody);
   });
@@ -224,7 +224,7 @@ JavaScriptInterpreter.hack = function() {
    * function(bindingIdentifier) {...})</tt>
    */
   JavaScriptInterpreter.prototype.identifierReference = 
-  interpreterMethodFactory.wrap("bindingIdentifier", 
+  interpreterMethodFactory.wrap2("bindingIdentifier", 
   function(bindingIdentifier) {
     var base = this.executionContext;
     while(!base.variables.hasOwnProperty(bindingIdentifier)) {
@@ -246,7 +246,7 @@ JavaScriptInterpreter.hack = function() {
    * function(identifierReference) {...})</tt>
    */
   JavaScriptInterpreter.prototype.identifierExpression = 
-  interpreterMethodFactory.wrap("identifierReference", 
+  interpreterMethodFactory.wrap2("identifierReference", 
   function(identifierReference) {
     return identifierReference.base[identifierReference.name];
   });
@@ -263,7 +263,7 @@ JavaScriptInterpreter.hack = function() {
    * reservedWord)</tt>
    */
   JavaScriptInterpreter.prototype.bindingIdentifier = 
-  interpreterMethodFactory.terminal(identifierName, reservedWord);
+  interpreterMethodFactory.terminal2(identifierName, reservedWord);
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("literal", 
@@ -294,7 +294,7 @@ JavaScriptInterpreter.hack = function() {
    * {...})</tt>
    */
   JavaScriptInterpreter.prototype.thisExpression = 
-  interpreterMethodFactory.terminal(/this/, function() {
+  interpreterMethodFactory.terminal2(/this/, function() {
     return this.executionContext.thisBinding;
   });
   
@@ -524,7 +524,7 @@ JavaScriptInterpreter.hack = function() {
    * "qualifier", function(leftHandSideExpressionBase, qualifier) {...})</tt>
    */
   JavaScriptInterpreter.prototype.leftHandSideExpression2 = 
-  interpreterMethodFactory.group("callExpression", "qualifier", 
+  interpreterMethodFactory.group2("callExpression", "qualifier", 
   function(leftHandSideExpressionBase, qualifier) {
     return {
       base: leftHandSideExpressionBase,
@@ -545,21 +545,21 @@ JavaScriptInterpreter.hack = function() {
    * "leftHandSideExpression", function(lhse) {...})</tt>
    */
   JavaScriptInterpreter.prototype.updateExpression1 = 
-  interpreterMethodFactory.wrap(/delete/, "leftHandSideExpression",  
+  interpreterMethodFactory.wrap2(/delete/, "leftHandSideExpression",  
   function(lhse) {return delete lhse.base[lhse.name];});
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} ("leftHandSideExpression", 
    * /\+\+/, function(lhse) {...})</tt>
    */
   JavaScriptInterpreter.prototype.updateExpression2 = 
-  interpreterMethodFactory.wrap("leftHandSideExpression", /\+\+/, 
+  interpreterMethodFactory.wrap2("leftHandSideExpression", /\+\+/, 
   function(lhse) {return lhse.base[lhse.name]++;});
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} ("leftHandSideExpression", 
    * /--/, function(lhse) {...})</tt>
    */
   JavaScriptInterpreter.prototype.updateExpression3 = 
-  interpreterMethodFactory.wrap("leftHandSideExpression", /--/, 
+  interpreterMethodFactory.wrap2("leftHandSideExpression", /--/, 
   function(lhse) {return lhse.base[lhse.name]--;});
   
   /**
@@ -567,7 +567,7 @@ JavaScriptInterpreter.hack = function() {
    * ("leftHandSideExpression", function(lhse) {...})</tt>
    */
   JavaScriptInterpreter.prototype.rightHandSideExpression = 
-  interpreterMethodFactory.wrap("leftHandSideExpression", 
+  interpreterMethodFactory.wrap2("leftHandSideExpression", 
   function(leftHandSideExpression) {
     return leftHandSideExpression.base[leftHandSideExpression.name];
   });
@@ -586,14 +586,14 @@ JavaScriptInterpreter.hack = function() {
    * "typeChangeExpression", function(typeChangeExpression) {...})</tt>
    */
   JavaScriptInterpreter.prototype.typeChangeExpression2 = 
-  interpreterMethodFactory.group(/typeof/, "typeChangeExpression", 
+  interpreterMethodFactory.group2(/typeof/, "typeChangeExpression", 
   function(typeChangeExpression) {return typeof typeChangeExpression;});
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/-/, 
    * "typeChangeExpression", function(typeChangeExpression) {...})</tt>
    */
   JavaScriptInterpreter.prototype.typeChangeExpression4 = 
-  interpreterMethodFactory.group(/-/, "typeChangeExpression", 
+  interpreterMethodFactory.group2(/-/, "typeChangeExpression", 
   function(typeChangeExpression) {return -typeChangeExpression;});
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/!/, 
@@ -1163,7 +1163,7 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * <tt>insignificant("spaces", "sourceElements")</tt>
+   * <tt>insignificant("sourceElements", "spaces")</tt>
    */
   JavaScriptInterpreter.prototype.program1 = 
   interpreterMethodFactory.insignificant2("sourceElements", "spaces");
