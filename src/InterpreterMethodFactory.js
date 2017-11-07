@@ -2013,13 +2013,17 @@ InterpreterMethodFactory.prototype
 InterpreterMethodFactory.prototype
 .parseInsignificant2 = function(codePointer, interpreter) {
   var insignificant = codePointer.insignificant;
+  delete codePointer.insignificant;
+  var result;
   if(insignificant instanceof RegExp) {
-    return codePointer.parse(codePointer.insignificant);
+    result = codePointer.parse(insignificant);
   } else if(typeof insignificant === "string"){
-    return this.callInterpreterMethod(interpreter, insignificant, codePointer);
+    result = this.callInterpreterMethod(interpreter, insignificant, codePointer);
   } else {
-    return true;
+    result = true;
   }
+  codePointer.insignificant = insignificant;
+  return result;
 };
 
 InterpreterMethodFactory.prototype

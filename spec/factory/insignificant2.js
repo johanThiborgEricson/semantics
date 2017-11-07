@@ -103,4 +103,11 @@ describe("An insignificant pattern", function() {
     expect(interpreter.iaijajiai("iaijajiai")).toBe("aaa");
   });
   
+  it("may be a quantifier", function() {
+    interpreter.as = f.star2("a");
+    interpreter.ip = f.plus2("i");
+    interpreter.insignificant = f.insignificant2("as", "ip");
+    expect(interpreter.insignificant("iaiiai")).toEqual(["a", "a"]);
+  });
+  
 });
