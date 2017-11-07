@@ -479,7 +479,7 @@ JavaScriptInterpreter.hack = function() {
    * "identifierName")</tt>
    */
   JavaScriptInterpreter.prototype.qualifier2 = 
-  interpreterMethodFactory.wrap(/\./, "identifierName");
+  interpreterMethodFactory.wrap2(/\./, "identifierName");
   
   /**
    * <tt>{@link InterpreterMethodFactory#wrap|wrap} (/\(/, "argumentList", 
@@ -487,7 +487,7 @@ JavaScriptInterpreter.hack = function() {
    * /\)/)</tt>
    */
   JavaScriptInterpreter.prototype.args = 
-  interpreterMethodFactory.wrap(/\(/, "argumentList", /\)/);
+  interpreterMethodFactory.wrap2(/\(/, "argumentList", /\)/);
   
   /**
    * <tt>{@link InterpreterMethodFactory#star|star} ("assignmentExpression", 
@@ -511,7 +511,7 @@ JavaScriptInterpreter.hack = function() {
    * function(leftHandSideExpression, qualifier) {...})</tt>
    */
   JavaScriptInterpreter.prototype.leftHandSideExpression1 = 
-  interpreterMethodFactory.group("leftHandSideExpression", "qualifier", 
+  interpreterMethodFactory.group2("leftHandSideExpression", "qualifier", 
   function(leftHandSideExpression, qualifier) {
     return {
       base: leftHandSideExpression.base[leftHandSideExpression.name],
