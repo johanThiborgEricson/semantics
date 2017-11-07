@@ -1826,10 +1826,10 @@ InterpreterMethodFactory.prototype
  * is a regular expression, or inside an {@link InterpreterMethodFactory#opt} 
  * if it is an interpreter method.
  * 
- * @param {(RegExp|interpreterMethodName)} insignificant - A description of 
- * what should be parsed unnoticed between the significant parts.
- * @param {interpreterMethodName} partName - The top interpreter method where 
- * the parts should be parsed with insignificants in between.
+ * @param {interpreterMethodName} childName - The nonterminal bellow which  
+ * the decendants should be parsed with insignificants in between them.
+ * @param {(RegExp|interpreterMethodName)} insignificant - A pattern that 
+ * should be parsed and ignored between the tokens.
  * @returns {external:InterpreterObject#insignificantTypeInterpreterMethod} 
  * An interpreter method where the parsing behaviour has been altered to skip 
  * insignificant symbols.
@@ -1841,17 +1841,17 @@ InterpreterMethodFactory.prototype
  *   b: f.atom(/b/),
  *   part: f.group("a", "b"),
  *   insign: f.atom(/i/),
- *   iPart: f.insignificant("insign", "part"),
- *   jiPart: f.insignificant(/j/, "iPart"),
+ *   iPart: f.insignificant("part", "insign"),
+ *   jiPart: f.insignificant("iPart", /j/),
  * };
  * var ab1 = interpreter.iPart("iaibi");       // ab1 == {a: "a", b: "b"}
  * var ab2 = interpreter.jiPart("jiaibij");    // ab2 == {a: "a", b: "b"}
  * var missingInsign = interpreter.iPart("ab") // parse fail
  */
 InterpreterMethodFactory.prototype
-.insignificant = function(insignificant, partName) {
+.insignificant = function(childName, insignificant) {
   "use strict";
-  var that = this;
+  var factory = this;
 
   /**
    * @method external:InterpreterObject#insignificantTypeInterpreterMethod
@@ -1866,20 +1866,6 @@ InterpreterMethodFactory.prototype
    * @see {@link insignificantUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var instruction;
-    if(that.parseInsignificant(codePointer, interpreter)) {
-      instruction = that.shiftInsignificant(insignificant, partName, 
-      codePointer, interpreter);
-    }
-    return instruction;
-  });
-};
-
-InterpreterMethodFactory.prototype
-.insignificant2 = function(childName, insignificant) {
-  "use strict";
-  var factory = this;
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var outerInsignificant = codePointer.insignificant;
     codePointer.insignificant = insignificant;
     var maybeInstruction;
@@ -1893,6 +1879,9 @@ InterpreterMethodFactory.prototype
     return maybeInstruction;
   });
 };
+
+InterpreterMethodFactory.prototype.insignificant2 = 
+InterpreterMethodFactory.prototype.insignificant;
 
 InterpreterMethodFactory.prototype
 .terminal2 = function(regex, interpretationOrButNot) {
