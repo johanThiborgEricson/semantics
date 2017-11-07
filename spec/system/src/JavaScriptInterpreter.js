@@ -341,7 +341,7 @@ JavaScriptInterpreter.hack = function() {
    * "assignmentExpression")</tt>
    */
   JavaScriptInterpreter.prototype.propertyAssignment = 
-  interpreterMethodFactory.group("propertyName", /:/, "assignmentExpression");
+  interpreterMethodFactory.group2("propertyName", /:/, "assignmentExpression");
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("identifierName")</tt>
@@ -756,7 +756,7 @@ JavaScriptInterpreter.hack = function() {
    * deferredAssignmentExpression1, deferredAssignmentExpression2) {...})</tt>
    */
   JavaScriptInterpreter.prototype.conditionalExpression1 = 
-  interpreterMethodFactory.group("logicalOrExpression", /\?/, 
+  interpreterMethodFactory.group2("logicalOrExpression", /\?/, 
   "deferredAssignmentExpression", /:/, "deferredAssignmentExpression", 
   function(logicalOrExpression, deferredAssignmentExpression1, 
   deferredAssignmentExpression2) {
@@ -786,7 +786,7 @@ JavaScriptInterpreter.hack = function() {
    * function(lhse, assignmentExpression) {...})</tt>
    */
   JavaScriptInterpreter.prototype.assignmentExpression1 = 
-  interpreterMethodFactory.group("leftHandSideExpression", /=/, 
+  interpreterMethodFactory.group2("leftHandSideExpression", /=/, 
   "assignmentExpression", function(lhse, assignmentExpression) {
     return (lhse.base[lhse.name] = assignmentExpression);});
   /**
@@ -872,14 +872,14 @@ JavaScriptInterpreter.hack = function() {
    * <tt>plus("variableDeclaration", /,/)</tt>
    */
   JavaScriptInterpreter.prototype.variableDeclarationList = 
-  interpreterMethodFactory.plus("variableDeclaration", /,/);
+  interpreterMethodFactory.plus2("variableDeclaration", /,/);
   
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} ("bindingIdentifier", 
    * "initialiserOpt", function(bindingIdentifier, initialiserOpt) {...})</tt>
    */
   JavaScriptInterpreter.prototype.variableDeclaration = 
-  interpreterMethodFactory.group("bindingIdentifier", 
+  interpreterMethodFactory.group2("bindingIdentifier", 
   "initialiserOpt", function(bindingIdentifier, initialiserOpt) {
     this.executionContext.variables[bindingIdentifier] = initialiserOpt;
     return bindingIdentifier;
@@ -890,7 +890,7 @@ JavaScriptInterpreter.hack = function() {
    * "assignmentExpression")</tt>
    */
   JavaScriptInterpreter.prototype.initialiser = 
-  interpreterMethodFactory.wrap(/=/, "assignmentExpression");
+  interpreterMethodFactory.wrap2(/=/, "assignmentExpression");
   
   /**
    * <tt>opt("initialiser", function() {...})</tt>
@@ -1029,7 +1029,7 @@ JavaScriptInterpreter.hack = function() {
    * "expression", /;/, function(expression) {...})</tt>
    */
   JavaScriptInterpreter.prototype.returnStatement = 
-  interpreterMethodFactory.group(/return/, "expression", /;/, 
+  interpreterMethodFactory.group2(/return/, "expression", /;/, 
   function(expression) {
     return ["return", expression];
   });
@@ -1082,7 +1082,7 @@ JavaScriptInterpreter.hack = function() {
    * "functionExpressionContent")</tt>
    */
   JavaScriptInterpreter.prototype.anonymousFunctionExpression = 
-  interpreterMethodFactory.wrap(/function/, "functionExpressionContent");
+  interpreterMethodFactory.wrap2(/function/, "functionExpressionContent");
   
   /**
    * <tt>{@link InterpreterMethodFactory#group|group} (/\(/, 
@@ -1090,7 +1090,7 @@ JavaScriptInterpreter.hack = function() {
    * function(formalParameterList, functionBody) {...})</tt>
    */
   JavaScriptInterpreter.prototype.functionExpressionContent = 
-  interpreterMethodFactory.group(/\(/, "formalParameterList", /\)/, 
+  interpreterMethodFactory.group2(/\(/, "formalParameterList", /\)/, 
   /\{/, "functionBody", /\}/, function(formalParameterList, functionBody) {
     var that = this;
     var outerExecutionContext = this.executionContext;
@@ -1118,7 +1118,7 @@ JavaScriptInterpreter.hack = function() {
    * /,/)</tt>
    */
   JavaScriptInterpreter.prototype.formalParameterList = 
-  interpreterMethodFactory.star("bindingIdentifier", /,/);
+  interpreterMethodFactory.star2("bindingIdentifier", /,/);
   
   /**
    * <tt>select(2, "useStrictDeclarationOpt", "deferredSourceElements")</tt>
@@ -1137,7 +1137,7 @@ JavaScriptInterpreter.hack = function() {
    * (/('use strict')|("use strict")/, /;/)</tt>
    */
   JavaScriptInterpreter.prototype.useStrictDeclaration = 
-  interpreterMethodFactory.group(/('use strict')|("use strict")/, /;/);
+  interpreterMethodFactory.group2(/('use strict')|("use strict")/, /;/);
   
   /**
    * Setting up the environment and calling program1.
