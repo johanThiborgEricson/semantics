@@ -1928,6 +1928,9 @@ InterpreterMethodFactory.prototype
   
 };
 
+InterpreterMethodFactory.prototype.terminal = 
+InterpreterMethodFactory.prototype.terminal2;
+
 InterpreterMethodFactory.prototype
 .group2 = function() {
   "use strict";
@@ -1962,6 +1965,9 @@ InterpreterMethodFactory.prototype
   });
   
 };
+
+InterpreterMethodFactory.prototype.group = 
+InterpreterMethodFactory.prototype.group2;
 
 InterpreterMethodFactory.prototype
 .parseChildren2 = function(codePointer, interpreter, args) {
@@ -2084,10 +2090,16 @@ InterpreterMethodFactory.prototype
   return this.atLeast(0, childName, delimiterOrInterpretation, interpretation); 
 };
 
+InterpreterMethodFactory.prototype.star = 
+InterpreterMethodFactory.prototype.star2;
+
 InterpreterMethodFactory.prototype
 .plus2 = function(childName, delimiterOrInterpretation, interpretation) {
   return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
 };
+
+InterpreterMethodFactory.prototype.plus = 
+InterpreterMethodFactory.prototype.plus2;
 
 InterpreterMethodFactory.prototype.wrap2 = function() {
   "use strict";
@@ -2107,6 +2119,9 @@ InterpreterMethodFactory.prototype.wrap2 = function() {
   });
   
 };
+
+InterpreterMethodFactory.prototype.wrap =
+InterpreterMethodFactory.prototype.wrap2;
 
 InterpreterMethodFactory.prototype.select2 = function(selected) {
   "use strict";
@@ -2131,3 +2146,6 @@ InterpreterMethodFactory.prototype.select2 = function(selected) {
   });
   
 };
+
+InterpreterMethodFactory.prototype.select = 
+InterpreterMethodFactory.prototype.select2;
