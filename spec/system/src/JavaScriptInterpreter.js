@@ -263,7 +263,7 @@ JavaScriptInterpreter.hack = function() {
    * reservedWord)</tt>
    */
   JavaScriptInterpreter.prototype.bindingIdentifier = 
-  interpreterMethodFactory.terminal(identifierName, reservedWord);
+  interpreterMethodFactory.butNot("identifierName", reservedWord);
   
   /**
    * <tt>{@link InterpreterMethodFactory#or|or} ("literal", 
