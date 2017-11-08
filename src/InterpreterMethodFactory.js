@@ -1872,3 +1872,20 @@ InterpreterMethodFactory.prototype
   codePointer.insignificant = insignificant;
   return result;
 };
+
+InterpreterMethodFactory.prototype
+.butNot = function(childName, forbidenStrings) {
+  var factory = this;
+  return this.makeMethod(function(codePointer, interpreter) {
+    var startIndex = codePointer.backup();
+    var childResult = factory.callInterpreterMethod(
+      interpreter, childName, codePointer);
+    var endIndex = codePointer.backup();
+    var parsedString = codePointer._code.substring(startIndex, endIndex);
+    if(forbidenStrings.indexOf(parsedString) > -1) {
+      return null;
+    }
+    return childResult;
+  });
+  
+};

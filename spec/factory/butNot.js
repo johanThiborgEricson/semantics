@@ -1,7 +1,7 @@
 /**
  * @name butNotUnitTests
  */
-describe("A but not specification of an terminal", function() {
+describe("A but not meta terminal", function() {
   
   var f;
   var interpreter;
@@ -12,18 +12,18 @@ describe("A but not specification of an terminal", function() {
   
   beforeEach(function() {
     interpreter = {
-      
+      anything: f.terminal(/./),
     };
     
   });
   
-  it("may be empty", function() {
-    interpreter.anything = f.terminal(/./, []);
-    expect(interpreter.anything("a")).toBe("a");
+  it("may disallow nothing", function() {
+    interpreter.noRestriction = f.butNot("anything", []);
+    expect(interpreter.noRestriction("a")).toBe("a");
   });
   
   it("may exclude one alternative", function() {
-    interpreter.notA = f.terminal(/./, ["a"]);
+    interpreter.notA = f.butNot("anything", ["a"]);
     interpreter.alternativeA = f.terminal(/a/, function() {
       return "alternative a";
     });
@@ -34,7 +34,7 @@ describe("A but not specification of an terminal", function() {
   });
   
   it("may exclude many alternatives", function() {
-    interpreter.notAorB = f.terminal(/./, ["a", "b"]);
+    interpreter.notAorB = f.butNot("anything", ["a", "b"]);
     interpreter.alternativeB = f.terminal(/b/, function() {
       return "alternative b";
     });
@@ -44,12 +44,14 @@ describe("A but not specification of an terminal", function() {
     expect(interpreter.program("b")).toBe("alternative b");
   });
   
-  it("may have an interpretation", function() {
-    interpreter.aNotB = f.terminal(/a/, ["b"], function interpretation() {
-      return "certainly not b";
-    });
+  it("does not include a leading or trailing insignificant", function() {
+    interpreter = {
+      ab: f.group(/a/, /b/),
+      justChild: f.butNot("ab", ["iaib", "aibi", "iaibi"]),
+      iaibi: f.insignificant("justChild", /i/),
+    };
     
-    expect(interpreter.aNotB("a")).toBe("certainly not b");
+    expect(interpreter.iaibi("iaibi")).toEqual({});
   });
   
 });
