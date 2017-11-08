@@ -1186,7 +1186,7 @@ InterpreterMethodFactory.prototype.or = function() {
       .callInterpreterMethod(interpreter, args.parts[i++].name, codePointer);
     }
     
-    return maybeInstruction;
+    return maybeInstruction || args.interpretation;
   });
 };
 

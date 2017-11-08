@@ -27,7 +27,6 @@ describe("An or", function() {
   it("always fails if it has zero alternatives", function() {
     interpreter.noChoice = f.or();
     interpreter.choice = f.or("noChoice", "a");
-    
     expect(interpreter.choice("a")).toBe("a");
   });
   
@@ -43,11 +42,26 @@ describe("An or", function() {
   });
   
   it("fails if all its alternatives fail", function() {
-    
     interpreter.outerOr = f.or("dab", "c");
     interpreter.dab = f.or("a", "b");
-
     expect(interpreter.outerOr("c")).toBe("c");
+  });
+  
+  it("may have a fallback interpretation", function() {
+    var spy = jasmine.createSpy("empty");
+    interpreter.empty = f.or(spy);
+    interpreter.empty("");
+    expect(spy).toHaveBeenCalled();
+  });
+  
+  it("calls its fallback interpretation as a method of the interpreter", 
+  function() {
+    interpreter.setup = f.or(function() {
+      this.side = "effect";
+    });
+    
+    interpreter.setup("");
+    expect(interpreter.side).toBe("effect");
   });
   
 });
