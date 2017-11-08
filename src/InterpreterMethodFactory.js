@@ -1170,7 +1170,7 @@ InterpreterMethodFactory.prototype.or = function() {
 InterpreterMethodFactory.prototype.longest = function() {
   "use strict";
   var factory = this;
-  var alternativesNames = Array.prototype.slice.call(arguments);
+  var args = this.getChildren(arguments);
   
   /**
    * @method external:InterpreterObject#longestTypeInterpreterMethod
@@ -1207,7 +1207,8 @@ InterpreterMethodFactory.prototype.longest = function() {
     var backup = codePointer.backup();
     var nullObject = {end:backup};
     var maybeInstruction = nullObject;
-    alternativesNames.map(function(name) {
+    args.parts.map(function(part) {
+      var name = part.name;
       codePointer.restore(backup);
       var partInstruction = factory
           .callInterpreterMethod(interpreter, name, codePointer);
@@ -1219,7 +1220,8 @@ InterpreterMethodFactory.prototype.longest = function() {
     
     codePointer.restore(maybeInstruction.end);
     
-    return maybeInstruction===nullObject?null:maybeInstruction;
+    maybeInstruction = maybeInstruction===nullObject?null:maybeInstruction;
+    return maybeInstruction || args.interpretation;
   });
 };
 

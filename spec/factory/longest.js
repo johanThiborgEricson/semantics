@@ -84,4 +84,23 @@ describe("The longest nonterminal", function() {
     expect(interpreter.longest("b")).toBe("first");
   });
   
+  it("may have a fallback interpretation", function() {
+    var spy = jasmine.createSpy("empty");
+    interpreter.empty = f.longest(spy);
+    interpreter.empty("");
+    expect(spy).toHaveBeenCalled();
+  });
+  
+  it("calls its fallback interpretation as a method of the interpreter", 
+  function() {
+    interpreter.setup = f.longest(function() {
+      this.side = "effect";
+    });
+    
+    interpreter.setup("");
+    expect(interpreter.side).toBe("effect");
+  });
+  
+
+  
 });
