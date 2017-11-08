@@ -534,7 +534,7 @@ InterpreterMethodFactory.prototype
  * @see {@link butNotUnitTests}
  */
 InterpreterMethodFactory.prototype
-.terminalDeprecated = function(regex, interpretationOrButNot) {
+.terminal = function(regex, interpretationOrButNot) {
   "use strict";
   var that = this;
   var parsingRegex = this.makeParsing(regex);
@@ -614,41 +614,6 @@ InterpreterMethodFactory.prototype
    * @see {@link terminalUnitTests}
    * @see {@link butNotUnitTests}
    */
-  return this.makeMethod(function(codePointer, interpreter) {
-    var match = that
-    .parseInsignificantAndToken(codePointer, parsingRegex, interpreter);
-    if(match === null) {
-      return null;
-    }
-    
-    var result = match[0];
-    if(butNot && butNot.indexOf(result) > -1) {
-      return null;
-    }
-    
-    return function instruction() {
-      return interpretation?interpretation.call(this, result):result;
-    };
-    
-  });
-  
-};
-
-InterpreterMethodFactory.prototype
-.terminal = function(regex, interpretationOrButNot) {
-  "use strict";
-  var that = this;
-  var parsingRegex = this.makeParsing(regex);
-  
-  var interpretation;
-  var butNot;
-  if(typeof interpretationOrButNot === "function") {
-    interpretation = interpretationOrButNot;
-  } else {
-    butNot = interpretationOrButNot;
-    interpretation = arguments[2];
-  }
-  
   return this.makeMethod(function(codePointer, interpreter) {
     var match = codePointer.parse(parsingRegex);
     if(match === null) {
@@ -781,6 +746,22 @@ InterpreterMethodFactory.prototype
 };
 
 /**
+ * @method external:ThisBinding#groupInterpretation
+ * @description A group interpretation is a callback function passed to 
+ * {@link InterpreterMethodFactory#group}. 
+ * Inside the callback, this will refere to the
+ * {@link external:ThisBinding}. 
+ * The interpretation is called with the results of the {@link part}s of the 
+ * interpreter method. 
+ * @param {...InterpreterMethodResult} partResults - The results of the 
+ * {@link part}s of the method. 
+ * @returns {*} User defined. 
+ * The value returned by the interpretation will also be the return value of 
+ * its interpreter method. 
+ * @see {@link groupUnitTests}
+ */
+
+/**
  * <p>
  * The group interpreter method factory accepts any number of 
  * {@link interpreterMethodName}s and regular expressions in any order as 
@@ -817,25 +798,10 @@ InterpreterMethodFactory.prototype
  * @see {@link groupUnitTests}
  */
 InterpreterMethodFactory.prototype
-.groupDeprecated = function() {
+.group = function() {
   "use strict";
   var factory = this;
   
-  /**
-   * @method external:ThisBinding#groupInterpretation
-   * @description A group interpretation is a callback function passed to 
-   * {@link InterpreterMethodFactory#group}. 
-   * Inside the callback, this will refere to the
-   * {@link external:ThisBinding}. 
-   * The interpretation is called with the results of the {@link part}s of the 
-   * interpreter method. 
-   * @param {...InterpreterMethodResult} partResults - The results of the 
-   * {@link part}s of the method. 
-   * @returns {*} User defined. 
-   * The value returned by the interpretation will also be the return value of 
-   * its interpreter method. 
-   * @see {@link groupUnitTests}
-   */
   var args = this.getChildren(arguments);
 
   /**
@@ -868,42 +834,6 @@ InterpreterMethodFactory.prototype
    * {@link part}s. 
    * @see {@link groupUnitTests}
    */
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = factory.parseChildren(
-      codePointer, interpreter, args);
-    
-    if(partInstructions === null) {
-      return null;
-    }
-    
-    if(args.interpretation) {
-      return function instruction() {
-        return args.interpretation.apply(this, factory
-            .mapRunAsMethod(this, partInstructions));
-      };
-    } else {
-      return function instruction() {
-        var that = this;
-        var mpo = new factory.MultiPropertyObject();
-        var result = {};
-        partInstructions.map(function(pi) {
-          mpo.appendProperty.call(result, pi.partName, pi.call(that));
-        });
-        
-        return result;
-      };
-    }
-  });
-  
-};
-
-InterpreterMethodFactory.prototype
-.group = function() {
-  "use strict";
-  var factory = this;
-  
-  var args = this.getChildren(arguments);
-
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = factory.parseChildren(codePointer, interpreter, args);
     
@@ -1074,6 +1004,30 @@ InterpreterMethodFactory.prototype.select = function(selected) {
 };
 
 /**
+ * @method external:ThisBinding#wrapInterpretation
+ * @description A wrap interpretation is a callback function passed to 
+ * {@link InterpreterMethodFactory#wrap} along with optional leading regular 
+ * expressions, a mandatory {@link interpreterMethodName} of its only 
+ * {@link part} and optional trailing regular expressions. 
+ * It describes how the resulting  
+ * {@link external:InterpreterObject#wrapTypeInterpreterMethod} should 
+ * interpret the result of its part. 
+ * It is meant to be thought of as a special kind of method of the same 
+ * object as its interpreter method, with the added ability to, before it is 
+ * called, compute the argument it should be called with. 
+ * It computes its argument by skiping over any text parsed by the leading 
+ * regular expressions, then computing the argument as the result of letting 
+ * its part parse from there, and finally skipping over the text parsed by 
+ * the trailing regular expressions. 
+ * @param {InterpreterMethodResult} partResult - The result of the only  
+ * {@link part} of the interpretations interpreter method.
+ * @returns {*} User defined. 
+ * The value returned by the interpretation will also be the return value of 
+ * its interpreter method. 
+ * @see {@link wrapUnitTests}
+ */
+
+/**
  * <p>
  * The wrap interpreter method factory accepts any number of leading regular 
  * expressions, followed by an {@link interpreterMethodName}, followed by any 
@@ -1130,35 +1084,11 @@ InterpreterMethodFactory.prototype.select = function(selected) {
  * and/or interpret the result of its part further. 
  * @see {@link wrapUnitTests}
  */
-InterpreterMethodFactory.prototype.wrapDeprecated = function() {
+InterpreterMethodFactory.prototype.wrap = function() {
   "use strict";
   var factory = this;
   var args = this.getChildren(arguments);
-
-  /**
-   * @method external:ThisBinding#wrapInterpretation
-   * @description A wrap interpretation is a callback function passed to 
-   * {@link InterpreterMethodFactory#wrap} along with optional leading regular 
-   * expressions, a mandatory {@link interpreterMethodName} of its only 
-   * {@link part} and optional trailing regular expressions. 
-   * It describes how the resulting  
-   * {@link external:InterpreterObject#wrapTypeInterpreterMethod} should 
-   * interpret the result of its part. 
-   * It is meant to be thought of as a special kind of method of the same 
-   * object as its interpreter method, with the added ability to, before it is 
-   * called, compute the argument it should be called with. 
-   * It computes its argument by skiping over any text parsed by the leading 
-   * regular expressions, then computing the argument as the result of letting 
-   * its part parse from there, and finally skipping over the text parsed by 
-   * the trailing regular expressions. 
-   * @param {InterpreterMethodResult} partResult - The result of the only  
-   * {@link part} of the interpretations interpreter method.
-   * @returns {*} User defined. 
-   * The value returned by the interpretation will also be the return value of 
-   * its interpreter method. 
-   * @see {@link wrapUnitTests}
-   */
-
+  
   /**
    * @method external:InterpreterObject#wrapTypeInterpreterMethod
    * @description <p>
@@ -1191,25 +1121,6 @@ InterpreterMethodFactory.prototype.wrapDeprecated = function() {
    * {@link part}s. 
    * @see {@link wrapUnitTests}
    */
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = 
-    factory.parseChildren(codePointer, interpreter, args);
-    if(partInstructions === null) {
-      return null;
-    }
-    var maybeInstruction = partInstructions[0];
-    return !args.interpretation?maybeInstruction:function instruction() {
-      return args.interpretation.call(this, maybeInstruction.call(this));
-    };
-    
-  });
-  
-};
-
-InterpreterMethodFactory.prototype.wrap = function() {
-  "use strict";
-  var factory = this;
-  var args = this.getChildren(arguments);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = 
     factory.parseChildren(codePointer, interpreter, args);
@@ -1435,6 +1346,69 @@ interpretation) {
 };
 
 /**
+ * @method external:ThisBinding#starInterpretation
+ * @description A star interpretation is a callback function passed to 
+ * {@link InterpreterMethodFactory#star} to define how the resulting 
+ * {@link external:InterpreterObject#starTypeInterpreterMethod} should 
+ * interpret the result of parsing its {@link part} as many times as 
+ * possible.
+ * It should be thought of as a regular method of the same object as its 
+ * interpreter method, but with added ability to, before it is run, compute 
+ * the argument that is will be called with.
+ * Before it runs, it let its {@link part} parse the text repeatedly as many 
+ * times as it can, and then gets the array of the results as its only 
+ * argument.
+ * Also, just like a regular method, it will have <tt>this</tt> bound to the 
+ * object of its interpreter method when it is run, and its result will also 
+ * be the result of its method.
+ * 
+ * @param {InterpreterMethodResult[]} partResults - The results of parsing 
+ * its {@link part} as many times as it can, or zero if it can't, in an 
+ * array. 
+ * @returns {InterpreterMethodResult} User defined. 
+ * The value returned by the interpretation will also be the returned value 
+ * of its interpreter method.
+ * @see {@link starUnitTests}
+ */
+
+/**
+ * @method external:InterpreterObject#starTypeInterpreterMethod
+ * @description <p>
+ * A star type interpreter method is a type of 
+ * {@link external:InterpreterObject#interpreterMethod} meant to be put on a 
+ * {@link external:InterpreterObject} created by the user. 
+ * It is the result of calling {@link InterpreterMethodFactory#star} with 
+ * the {@link interpreterMethodName} of its only {@link part} and optionally 
+ * a regular expression that will act as a delimiter.
+ * </p><p>
+ * Among the different types of interpreter methods, this is the equivalent 
+ * of the * quantifier in regular expressions. 
+ * It lets its {@link part} parse the text over and over until it can't parse 
+ * anymore, optionally skipping over a delimiter regular expression in 
+ * between the parsings. 
+ * Just like the regex *, it may successfully parse nothing.
+ * </p><p>
+ * The result of an interpreter method of this type is an, possibly zero 
+ * length, array with the results of the repeated parsings of its 
+ * {@link part}, if it wasn't defined with a 
+ * {@link external:ThisBinding#starInterpretation}.
+ * If it was, the result will be the result of calling its interpretation 
+ * as if it was a method of the same object with the abovementioned array as 
+ * the only argument. 
+ * Inside the body of the interpretation, <tt>this</tt> will be bound to the 
+ * object of the interpreter method.
+ * </p>
+ * @param {string} text - The text that the {@link part} should parse, as 
+ * many times as it can, or zero times if it can't.
+ * @param {boolean} [printDebuggingMessages] - See 
+ * {@link external:InterpreterObject#interpreterMethod}.
+ * @returns {InterpretationMethodResult} The result of its interpretation, 
+ * if it has one, otherwise an (possibly zero length) array with the results 
+ * of repeatedly letting its {@link part} parse the text.
+ * @see {@link starUnitTests}
+ */
+
+/**
  * <p>
  * The star interpreter method takes a {@link interpreterMethodName}, an 
  * optional delimiter regular expression, and an optional 
@@ -1486,114 +1460,71 @@ interpretation) {
  * @see {@link starUnitTests}
  */
 InterpreterMethodFactory.prototype
-.starDeprecated = function(partName) {
-  "use strict";
-  var factory = this;
-  
-  /**
-   * @method external:ThisBinding#starInterpretation
-   * @description A star interpretation is a callback function passed to 
-   * {@link InterpreterMethodFactory#star} to define how the resulting 
-   * {@link external:InterpreterObject#starTypeInterpreterMethod} should 
-   * interpret the result of parsing its {@link part} as many times as 
-   * possible.
-   * It should be thought of as a regular method of the same object as its 
-   * interpreter method, but with added ability to, before it is run, compute 
-   * the argument that is will be called with.
-   * Before it runs, it let its {@link part} parse the text repeatedly as many 
-   * times as it can, and then gets the array of the results as its only 
-   * argument.
-   * Also, just like a regular method, it will have <tt>this</tt> bound to the 
-   * object of its interpreter method when it is run, and its result will also 
-   * be the result of its method.
-   * 
-   * @param {InterpreterMethodResult[]} partResults - The results of parsing 
-   * its {@link part} as many times as it can, or zero if it can't, in an 
-   * array. 
-   * @returns {InterpreterMethodResult} User defined. 
-   * The value returned by the interpretation will also be the returned value 
-   * of its interpreter method.
-   * @see {@link starUnitTests}
-   */
-  var interpretation;
-  var delimiter;
-  var delimiterAndPart;
-  if(arguments[1] instanceof Function) {
-    interpretation = arguments[1];
-  } else {
-    delimiter = arguments[1];
-    delimiterAndPart = this.wrap(delimiter, partName);
-    
-    interpretation = arguments[2];
-  }
-  
-  /**
-   * @method external:InterpreterObject#starTypeInterpreterMethod
-   * @description <p>
-   * A star type interpreter method is a type of 
-   * {@link external:InterpreterObject#interpreterMethod} meant to be put on a 
-   * {@link external:InterpreterObject} created by the user. 
-   * It is the result of calling {@link InterpreterMethodFactory#star} with 
-   * the {@link interpreterMethodName} of its only {@link part} and optionally 
-   * a regular expression that will act as a delimiter.
-   * </p><p>
-   * Among the different types of interpreter methods, this is the equivalent 
-   * of the * quantifier in regular expressions. 
-   * It lets its {@link part} parse the text over and over until it can't parse 
-   * anymore, optionally skipping over a delimiter regular expression in 
-   * between the parsings. 
-   * Just like the regex *, it may successfully parse nothing.
-   * </p><p>
-   * The result of an interpreter method of this type is an, possibly zero 
-   * length, array with the results of the repeated parsings of its 
-   * {@link part}, if it wasn't defined with a 
-   * {@link external:ThisBinding#starInterpretation}.
-   * If it was, the result will be the result of calling its interpretation 
-   * as if it was a method of the same object with the abovementioned array as 
-   * the only argument. 
-   * Inside the body of the interpretation, <tt>this</tt> will be bound to the 
-   * object of the interpreter method.
-   * </p>
-   * @param {string} text - The text that the {@link part} should parse, as 
-   * many times as it can, or zero times if it can't.
-   * @param {boolean} [printDebuggingMessages] - See 
-   * {@link external:InterpreterObject#interpreterMethod}.
-   * @returns {InterpretationMethodResult} The result of its interpretation, 
-   * if it has one, otherwise an (possibly zero length) array with the results 
-   * of repeatedly letting its {@link part} parse the text.
-   * @see {@link starUnitTests}
-   */
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = [];
-    var maybeInstruction = factory
-    .callInterpreterMethod(interpreter, partName, codePointer);
-    if(delimiter){
-      while(maybeInstruction){
-        partInstructions.push(maybeInstruction);
-        maybeInstruction = delimiterAndPart.call(interpreter, codePointer, 
-          delimiter + " and " + partName);
-      }
-    } else {
-      while(maybeInstruction){
-        partInstructions.push(maybeInstruction);
-        maybeInstruction = factory
-          .callInterpreterMethod(interpreter, partName, codePointer);
-      }
-    }
-      
-    return function instruction() {
-      var results = factory.mapRunAsMethod(this, partInstructions);
-      return interpretation?interpretation.call(this, results):results;
-    };
-    
-  });
-  
-};
-
-InterpreterMethodFactory.prototype
 .star = function(childName, delimiterOrInterpretation, interpretation) {
   return this.atLeast(0, childName, delimiterOrInterpretation, interpretation); 
 };
+
+/**
+ * @method external:ThisBinding#plusInterpretation
+ * @description A plus interpretation is a callback function passed to 
+ * {@link InterpreterMethodFactory#plus} to define how the resulting 
+ * {@link external:InterpreterObject#plusTypeInterpreterMethod} should 
+ * interpret the result of parsing its {@link part} as many times as 
+ * possible, but at least one time.
+ * It should be thought of as a regular method of the same object as its 
+ * interpreter method, but with added ability to, before it is run, compute 
+ * the argument that is will be called with.
+ * Before it runs, it let its {@link part} parse the text repeatedly as many 
+ * times as it can, and then gets the array of the results as its only 
+ * argument.
+ * Also, just like a regular method, it will have <tt>this</tt> bound to the 
+ * object of its interpreter method when it is run, and its result will also 
+ * be the result of its method.
+ * 
+ * @param {InterpreterMethodResult[]} partResults - The results of parsing 
+ * its {@link part} as many times as it can, but at least one, in an array. 
+ * @returns {InterpreterMethodResult} User defined. 
+ * The value returned by the interpretation will also be the returned value 
+ * of its interpreter method.
+ * @see {@link plusUnitTests}
+ */
+
+/**
+ * @method external:InterpreterObject#plusTypeInterpreterMethod
+ * @description <p>
+ * A plus type interpreter method is a type of 
+ * {@link external:InterpreterObject#interpreterMethod} meant to be put on a 
+ * {@link external:InterpreterObject} created by the user. 
+ * It is the result of calling {@link InterpreterMethodFactory#plus} with 
+ * the {@link interpreterMethodName} of its only {@link part} and optionally 
+ * a regular expression that will act as a delimiter.
+ * </p><p>
+ * Among the different types of interpreter methods, this is the equivalent 
+ * of the + quantifier in regular expressions. 
+ * It lets its {@link part} parse the text over and over until it can't parse 
+ * anymore, optionally skipping over a delimiter regular expression in 
+ * between the parsings. 
+ * Just like the regex +, it needs to parse its part at least once to 
+ * be successfully parsed.
+ * </p><p>
+ * The result of an interpreter method of this type is an array with the 
+ * results of the repeated parsings of its {@link part}, if it wasn't defined 
+ * with a {@link external:ThisBinding#plusInterpretation}.
+ * If it was, the result will be the result of calling its interpretation 
+ * as if it was a method of the same object with the abovementioned array as 
+ * the only argument. 
+ * Inside the body of the interpretation, <tt>this</tt> will be bound to the 
+ * object of the interpreter method.
+ * </p>
+ * @param {string} text - The text that the {@link part} should parse, as 
+ * many times as it can, but at least one time.
+ * @param {boolean} [printDebuggingMessages] - See 
+ * {@link external:InterpreterObject#interpreterMethod}.
+ * @returns {InterpretationMethodResult} The result of its interpretation, 
+ * if it has one, otherwise an array with the results of repeatedly letting 
+ * its {@link part} parse the text.
+ * @see {@link plusUnitTests}
+ */
 
 /**
  * <p>
@@ -1646,113 +1577,6 @@ InterpreterMethodFactory.prototype
  * var emptyAs = interpreter.aPlus(""); // Error. Plus needs at least one "a". 
  * @see {@link plusUnitTests}
  */
-InterpreterMethodFactory.prototype
-.plusDeprecated = function(partName) {
-  "use strict";
-  var factory = this;
-  
-  /**
-   * @method external:ThisBinding#plusInterpretation
-   * @description A plus interpretation is a callback function passed to 
-   * {@link InterpreterMethodFactory#plus} to define how the resulting 
-   * {@link external:InterpreterObject#plusTypeInterpreterMethod} should 
-   * interpret the result of parsing its {@link part} as many times as 
-   * possible, but at least one time.
-   * It should be thought of as a regular method of the same object as its 
-   * interpreter method, but with added ability to, before it is run, compute 
-   * the argument that is will be called with.
-   * Before it runs, it let its {@link part} parse the text repeatedly as many 
-   * times as it can, and then gets the array of the results as its only 
-   * argument.
-   * Also, just like a regular method, it will have <tt>this</tt> bound to the 
-   * object of its interpreter method when it is run, and its result will also 
-   * be the result of its method.
-   * 
-   * @param {InterpreterMethodResult[]} partResults - The results of parsing 
-   * its {@link part} as many times as it can, but at least one, in an array. 
-   * @returns {InterpreterMethodResult} User defined. 
-   * The value returned by the interpretation will also be the returned value 
-   * of its interpreter method.
-   * @see {@link plusUnitTests}
-   */
-  var interpretation;
-  var delimiter;
-  var delimiterAndPart;
-  if(arguments[1] instanceof Function) {
-    interpretation = arguments[1];
-  } else {
-    delimiter = arguments[1];
-    delimiterAndPart = this.wrap(delimiter, partName);
-    
-    interpretation = arguments[2];
-  }
-  
-  /**
-   * @method external:InterpreterObject#plusTypeInterpreterMethod
-   * @description <p>
-   * A plus type interpreter method is a type of 
-   * {@link external:InterpreterObject#interpreterMethod} meant to be put on a 
-   * {@link external:InterpreterObject} created by the user. 
-   * It is the result of calling {@link InterpreterMethodFactory#plus} with 
-   * the {@link interpreterMethodName} of its only {@link part} and optionally 
-   * a regular expression that will act as a delimiter.
-   * </p><p>
-   * Among the different types of interpreter methods, this is the equivalent 
-   * of the + quantifier in regular expressions. 
-   * It lets its {@link part} parse the text over and over until it can't parse 
-   * anymore, optionally skipping over a delimiter regular expression in 
-   * between the parsings. 
-   * Just like the regex +, it needs to parse its part at least once to 
-   * be successfully parsed.
-   * </p><p>
-   * The result of an interpreter method of this type is an array with the 
-   * results of the repeated parsings of its {@link part}, if it wasn't defined 
-   * with a {@link external:ThisBinding#plusInterpretation}.
-   * If it was, the result will be the result of calling its interpretation 
-   * as if it was a method of the same object with the abovementioned array as 
-   * the only argument. 
-   * Inside the body of the interpretation, <tt>this</tt> will be bound to the 
-   * object of the interpreter method.
-   * </p>
-   * @param {string} text - The text that the {@link part} should parse, as 
-   * many times as it can, but at least one time.
-   * @param {boolean} [printDebuggingMessages] - See 
-   * {@link external:InterpreterObject#interpreterMethod}.
-   * @returns {InterpretationMethodResult} The result of its interpretation, 
-   * if it has one, otherwise an array with the results of repeatedly letting 
-   * its {@link part} parse the text.
-   * @see {@link plusUnitTests}
-   */
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = [];
-    var maybeInstruction = factory
-    .callInterpreterMethod(interpreter, partName, codePointer);
-    if(!maybeInstruction){
-      return null;
-    }
-    if(delimiter){
-      while(maybeInstruction){
-        partInstructions.push(maybeInstruction);
-        maybeInstruction = delimiterAndPart.call(interpreter, codePointer, 
-          delimiter + " and " + partName);
-      }
-    } else {
-      while(maybeInstruction){
-        partInstructions.push(maybeInstruction);
-        maybeInstruction = factory
-          .callInterpreterMethod(interpreter, partName, codePointer);
-      }
-    }
-    
-    return function instruction() {
-      var results = factory.mapRunAsMethod(this, partInstructions);
-      return interpretation?interpretation.call(this, results):results;
-    };
-    
-  });
-  
-};
-
 InterpreterMethodFactory.prototype
 .plus = function(childName, delimiterOrInterpretation, interpretation) {
   return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
