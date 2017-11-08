@@ -205,13 +205,13 @@ describe("A group", function() {
   it("calls intignificant nonterminals as a method of the interpreter", 
   function() {
     interpreter.aGroup = f.group("a");
-    interpreter.program = f.insignificant2("b", "aGroup");
+    interpreter.program = f.insignificant("b", "aGroup");
     
     expect(interpreter.program("aba")).toEqual("b");
   });
   
   it("may be have insignificant regexes", function() {
-    interpreter.program = f.insignificant2("b", /a/);
+    interpreter.program = f.insignificant("b", /a/);
     
     expect(interpreter.program("aba")).toEqual("b");
   });

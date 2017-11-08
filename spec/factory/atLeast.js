@@ -12,11 +12,11 @@ describe("The at least quantifier", function() {
   
   beforeEach(function() {
     interpreter = {
-      a: f.terminal2(/a/),
+      a: f.terminal(/a/),
       atLeastZero: f.atLeast(0, "a"),
       list: f.atLeast(0, "a", /d/),
-      insignificant: f.insignificant2("atLeastZero", /i/),
-      insigList: f.insignificant2("list", /i/),
+      insignificant: f.insignificant("atLeastZero", /i/),
+      insigList: f.insignificant("list", /i/),
     };
     
   });

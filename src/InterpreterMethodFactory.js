@@ -1839,13 +1839,13 @@ InterpreterMethodFactory.prototype
  * var interpreter = {
  *   a: f.atom(/a/), 
  *   b: f.atom(/b/),
- *   part: f.group("a", "b"),
+ *   children: f.group("a", "b"),
  *   insign: f.atom(/i/),
- *   iPart: f.insignificant("part", "insign"),
- *   jiPart: f.insignificant("iPart", /j/),
+ *   iPadded: f.insignificant("children", "insign"),
+ *   jiPadded: f.insignificant("iPadded", /j/),
  * };
- * var ab1 = interpreter.iPart("iaibi");       // ab1 == {a: "a", b: "b"}
- * var ab2 = interpreter.jiPart("jiaibij");    // ab2 == {a: "a", b: "b"}
+ * var ab1 = interpreter.iPadded("iaibi");       // ab1 == {a: "a", b: "b"}
+ * var ab2 = interpreter.jiPadded("jiaibij");    // ab2 == {a: "a", b: "b"}
  * var missingInsign = interpreter.iPart("ab") // parse fail
  */
 InterpreterMethodFactory.prototype

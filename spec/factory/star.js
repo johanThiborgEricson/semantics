@@ -13,12 +13,12 @@ describe("A star quantifier", function() {
   beforeEach(function() {
     interpreter = {
       a: f.terminal(/a/),
-      as: f.star2("a"),
+      as: f.star("a"),
       b: f.terminal(/b/),
       ab: f.terminal(/[ab]/),
-      abs: f.star2("ab"),
+      abs: f.star("ab"),
       abc: f.terminal(/a|b|c/),
-      list: f.star2("abc", /,/),
+      list: f.star("abc", /,/),
     };
     
   });
@@ -38,7 +38,7 @@ describe("A star quantifier", function() {
   
   it("doesn't leave a part half parsed", function() {
     interpreter.ab = f.group("a", "b");
-    interpreter.abs = f.star2("ab");
+    interpreter.abs = f.star("ab");
     interpreter.absa = f.group("abs", "a");
     
     var expected = {
@@ -58,7 +58,7 @@ describe("A star quantifier", function() {
   
   it("can interpret the results of its parts", function() {
     var abSpy = jasmine.createSpy("abSpy");
-    interpreter.abs = f.star2("ab", abSpy);
+    interpreter.abs = f.star("ab", abSpy);
     
     interpreter.abs("ab");
     
@@ -66,7 +66,7 @@ describe("A star quantifier", function() {
   });
   
   it("calls the interpretation as a method of the interpreter", function() {
-    interpreter.abs = f.star2("ab", function(abs) {
+    interpreter.abs = f.star("ab", function(abs) {
       this.first = abs[0];
       this.second = abs[1];
     });
@@ -93,7 +93,7 @@ describe("A star quantifier", function() {
   
   it("always parse delimiters between parts", function() {
     interpreter.program = f.group("ablist", /b/);
-    interpreter.ablist = f.star2("ab", /,/);
+    interpreter.ablist = f.star("ab", /,/);
     
     expect(interpreter.program("ab")).toEqual({ablist:["a"]});
   });

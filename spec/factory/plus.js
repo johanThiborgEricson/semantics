@@ -13,10 +13,10 @@ describe("A plus quantifier", function() {
   beforeEach(function() {
     interpreter = {
       a: f.terminal(/a/),
-      ap: f.plus2("a"),
+      ap: f.plus("a"),
       b: f.terminal(/b/),
       ab: f.terminal(/[ab]/),
-      abp: f.plus2("ab"),
+      abp: f.plus("ab"),
       abc: f.terminal(/a|b|c/),
       list: f.star("abc", /,/),
     };
@@ -40,7 +40,7 @@ describe("A plus quantifier", function() {
   
   it("doesn't leave a part half parsed", function() {
     interpreter.ab = f.group("a", "b");
-    interpreter.abp = f.plus2("ab");
+    interpreter.abp = f.plus("ab");
     interpreter.abpa = f.group("abp", "a");
     
     var expected = {
@@ -60,7 +60,7 @@ describe("A plus quantifier", function() {
   
   it("can interpret the results of its parts", function() {
     var abSpy = jasmine.createSpy("abSpy");
-    interpreter.abp = f.plus2("ab", abSpy);
+    interpreter.abp = f.plus("ab", abSpy);
     
     interpreter.abp("ab");
     
@@ -68,7 +68,7 @@ describe("A plus quantifier", function() {
   });
   
   it("calls the interpretation as a method of the interpreter", function() {
-    interpreter.abp = f.plus2("ab", function(abs) {
+    interpreter.abp = f.plus("ab", function(abs) {
       this.first = abs[0];
       this.second = abs[1];
     });
