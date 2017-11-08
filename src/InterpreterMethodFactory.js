@@ -1153,6 +1153,7 @@ InterpreterMethodFactory.prototype.functionReturning = function(value) {
  */
 InterpreterMethodFactory.prototype.or = function() {
   var factory = this;
+  var args = this.getChildren(arguments);
   var alternativesNames = arguments;
   
   /**
@@ -1180,9 +1181,9 @@ InterpreterMethodFactory.prototype.or = function() {
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var maybeInstruction = null;
     var i = 0;
-    while(!maybeInstruction && i < alternativesNames.length) {
+    while(!maybeInstruction && i < args.parts.length) {
       maybeInstruction = factory
-      .callInterpreterMethod(interpreter, alternativesNames[i++], codePointer);
+      .callInterpreterMethod(interpreter, args.parts[i++].name, codePointer);
     }
     
     return maybeInstruction;
