@@ -634,6 +634,40 @@ InterpreterMethodFactory.prototype
   
 };
 
+InterpreterMethodFactory.prototype
+.terminal = function(regex, interpretationOrButNot) {
+  "use strict";
+  var that = this;
+  var parsingRegex = this.makeParsing(regex);
+  
+  var interpretation;
+  var butNot;
+  if(typeof interpretationOrButNot === "function") {
+    interpretation = interpretationOrButNot;
+  } else {
+    butNot = interpretationOrButNot;
+    interpretation = arguments[2];
+  }
+  
+  return this.makeMethod(function(codePointer, interpreter) {
+    var match = codePointer.parse(parsingRegex);
+    if(match === null) {
+      return null;
+    }
+    
+    var result = match[0];
+    if(butNot && butNot.indexOf(result) > -1) {
+      return null;
+    }
+    
+    return function instruction() {
+      return interpretation?interpretation.call(this, result):result;
+    };
+    
+  });
+  
+};
+
 /**
  * The empty method factory takes an interpretation callback function and 
  * returns an {@link external:InterpreterObject#emptyTypeInterpreterMethod} 
@@ -835,6 +869,42 @@ InterpreterMethodFactory.prototype
    * @see {@link groupUnitTests}
    */
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var partInstructions = factory.parseChildren(
+      codePointer, interpreter, args);
+    
+    if(partInstructions === null) {
+      return null;
+    }
+    
+    if(args.interpretation) {
+      return function instruction() {
+        return args.interpretation.apply(this, factory
+            .mapRunAsMethod(this, partInstructions));
+      };
+    } else {
+      return function instruction() {
+        var that = this;
+        var mpo = new factory.MultiPropertyObject();
+        var result = {};
+        partInstructions.map(function(pi) {
+          mpo.appendProperty.call(result, pi.partName, pi.call(that));
+        });
+        
+        return result;
+      };
+    }
+  });
+  
+};
+
+InterpreterMethodFactory.prototype
+.group = function() {
+  "use strict";
+  var factory = this;
+  
+  var args = this.getChildren(arguments);
+
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = factory.parseChildren(codePointer, interpreter, args);
     
     if(partInstructions === null) {
@@ -860,6 +930,53 @@ InterpreterMethodFactory.prototype
     }
   });
   
+};
+
+InterpreterMethodFactory.prototype
+.parseChildren = function(codePointer, interpreter, args) {
+  var partInstructions = [];
+  var p = {
+    first: true,
+  };
+  
+  if(!this.skipRegexes2(codePointer, args.leadingRegexes, interpreter, p)){
+    return null;
+  }
+  for(var i = 0; i < args.parts.length; i++){
+    if(p.first) {
+      p.first = false;
+    } else if(!this.parseInsignificant(codePointer, interpreter)) return null;
+
+    var maybeInstruction = this
+          .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
+    if(!maybeInstruction
+      ||!this.skipRegexes(codePointer, args.parts[i].trailingRegexes, 
+      interpreter)) {
+      return null;
+    }
+    maybeInstruction.partName = args.parts[i].name;
+    
+    partInstructions.push(maybeInstruction);
+  }
+  return partInstructions;
+};
+
+InterpreterMethodFactory.prototype
+.skipRegexes2 = function(codePointer, regexes, interpreter, p) {
+  for(var i = 0; i < regexes.length; i++) {
+    if(!p.first){
+      if(!this.parseInsignificantAndToken(
+          codePointer, regexes[i], interpreter)) {
+        return null;
+      }
+    } else {
+      p.first = false;
+      if(!codePointer.parse(regexes[i])){
+        return null;
+      }
+    }
+  }
+  return true;
 };
 
 InterpreterMethodFactory.prototype
@@ -932,36 +1049,25 @@ InterpreterMethodFactory.prototype.MultiPropertyObject = function() {
   
 };
 
-InterpreterMethodFactory.prototype.selectDeprecated = function(index) {
+InterpreterMethodFactory.prototype.select = function(selected) {
+  "use strict";
   var factory = this;
-  var partNames = Array.prototype.slice.call(arguments, 1);
+  var childrenNames = Array.prototype.slice.call(arguments, 1);
+  var args = this.getChildren(childrenNames);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = [];
-    for(var i = 0; i < partNames.length; i++) {
-      var partName = partNames[i];
-      var maybeInstruction;
-      if(typeof partName === "string") {
-        maybeInstruction = factory
-          .callInterpreterMethod(interpreter, partName, codePointer);
-      } else if(partName instanceof RegExp) {
-        var regex = factory.parseInsignificantAndToken(
-          codePointer, partName, interpreter);
-        maybeInstruction = regex?factory.functionReturning(regex):null;
-      }
-      if(!maybeInstruction){
-        return null;
-      }
-      partInstructions.push(maybeInstruction);
-    }
-    
-    return index>0? partInstructions[index-1]:function instruction() {
-        var that = this;
-        var partResults = partInstructions.map(function(partInstruction) {
-          return partInstruction.call(that);
+    var childrenInstructions = 
+    factory.parseChildren(codePointer, interpreter, args);
+    if(!childrenInstructions) return null;
+    if(selected === 0){
+      return function() {
+        return childrenInstructions.map(function(childInstruction) {
+          return childInstruction.call(interpreter);
         });
         
-        return partResults;
       };
+    } else {
+      return childrenInstructions[selected-1];
+    }
     
   });
   
@@ -1085,6 +1191,25 @@ InterpreterMethodFactory.prototype.wrapDeprecated = function() {
    * {@link part}s. 
    * @see {@link wrapUnitTests}
    */
+  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
+    var partInstructions = 
+    factory.parseChildren(codePointer, interpreter, args);
+    if(partInstructions === null) {
+      return null;
+    }
+    var maybeInstruction = partInstructions[0];
+    return !args.interpretation?maybeInstruction:function instruction() {
+      return args.interpretation.call(this, maybeInstruction.call(this));
+    };
+    
+  });
+  
+};
+
+InterpreterMethodFactory.prototype.wrap = function() {
+  "use strict";
+  var factory = this;
+  var args = this.getChildren(arguments);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = 
     factory.parseChildren(codePointer, interpreter, args);
@@ -1256,6 +1381,59 @@ InterpreterMethodFactory.prototype.longest = function() {
   });
 };
 
+InterpreterMethodFactory.prototype
+.atLeast = function(atLeast, childName, delimiterOrInterpretation, 
+interpretation) {
+  "use strict";
+  var factory = this;
+  var delimiter;
+  if(typeof delimiterOrInterpretation === "function") {
+    interpretation = delimiterOrInterpretation;
+  } else {
+    delimiter = delimiterOrInterpretation;
+  }
+  return this.makeMethod(function(codePointer, interpreter) {
+    var childrenInstructions = [];
+    var backup = codePointer.backup();
+    var childInstruction = factory.callInterpreterMethod(
+      interpreter, childName, codePointer);
+    var skip = delimiter ? 
+      function() {
+        return factory.parseInsignificant(codePointer, interpreter) && 
+        codePointer.parse(delimiter) && 
+        factory.parseInsignificant(codePointer, interpreter);
+      }
+    :
+      function() {
+        return factory.parseInsignificant(codePointer, interpreter);
+      };
+    
+    while(childInstruction) {
+      childrenInstructions.push(childInstruction);
+      backup = codePointer.backup();
+      childInstruction = skip() && factory.callInterpreterMethod(
+          interpreter, childName, codePointer);
+    }
+    codePointer.restore(backup);
+    if(childrenInstructions.length < atLeast) {
+      return null;
+    }
+    if(interpretation){
+      return function() {
+        return interpretation.call(
+          interpreter, factory.mapRunAsMethod(this, childrenInstructions));
+      };
+      
+    } else {
+      return function() {
+        return factory.mapRunAsMethod(this, childrenInstructions);
+      };
+      
+    }
+  });
+  
+};
+
 /**
  * <p>
  * The star interpreter method takes a {@link interpreterMethodName}, an 
@@ -1410,6 +1588,11 @@ InterpreterMethodFactory.prototype
     
   });
   
+};
+
+InterpreterMethodFactory.prototype
+.star = function(childName, delimiterOrInterpretation, interpretation) {
+  return this.atLeast(0, childName, delimiterOrInterpretation, interpretation); 
 };
 
 /**
@@ -1568,6 +1751,11 @@ InterpreterMethodFactory.prototype
     
   });
   
+};
+
+InterpreterMethodFactory.prototype
+.plus = function(childName, delimiterOrInterpretation, interpretation) {
+  return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
 };
 
 /**
@@ -1844,125 +2032,6 @@ InterpreterMethodFactory.prototype
   });
 };
 
-InterpreterMethodFactory.prototype.insignificant2 = 
-InterpreterMethodFactory.prototype.insignificant;
-
-InterpreterMethodFactory.prototype
-.terminal = function(regex, interpretationOrButNot) {
-  "use strict";
-  var that = this;
-  var parsingRegex = this.makeParsing(regex);
-  
-  var interpretation;
-  var butNot;
-  if(typeof interpretationOrButNot === "function") {
-    interpretation = interpretationOrButNot;
-  } else {
-    butNot = interpretationOrButNot;
-    interpretation = arguments[2];
-  }
-  
-  return this.makeMethod(function(codePointer, interpreter) {
-    var match = codePointer.parse(parsingRegex);
-    if(match === null) {
-      return null;
-    }
-    
-    var result = match[0];
-    if(butNot && butNot.indexOf(result) > -1) {
-      return null;
-    }
-    
-    return function instruction() {
-      return interpretation?interpretation.call(this, result):result;
-    };
-    
-  });
-  
-};
-
-InterpreterMethodFactory.prototype
-.group = function() {
-  "use strict";
-  var factory = this;
-  
-  var args = this.getChildren(arguments);
-
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = factory.parseChildren(codePointer, interpreter, args);
-    
-    if(partInstructions === null) {
-      return null;
-    }
-    
-    if(args.interpretation) {
-      return function instruction() {
-        return args.interpretation.apply(this, factory
-            .mapRunAsMethod(this, partInstructions));
-      };
-    } else {
-      return function instruction() {
-        var that = this;
-        var mpo = new factory.MultiPropertyObject();
-        var result = {};
-        partInstructions.map(function(pi) {
-          mpo.appendProperty.call(result, pi.partName, pi.call(that));
-        });
-        
-        return result;
-      };
-    }
-  });
-  
-};
-
-InterpreterMethodFactory.prototype
-.parseChildren = function(codePointer, interpreter, args) {
-  var partInstructions = [];
-  var p = {
-    first: true,
-  };
-  
-  if(!this.skipRegexes2(codePointer, args.leadingRegexes, interpreter, p)){
-    return null;
-  }
-  for(var i = 0; i < args.parts.length; i++){
-    if(p.first) {
-      p.first = false;
-    } else if(!this.parseInsignificant(codePointer, interpreter)) return null;
-
-    var maybeInstruction = this
-          .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
-    if(!maybeInstruction
-      ||!this.skipRegexes(codePointer, args.parts[i].trailingRegexes, 
-      interpreter)) {
-      return null;
-    }
-    maybeInstruction.partName = args.parts[i].name;
-    
-    partInstructions.push(maybeInstruction);
-  }
-  return partInstructions;
-};
-
-InterpreterMethodFactory.prototype
-.skipRegexes2 = function(codePointer, regexes, interpreter, p) {
-  for(var i = 0; i < regexes.length; i++) {
-    if(!p.first){
-      if(!this.parseInsignificantAndToken(
-          codePointer, regexes[i], interpreter)) {
-        return null;
-      }
-    } else {
-      p.first = false;
-      if(!codePointer.parse(regexes[i])){
-        return null;
-      }
-    }
-  }
-  return true;
-};
-
 InterpreterMethodFactory.prototype
 .parseInsignificant = function(codePointer, interpreter) {
   var insignificant = codePointer.insignificant;
@@ -1978,110 +2047,4 @@ InterpreterMethodFactory.prototype
   }
   codePointer.insignificant = insignificant;
   return result;
-};
-
-InterpreterMethodFactory.prototype
-.atLeast = function(atLeast, childName, delimiterOrInterpretation, 
-interpretation) {
-  "use strict";
-  var factory = this;
-  var delimiter;
-  if(typeof delimiterOrInterpretation === "function") {
-    interpretation = delimiterOrInterpretation;
-  } else {
-    delimiter = delimiterOrInterpretation;
-  }
-  return this.makeMethod(function(codePointer, interpreter) {
-    var childrenInstructions = [];
-    var backup = codePointer.backup();
-    var childInstruction = factory.callInterpreterMethod(
-      interpreter, childName, codePointer);
-    var skip = delimiter ? 
-      function() {
-        return factory.parseInsignificant(codePointer, interpreter) && 
-        codePointer.parse(delimiter) && 
-        factory.parseInsignificant(codePointer, interpreter);
-      }
-    :
-      function() {
-        return factory.parseInsignificant(codePointer, interpreter);
-      };
-    
-    while(childInstruction) {
-      childrenInstructions.push(childInstruction);
-      backup = codePointer.backup();
-      childInstruction = skip() && factory.callInterpreterMethod(
-          interpreter, childName, codePointer);
-    }
-    codePointer.restore(backup);
-    if(childrenInstructions.length < atLeast) {
-      return null;
-    }
-    if(interpretation){
-      return function() {
-        return interpretation.call(
-          interpreter, factory.mapRunAsMethod(this, childrenInstructions));
-      };
-      
-    } else {
-      return function() {
-        return factory.mapRunAsMethod(this, childrenInstructions);
-      };
-      
-    }
-  });
-  
-};
-
-InterpreterMethodFactory.prototype
-.star = function(childName, delimiterOrInterpretation, interpretation) {
-  return this.atLeast(0, childName, delimiterOrInterpretation, interpretation); 
-};
-
-InterpreterMethodFactory.prototype
-.plus = function(childName, delimiterOrInterpretation, interpretation) {
-  return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
-};
-
-InterpreterMethodFactory.prototype.wrap = function() {
-  "use strict";
-  var factory = this;
-  var args = this.getChildren(arguments);
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = 
-    factory.parseChildren(codePointer, interpreter, args);
-    if(partInstructions === null) {
-      return null;
-    }
-    var maybeInstruction = partInstructions[0];
-    return !args.interpretation?maybeInstruction:function instruction() {
-      return args.interpretation.call(this, maybeInstruction.call(this));
-    };
-    
-  });
-  
-};
-
-InterpreterMethodFactory.prototype.select = function(selected) {
-  "use strict";
-  var factory = this;
-  var childrenNames = Array.prototype.slice.call(arguments, 1);
-  var args = this.getChildren(childrenNames);
-  return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var childrenInstructions = 
-    factory.parseChildren(codePointer, interpreter, args);
-    if(!childrenInstructions) return null;
-    if(selected === 0){
-      return function() {
-        return childrenInstructions.map(function(childInstruction) {
-          return childInstruction.call(interpreter);
-        });
-        
-      };
-    } else {
-      return childrenInstructions[selected-1];
-    }
-    
-  });
-  
 };
