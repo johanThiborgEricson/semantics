@@ -534,7 +534,7 @@ InterpreterMethodFactory.prototype
  * @see {@link butNotUnitTests}
  */
 InterpreterMethodFactory.prototype
-.terminal = function(regex, interpretationOrButNot) {
+.terminalDeprecated = function(regex, interpretationOrButNot) {
   "use strict";
   var that = this;
   var parsingRegex = this.makeParsing(regex);
@@ -746,27 +746,6 @@ InterpreterMethodFactory.prototype
   };
 };
 
-InterpreterMethodFactory.prototype
-.parseChildren = function(codePointer, interpreter, args) {
-  var partInstructions = [];
-  if(!this.skipRegexes(codePointer, args.leadingRegexes, interpreter)){
-    return null;
-  }
-  for(var i = 0; i < args.parts.length; i++){
-    var maybeInstruction = this
-          .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
-    if(!maybeInstruction
-      ||!this.skipRegexes(codePointer, args.parts[i].trailingRegexes, 
-      interpreter)) {
-      return null;
-    }
-    maybeInstruction.partName = args.parts[i].name;
-    
-    partInstructions.push(maybeInstruction);
-  }
-  return partInstructions;
-};
-
 /**
  * <p>
  * The group interpreter method factory accepts any number of 
@@ -804,7 +783,7 @@ InterpreterMethodFactory.prototype
  * @see {@link groupUnitTests}
  */
 InterpreterMethodFactory.prototype
-.group = function() {
+.groupDeprecated = function() {
   "use strict";
   var factory = this;
   
@@ -953,7 +932,7 @@ InterpreterMethodFactory.prototype.MultiPropertyObject = function() {
   
 };
 
-InterpreterMethodFactory.prototype.select = function(index) {
+InterpreterMethodFactory.prototype.selectDeprecated = function(index) {
   var factory = this;
   var partNames = Array.prototype.slice.call(arguments, 1);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
@@ -1045,7 +1024,7 @@ InterpreterMethodFactory.prototype.select = function(index) {
  * and/or interpret the result of its part further. 
  * @see {@link wrapUnitTests}
  */
-InterpreterMethodFactory.prototype.wrap = function() {
+InterpreterMethodFactory.prototype.wrapDeprecated = function() {
   "use strict";
   var factory = this;
   var args = this.getChildren(arguments);
@@ -1329,7 +1308,7 @@ InterpreterMethodFactory.prototype.longest = function() {
  * @see {@link starUnitTests}
  */
 InterpreterMethodFactory.prototype
-.star = function(partName) {
+.starDeprecated = function(partName) {
   "use strict";
   var factory = this;
   
@@ -1485,7 +1464,7 @@ InterpreterMethodFactory.prototype
  * @see {@link plusUnitTests}
  */
 InterpreterMethodFactory.prototype
-.plus = function(partName) {
+.plusDeprecated = function(partName) {
   "use strict";
   var factory = this;
   
@@ -1768,21 +1747,6 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.parseInsignificant = function(codePointer, interpreter) {
-  if(codePointer.insignificant instanceof RegExp) {
-    return codePointer.parse(codePointer.insignificant);
-  } else if(typeof codePointer.insignificant === "string"){
-    var justInsignificantMethod = this.justInsignificant(undefined, 
-    codePointer.insignificant);
-    return justInsignificantMethod
-    .call(interpreter, codePointer, "(insignificant) " +
-    codePointer.insignificant);
-  } else {
-    return true;
-  }
-};
-
-InterpreterMethodFactory.prototype
 .shiftInsignificant = function(insignificant, partName, codePointer, 
 interpreter) {
   var outerInsignificant = codePointer.insignificant;
@@ -1869,10 +1833,10 @@ InterpreterMethodFactory.prototype
     var outerInsignificant = codePointer.insignificant;
     codePointer.insignificant = insignificant;
     var maybeInstruction;
-    if( !factory.parseInsignificant2(codePointer, interpreter) || 
+    if( !factory.parseInsignificant(codePointer, interpreter) || 
         !(maybeInstruction = factory.callInterpreterMethod(
           interpreter, childName, codePointer)) || 
-       !factory.parseInsignificant2(codePointer, interpreter)) {
+       !factory.parseInsignificant(codePointer, interpreter)) {
       maybeInstruction = null;
     }
     codePointer.insignificant = outerInsignificant;
@@ -1884,7 +1848,7 @@ InterpreterMethodFactory.prototype.insignificant2 =
 InterpreterMethodFactory.prototype.insignificant;
 
 InterpreterMethodFactory.prototype
-.terminal2 = function(regex, interpretationOrButNot) {
+.terminal = function(regex, interpretationOrButNot) {
   "use strict";
   var that = this;
   var parsingRegex = this.makeParsing(regex);
@@ -1917,18 +1881,15 @@ InterpreterMethodFactory.prototype
   
 };
 
-InterpreterMethodFactory.prototype.terminal = 
-InterpreterMethodFactory.prototype.terminal2;
-
 InterpreterMethodFactory.prototype
-.group2 = function() {
+.group = function() {
   "use strict";
   var factory = this;
   
   var args = this.getChildren(arguments);
 
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
-    var partInstructions = factory.parseChildren2(codePointer, interpreter, args);
+    var partInstructions = factory.parseChildren(codePointer, interpreter, args);
     
     if(partInstructions === null) {
       return null;
@@ -1955,11 +1916,8 @@ InterpreterMethodFactory.prototype
   
 };
 
-InterpreterMethodFactory.prototype.group = 
-InterpreterMethodFactory.prototype.group2;
-
 InterpreterMethodFactory.prototype
-.parseChildren2 = function(codePointer, interpreter, args) {
+.parseChildren = function(codePointer, interpreter, args) {
   var partInstructions = [];
   var p = {
     first: true,
@@ -1971,7 +1929,7 @@ InterpreterMethodFactory.prototype
   for(var i = 0; i < args.parts.length; i++){
     if(p.first) {
       p.first = false;
-    } else if(!this.parseInsignificant2(codePointer, interpreter)) return null;
+    } else if(!this.parseInsignificant(codePointer, interpreter)) return null;
 
     var maybeInstruction = this
           .callInterpreterMethod(interpreter, args.parts[i].name, codePointer);
@@ -2006,14 +1964,15 @@ InterpreterMethodFactory.prototype
 };
 
 InterpreterMethodFactory.prototype
-.parseInsignificant2 = function(codePointer, interpreter) {
+.parseInsignificant = function(codePointer, interpreter) {
   var insignificant = codePointer.insignificant;
   delete codePointer.insignificant;
   var result;
   if(insignificant instanceof RegExp) {
     result = codePointer.parse(insignificant);
   } else if(typeof insignificant === "string"){
-    result = this.callInterpreterMethod(interpreter, insignificant, codePointer);
+    result = this.callInterpreterMethod(
+      interpreter, insignificant, codePointer);
   } else {
     result = true;
   }
@@ -2039,13 +1998,13 @@ interpretation) {
       interpreter, childName, codePointer);
     var skip = delimiter ? 
       function() {
-        return factory.parseInsignificant2(codePointer, interpreter) && 
+        return factory.parseInsignificant(codePointer, interpreter) && 
         codePointer.parse(delimiter) && 
-        factory.parseInsignificant2(codePointer, interpreter);
+        factory.parseInsignificant(codePointer, interpreter);
       }
     :
       function() {
-        return factory.parseInsignificant2(codePointer, interpreter);
+        return factory.parseInsignificant(codePointer, interpreter);
       };
     
     while(childInstruction) {
@@ -2075,28 +2034,22 @@ interpretation) {
 };
 
 InterpreterMethodFactory.prototype
-.star2 = function(childName, delimiterOrInterpretation, interpretation) {
+.star = function(childName, delimiterOrInterpretation, interpretation) {
   return this.atLeast(0, childName, delimiterOrInterpretation, interpretation); 
 };
 
-InterpreterMethodFactory.prototype.star = 
-InterpreterMethodFactory.prototype.star2;
-
 InterpreterMethodFactory.prototype
-.plus2 = function(childName, delimiterOrInterpretation, interpretation) {
+.plus = function(childName, delimiterOrInterpretation, interpretation) {
   return this.atLeast(1, childName, delimiterOrInterpretation, interpretation); 
 };
 
-InterpreterMethodFactory.prototype.plus = 
-InterpreterMethodFactory.prototype.plus2;
-
-InterpreterMethodFactory.prototype.wrap2 = function() {
+InterpreterMethodFactory.prototype.wrap = function() {
   "use strict";
   var factory = this;
   var args = this.getChildren(arguments);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var partInstructions = 
-    factory.parseChildren2(codePointer, interpreter, args);
+    factory.parseChildren(codePointer, interpreter, args);
     if(partInstructions === null) {
       return null;
     }
@@ -2109,17 +2062,14 @@ InterpreterMethodFactory.prototype.wrap2 = function() {
   
 };
 
-InterpreterMethodFactory.prototype.wrap =
-InterpreterMethodFactory.prototype.wrap2;
-
-InterpreterMethodFactory.prototype.select2 = function(selected) {
+InterpreterMethodFactory.prototype.select = function(selected) {
   "use strict";
   var factory = this;
   var childrenNames = Array.prototype.slice.call(arguments, 1);
   var args = this.getChildren(childrenNames);
   return this.makeMethod(function instructionMaker(codePointer, interpreter) {
     var childrenInstructions = 
-    factory.parseChildren2(codePointer, interpreter, args);
+    factory.parseChildren(codePointer, interpreter, args);
     if(!childrenInstructions) return null;
     if(selected === 0){
       return function() {
@@ -2135,6 +2085,3 @@ InterpreterMethodFactory.prototype.select2 = function(selected) {
   });
   
 };
-
-InterpreterMethodFactory.prototype.select = 
-InterpreterMethodFactory.prototype.select2;
