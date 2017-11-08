@@ -31,7 +31,7 @@ describe("Head recursion", function() {
       c: f.terminal(/c/),
       as: f.or("as1", "ec"),
       as1: f.group("as", "a", add),
-      ec: f.empty(function() {
+      ec: f.or(function() {
         var i = 0;
         return function() {
           return "e"+i++;
@@ -95,7 +95,7 @@ describe("Head recursion", function() {
   
   it("can be nested", function() {
     interpreter = {
-      e: f.empty(function(){
+      e: f.or(function(){
         return "";
       }),
       

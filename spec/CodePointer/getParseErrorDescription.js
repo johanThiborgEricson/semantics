@@ -93,7 +93,7 @@ describe("A parse error description", function() {
   function() {
     var f = new InterpreterMethodFactory();
     var interpreter = {
-      maybeA: f.opt("a"),
+      maybeA: f.or("a", function() {}),
       a: f.terminal(/a/),
     };
     
