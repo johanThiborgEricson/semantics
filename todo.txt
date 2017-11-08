@@ -94,3 +94,4 @@ Tests should make factory in beforeAll, new tests especially.
 Fail is a really bad name. It is part of the Jasmine API.
 At least quantifier should use break in the while loops.
 Merge insignificant.js and insignificant2.js
+Implement longest fallback interpretation.
