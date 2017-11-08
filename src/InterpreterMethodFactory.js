@@ -521,8 +521,6 @@ InterpreterMethodFactory.prototype
  * the interpretation body.
  * @param {RegExp} regex - The regular expression that the interpreter method
  * should use to parse text. 
- * @param {string[]} [butNot] - A list of forbidden words. 
- * If the parsed string equals an element in this list, the parsing fails. 
  * @param {external:ThisBinding#terminalInterpretation} [interpretation] - 
  * A callback function describing how the parsed string should be interpreted. 
  * If pressent, the result of this function will also be the result of the 
@@ -531,10 +529,9 @@ InterpreterMethodFactory.prototype
  * @returns {external:InterpreterObject#terminalTypeInterpreterMethod}
  * An interpreter method that uses a regular expression to parse text. 
  * @see {@link terminalUnitTests}
- * @see {@link butNotUnitTests}
  */
 InterpreterMethodFactory.prototype
-.terminal = function(regex, interpretationOrButNot) {
+.terminal = function(regex, interpretation) {
   "use strict";
   var that = this;
   var parsingRegex = this.makeParsing(regex);
@@ -571,17 +568,8 @@ InterpreterMethodFactory.prototype
    * The value returned by the interpretation will also be the return value of 
    * its interpreter method. 
    * @see {@link terminalUnitTests}
-   * @see {@link butNotUnitTests}
    */
-  var interpretation;
-  var butNot;
-  if(typeof interpretationOrButNot === "function") {
-    interpretation = interpretationOrButNot;
-  } else {
-    butNot = interpretationOrButNot;
-    interpretation = arguments[2];
-  }
-  
+
   /**
    * @method external:InterpreterObject#terminalTypeInterpreterMethod
    * @description A terminal type interpreter method is a method of an 
@@ -612,19 +600,14 @@ InterpreterMethodFactory.prototype
    * with an interpretation, the result of calling the interpretation as if it 
    * was a method of the same object with the parsed string. 
    * @see {@link terminalUnitTests}
-   * @see {@link butNotUnitTests}
    */
   return this.makeMethod(function(codePointer, interpreter) {
     var match = codePointer.parse(parsingRegex);
     if(match === null) {
       return null;
     }
-    
     var result = match[0];
-    if(butNot && butNot.indexOf(result) > -1) {
-      return null;
-    }
-    
+
     return function instruction() {
       return interpretation?interpretation.call(this, result):result;
     };
