@@ -161,186 +161,6 @@ created by the user.</div>
     
 
     
-    <h4 class="name" id="empty"><span class="type-signature"></span>empty<span class="signature">(interpretation)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#emptyTypeInterpreterMethod">external:InterpreterObject#emptyTypeInterpreterMethod</a>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    The empty method factory takes an interpretation callback function and 
-returns an <a href="external-InterpreterObject.html#emptyTypeInterpreterMethod">external:InterpreterObject#emptyTypeInterpreterMethod</a> 
-meant to be a method of a user created <a href="external-InterpreterObject.html">external:InterpreterObject</a>. 
-The returned method is a type of 
-<a href="external-InterpreterObject.html#interpreterMethod">external:InterpreterObject#interpreterMethod</a> that doesn't parse 
-anything but just runs the interpretation as i it was a method of the 
-interpreter object, i. e. with <tt>this</tt> bound to the interpreter 
-object inside the body of the interpretation.
-The result of the interpretation function will also be the result of the 
-interpreter method. 
-Empty type interpreter methods are mainly useful as a setup function when 
-placed as the first <a href="global.html#part">part</a> of an 
-<a href="InterpreterMethodFactory.html#group">InterpreterMethodFactory#group</a>.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>interpretation</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A callback function that will be run as 
-a method of the interpreter object. 
-The result of this method will also be the result of the returned 
-interpreter method.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line659">line 659</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    A 
-nonparsing interpreter method.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="external-InterpreterObject.html#emptyTypeInterpreterMethod">external:InterpreterObject#emptyTypeInterpreterMethod</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
     <h4 class="name" id="group"><span class="type-signature"></span>group<span class="signature">(&hellip;parsable, interpretation<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#groupTypeInterpreterMethod">external:InterpreterObject#groupTypeInterpreterMethod</a>}</span></h4>
     
 
@@ -516,7 +336,7 @@ Otherwise it will return an object with the result of its <a href="global.html#p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line806">line 806</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line730">line 730</a>
     </li></ul></dd>
     
 
@@ -580,7 +400,7 @@ regular expressions and other interpreter methods.
     
 
     
-    <h4 class="name" id="insignificant"><span class="type-signature"></span>insignificant<span class="signature">(insignificant, partName)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#insignificantTypeInterpreterMethod">external:InterpreterObject#insignificantTypeInterpreterMethod</a>}</span></h4>
+    <h4 class="name" id="insignificant"><span class="type-signature"></span>insignificant<span class="signature">(childName, insignificant)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#insignificantTypeInterpreterMethod">external:InterpreterObject#insignificantTypeInterpreterMethod</a>}</span></h4>
     
 
     
@@ -601,7 +421,7 @@ Note that a descendant part will fail to parse if it isn't padded with an
 insignificant.
 Therefore, if insignificants are not meant to be mandatory, they should be 
 defined as optional, either by putting them in a <tt>/()?/</tt> in case it 
-is a regular expression, or inside an <a href="InterpreterMethodFactory.html#opt">InterpreterMethodFactory#opt</a> 
+is a regular expression, or inside an InterpreterMethodFactory#opt 
 if it is an interpreter method.
 </div>
 
@@ -638,6 +458,30 @@ if it is an interpreter method.
 
         <tr>
             
+                <td class="name"><code>childName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#interpreterMethodName">interpreterMethodName</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The nonterminal bellow which  
+the decendants should be parsed with insignificants in between them.</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>insignificant</code></td>
             
 
@@ -657,32 +501,8 @@ if it is an interpreter method.
 
             
 
-            <td class="description last">A description of 
-what should be parsed unnoticed between the significant parts.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>partName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#interpreterMethodName">interpreterMethodName</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The top interpreter method where 
-the parts should be parsed with insignificants in between.</td>
+            <td class="description last">A pattern that 
+should be parsed and ignored between the tokens.</td>
         </tr>
 
     
@@ -723,7 +543,7 @@ the parts should be parsed with insignificants in between.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1855">line 1855</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1661">line 1661</a>
     </li></ul></dd>
     
 
@@ -786,13 +606,13 @@ insignificant symbols.
 var interpreter = {
   a: f.atom(/a/), 
   b: f.atom(/b/),
-  part: f.group("a", "b"),
+  children: f.group("a", "b"),
   insign: f.atom(/i/),
-  iPart: f.insignificant("insign", "part"),
-  jiPart: f.insignificant(/j/, "iPart"),
+  iPadded: f.insignificant("children", "insign"),
+  jiPadded: f.insignificant("iPadded", /j/),
 };
-var ab1 = interpreter.iPart("iaibi");       // ab1 == {a: "a", b: "b"}
-var ab2 = interpreter.jiPart("jiaibij");    // ab2 == {a: "a", b: "b"}
+var ab1 = interpreter.iPadded("iaibi");       // ab1 == {a: "a", b: "b"}
+var ab2 = interpreter.jiPadded("jiaibij");    // ab2 == {a: "a", b: "b"}
 var missingInsign = interpreter.iPart("ab") // parse fail</code></pre>
 
 
@@ -937,7 +757,7 @@ alternatives <a href="global.html#part">part</a>s of the returned interpreter me
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1224">line 1224</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1170">line 1170</a>
     </li></ul></dd>
     
 
@@ -1117,7 +937,7 @@ the function returned by the interpreter method will run.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1720">line 1720</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1541">line 1541</a>
     </li></ul></dd>
     
 
@@ -1173,244 +993,6 @@ descendant interpretations with another <tt>this</tt> binding.
     
 
 
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="opt"><span class="type-signature"></span>opt<span class="signature">(partName, fallbackReplacement<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#optTypeInterpreterMethod">external:InterpreterObject#optTypeInterpreterMethod</a>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    The opt interpreter method factory method takes an 
-<a href="global.html#interpreterMethodName">interpreterMethodName</a> and optionally an 
-<a href="external-ThisBinding.html#optFallbackReplacement">external:ThisBinding#optFallbackReplacement</a> and produces a
-<a href="external-InterpreterObject.html#optTypeInterpreterMethod">external:InterpreterObject#optTypeInterpreterMethod</a> meant to be 
-put on a user created <a href="external-InterpreterObject.html">external:InterpreterObject</a>. 
-This is a quantifier type interpretation method that tries to parse the 
-<a href="global.html#part">part</a> indicated by the <a href="global.html#interpreterMethodName">interpreterMethodName</a> once. 
-The result of the interpreter method is the result of its <a href="global.html#part">part</a>, if 
-the manages to parse.
-Otherwise the it will behave as if it was the fallback method that was 
-called. 
-More precisely, the interpreter method will call the fallback method with 
-<tt>this</tt> bound to its object and return the result.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>partName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#interpreterMethodName">interpreterMethodName</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The name of the optional 
-<a href="global.html#part">part</a>.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>fallbackReplacement</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="external-ThisBinding.html#optFallbackReplacement">external:ThisBinding#optFallbackReplacement</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">If the <a href="global.html#part">part</a> couldn't be parsed, the 
-interpreter method will behave as if it was the fallback replacement that 
-was called. If there is no fallback, the interpreter method will return 
-<tt>undefined</tt> in case its part fails to parse.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1636">line 1636</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="global.html#optUnitTests">optUnitTests</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    An 
-interpreter method that will succeed to parse, even of its part doesn't.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="external-InterpreterObject.html#optTypeInterpreterMethod">external:InterpreterObject#optTypeInterpreterMethod</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>var f = new InterpreterMethodFactory();
-// interpreter.aOpt is the Semantics! equivalent of /a?/
-var interpreter = {
-  a: f.atom(/a/), 
-  aOpt: f.opt("a", function() {
-    return "fallback result";
-  },
-};
-var anA = interpreter.aOpt("a"); // anA == "a"
-var noA = interpreter.aOpt(""); // noA == "fallback result" </code></pre>
 
 
 
@@ -1551,7 +1133,7 @@ parse and no interpretations are run.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1156">line 1156</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1101">line 1101</a>
     </li></ul></dd>
     
 
@@ -1825,7 +1407,7 @@ interpreter method.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1489">line 1489</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1513">line 1513</a>
     </li></ul></dd>
     
 
@@ -2107,7 +1689,7 @@ interpreter method.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1331">line 1331</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1395">line 1395</a>
     </li></ul></dd>
     
 
@@ -2183,7 +1765,7 @@ var emptyAs = interpreter.aStar(""); // emptyAs == []</code></pre>
     
 
     
-    <h4 class="name" id="terminal"><span class="type-signature"></span>terminal<span class="signature">(regex, butNot<span class="signature-attributes">opt</span>, interpretation<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#terminalTypeInterpreterMethod">external:InterpreterObject#terminalTypeInterpreterMethod</a>}</span></h4>
+    <h4 class="name" id="terminal"><span class="type-signature"></span>terminal<span class="signature">(regex, interpretation<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="external-InterpreterObject.html#terminalTypeInterpreterMethod">external:InterpreterObject#terminalTypeInterpreterMethod</a>}</span></h4>
     
 
     
@@ -2271,40 +1853,6 @@ should use to parse text.</td>
 
         <tr>
             
-                <td class="name"><code>butNot</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;string></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">A list of forbidden words. 
-If the parsed string equals an element in this list, the parsing fails.</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>interpretation</code></td>
             
 
@@ -2375,7 +1923,7 @@ Otherwise the parsed string will be returned.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line536">line 536</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line533">line 533</a>
     </li></ul></dd>
     
 
@@ -2386,8 +1934,6 @@ Otherwise the parsed string will be returned.</td>
     <dd class="tag-see">
         <ul>
             <li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li>
-        
-            <li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li>
         </ul>
     </dd>
     
@@ -2699,7 +2245,7 @@ Otherwise the result of the part will be returned, untouched.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1048">line 1048</a>
+        <a href="src_InterpreterMethodFactory.js.html">src/InterpreterMethodFactory.js</a>, <a href="src_InterpreterMethodFactory.js.html#line1017">line 1017</a>
     </li></ul></dd>
     
 
@@ -2773,13 +2319,13 @@ and/or interpret the result of its part further.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#optUnitTests">optUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 19:18:25 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 10 2017 18:34:58 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

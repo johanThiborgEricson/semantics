@@ -157,11 +157,11 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>insignificant(null, "stringLiteralSignificantSpaces")&lt;/tt>
+   * &lt;tt>insignificant("stringLiteralSignificantSpaces", null)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.stringLiteral = 
   interpreterMethodFactory.
-  insignificant(null, "stringLiteralSignificantSpaces");
+  insignificant("stringLiteralSignificantSpaces", null);
   
   /**
    * &lt;tt>{@link InterpreterMethodFactory#or|or}
@@ -221,11 +221,11 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * &lt;tt>insignificant(null, "regularExpressionLiteralSignificantSpaces")&lt;/tt>
+   * &lt;tt>insignificant("regularExpressionLiteralSignificantSpaces, null")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.regularExpressionLiteral = 
   interpreterMethodFactory.
-  insignificant(null, "regularExpressionLiteralSignificantSpaces");
+  insignificant("regularExpressionLiteralSignificantSpaces", null);
   
   /**
    * &lt;tt>{@link InterpreterMethodFactory#wrap|wrap} (/\//, 
@@ -291,7 +291,7 @@ JavaScriptInterpreter.hack = function() {
    * reservedWord)&lt;/tt>
    */
   JavaScriptInterpreter.prototype.bindingIdentifier = 
-  interpreterMethodFactory.terminal(identifierName, reservedWord);
+  interpreterMethodFactory.butNot("identifierName", reservedWord);
   
   /**
    * &lt;tt>{@link InterpreterMethodFactory#or|or} ("literal", 
@@ -416,10 +416,10 @@ JavaScriptInterpreter.hack = function() {
   });
   
   /**
-   * &lt;tt>opt("args", function(){...})&lt;/tt>
+   * &lt;tt>or("args", function(){...})&lt;/tt>
    */
   JavaScriptInterpreter.prototype.argumentsOpt = 
-  interpreterMethodFactory.opt("args", function(){
+  interpreterMethodFactory.or("args", function(){
     return [];
   });
   
@@ -921,10 +921,10 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.wrap(/=/, "assignmentExpression");
   
   /**
-   * &lt;tt>opt("initialiser", function() {...})&lt;/tt>
+   * &lt;tt>or("initialiser", function() {...})&lt;/tt>
    */
   JavaScriptInterpreter.prototype.initialiserOpt = 
-  interpreterMethodFactory.opt("initialiser", function() {
+  interpreterMethodFactory.or("initialiser", function() {
     return undefined;
   });
   
@@ -1037,10 +1037,10 @@ JavaScriptInterpreter.hack = function() {
   interpreterMethodFactory.methodFactory("elseStatementOpt");
   
   /**
-   * &lt;tt>opt("elseStatement", function() {...})&lt;/tt>
+   * &lt;tt>or("elseStatement", function() {...})&lt;/tt>
    */
   JavaScriptInterpreter.prototype.elseStatementOpt = 
-  interpreterMethodFactory.opt("elseStatement", 
+  interpreterMethodFactory.or("elseStatement", 
   function() {
     return ["normal", undefined];
   });
@@ -1156,10 +1156,10 @@ JavaScriptInterpreter.hack = function() {
   "deferredSourceElements");
   
   /**
-   * &lt;tt>opt("useStrictDeclaration")&lt;/tt>
+   * &lt;tt>or("useStrictDeclaration")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.useStrictDeclarationOpt = 
-  interpreterMethodFactory.opt("useStrictDeclaration");
+  interpreterMethodFactory.or("useStrictDeclaration", function() {});
   /**
    * &lt;tt>{@link InterpreterMethodFactory#group|group}
    * (/('use strict')|("use strict")/, /;/)&lt;/tt>
@@ -1191,10 +1191,10 @@ JavaScriptInterpreter.hack = function() {
   };
   
   /**
-   * &lt;tt>insignificant("spaces", "sourceElements")&lt;/tt>
+   * &lt;tt>insignificant("sourceElements", "spaces")&lt;/tt>
    */
   JavaScriptInterpreter.prototype.program1 = 
-  interpreterMethodFactory.insignificant("spaces", "sourceElements");
+  interpreterMethodFactory.insignificant("sourceElements", "spaces");
   
   /**
    * &lt;tt>{@link InterpreterMethodFactory#or|or} ("statementList")&lt;/tt>
@@ -1222,13 +1222,13 @@ JavaScriptInterpreter.hack();
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#emptyUnitTests">emptyUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#optUnitTests">optUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-InterpreterObject.html">InterpreterObject</a></li><li><a href="external-ThisBinding.html">ThisBinding</a></li></ul><h3>Classes</h3><ul><li><a href="InterpreterMethodFactory.html">InterpreterMethodFactory</a></li><li><a href="InterpreterMethodFactory_MultiPropertyObject.html">MultiPropertyObject</a></li><li><a href="UsageExampleJavaScriptInterpreter.html">UsageExampleJavaScriptInterpreter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#butNotUnitTests">butNotUnitTests</a></li><li><a href="global.html#groupUnitTests">groupUnitTests</a></li><li><a href="global.html#insignificantUnitTests">insignificantUnitTests</a></li><li><a href="global.html#longestUnitTests">longestUnitTests</a></li><li><a href="global.html#methodFactoryUnitTests">methodFactoryUnitTests</a></li><li><a href="global.html#orUnitTests">orUnitTests</a></li><li><a href="global.html#plusUnitTests">plusUnitTests</a></li><li><a href="global.html#selectUnitTests">selectUnitTests</a></li><li><a href="global.html#starUnitTests">starUnitTests</a></li><li><a href="global.html#terminalUnitTests">terminalUnitTests</a></li><li><a href="global.html#wrapUnitTests">wrapUnitTests</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 20 2017 19:18:25 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 10 2017 18:34:58 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
