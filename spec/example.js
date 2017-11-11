@@ -4,8 +4,8 @@ describe("The Semantics! library", function() {
     var f = new InterpreterMethodFactory();
     var interpreter = {
       digit:   f.terminal(/0|1|2|3|4|5|6|7|8|9/, 
-                function(digits) {
-                  return Number(digits);
+                function(digit) {
+                  return Number(digit);
                 }),
       product:  f.longest("digit", "product1"), 
       product1: f.group("product", /\*/, "digit", 
